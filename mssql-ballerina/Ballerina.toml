@@ -4,7 +4,7 @@ observabilityIncluded = true
 [package]
 org = "ballerinax"
 name = "mssql"
-version = "0.7.0-alpha5"
+version = "0.1.0"
 
 [[platform.java11.dependency]]
 path = "../mssql-native/build/libs/mssql-native-0.7.0-alpha5-SNAPSHOT.jar"
@@ -14,7 +14,7 @@ version = "0.7.0-alpha5-SNAPSHOT"
 
 
 [[platform.java11.dependency]]
-path = "/home/rajinthan/Documents/GitHub/module-ballerinax-mssql/mssql-ballerina/build/target/jballerina-tools-2.0.0-alpha6-SNAPSHOT/repo/bala/ballerina/sql/0.6.0-alpha5/platform/java11/sql-native-0.6.0-alpha5.bala"
+path = "/home/rajinthan/Documents/GitHub/module-ballerinax-mssql/mssql-ballerina/build/target/jballerina-tools-2.0.0-alpha6-SNAPSHOT/repo/bala/ballerina/sql/0.6.0-alpha5/ballerina-sql-java11-0.6.0-alpha5.bala"
 groupId = "org.ballerinalang"
 artifactId = "ballerina-sql"
 version = "0.6.0-alpha5-SNAPSHOT"
