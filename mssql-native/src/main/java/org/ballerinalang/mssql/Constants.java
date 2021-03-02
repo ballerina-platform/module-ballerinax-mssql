@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.ballerinalang.mysql;
+package org.ballerinalang.mssql;
 
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BString;
@@ -35,62 +35,7 @@ public final class Constants {
         public static final BString USER = StringUtils.fromString("user");
         public static final BString PASSWORD = StringUtils.fromString("password");
         public static final BString DATABASE = StringUtils.fromString("database");
-        public static final BString OPTIONS = StringUtils.fromString("options");
-        public static final BString CONNECTION_POOL_OPTIONS = StringUtils.fromString("connectionPool");
+        //public static final BString OPTIONS = StringUtils.fromString("options");
+        //public static final BString CONNECTION_POOL_OPTIONS = StringUtils.fromString("connectionPool");
     }
-
-    /**
-     * Constants for database options.
-     */
-    public static final class Options {
-        public static final BString SSL = StringUtils.fromString("ssl");
-        public static final BString USE_XA_DATASOURCE = StringUtils.fromString("useXADatasource");
-        public static final BString CONNECT_TIMEOUT_SECONDS = StringUtils.fromString("connectTimeoutInSeconds");
-        public static final BString SOCKET_TIMEOUT_SECONDS = StringUtils.fromString("socketTimeoutInSeconds");
-    }
-
-    /**
-     * Constants for ssl configuration.
-     */
-    public static final class SSLConfig {
-        public static final BString MODE = StringUtils.fromString("mode");
-        public static final String VERIFY_CERT_MODE = "VERIFY_CERT";
-        public static final BString CLIENT_CERT_KEYSTORE = StringUtils.fromString("clientCertKeystore");
-        public static final BString TRUST_CERT_KEYSTORE = StringUtils.fromString("trustCertKeystore");
-
-        /**
-        * Constants for processing ballerina `crypto:KeyStore`.
-        */
-        public static final class CryptoKeyStoreRecord {
-            public static final BString KEY_STORE_RECORD_PATH_FIELD = StringUtils.fromString("path");
-            public static final BString KEY_STORE_RECORD_PASSWORD_FIELD = StringUtils.fromString("password");
-        }
-    }
-
-    /**
-    * Constants for database specific properties.
-    */
-    public static final class DatabaseProps {
-        public static final BString SSL_MODE = StringUtils.fromString("sslMode");
-        public static final BString SSL_MODE_DISABLED = StringUtils.fromString("DISABLED");
-        public static final BString SSL_MODE_VERIFY_CA = StringUtils.fromString("VERIFY_CA");
-
-        public static final BString KEYSTORE_TYPE_PKCS12 = StringUtils.fromString("PKCS12");
-        public static final BString CLIENT_KEYSTORE_URL = StringUtils.fromString("clientCertificateKeyStoreUrl");
-        public static final BString CLIENT_KEYSTORE_PASSWORD = StringUtils.fromString(
-            "clientCertificateKeyStorePassword");
-        public static final BString CLIENT_KEYSTORE_TYPE = StringUtils.fromString("clientCertificateKeyStoreType");
-        public static final BString TRUST_KEYSTORE_URL = StringUtils.fromString("trustCertificateKeyStoreUrl");
-        public static final BString TRUST_KEYSTORE_PASSWORD = StringUtils.fromString(
-            "trustCertificateKeyStorePassword");
-        public static final BString TRUST_KEYSTORE_TYPE = StringUtils.fromString("trustCertificateKeyStoreType");
-
-        public static final BString CONNECT_TIMEOUT = StringUtils.fromString("connectTimeout");
-        public static final BString SOCKET_TIMEOUT = StringUtils.fromString("socketTimeout");
-    }
-
-    public static final String MYSQL_DATASOURCE_NAME = "com.mysql.cj.jdbc.MysqlDataSource";
-    public static final String MYSQL_XA_DATASOURCE_NAME = "com.mysql.cj.jdbc.MysqlXADataSource";
-    public static final String FILE = "file:";
-    public static final String POOL_CONNECT_TIMEOUT = "ConnectionTimeout";
 }
