@@ -1,7 +1,28 @@
-[package]
-org = "rajinthan"
-name = "mssql_ballerina"
-version = "0.1.0"
-
 [build-options]
 observabilityIncluded = true
+
+[package]
+org = "ballerinax"
+name = "mssql"
+version = "0.7.0-alpha5"
+
+[[platform.java11.dependency]]
+path = "../mssql-native/build/libs/mssql-native-0.7.0-alpha5-SNAPSHOT.jar"
+groupId = "org.ballerinalang"
+artifactId = "mssql-native"
+version = "0.7.0-alpha5-SNAPSHOT"
+
+
+[[platform.java11.dependency]]
+path = "/home/rajinthan/Documents/GitHub/module-ballerinax-mssql/mssql-ballerina/build/target/jballerina-tools-2.0.0-alpha6-SNAPSHOT/repo/bala/ballerina/sql/0.6.0-alpha5/platform/java11/sql-native-0.6.0-alpha5.bala"
+groupId = "org.ballerinalang"
+artifactId = "ballerina-sql"
+version = "0.6.0-alpha5-SNAPSHOT"
+
+
+[[platform.java11.dependency]]
+path = "./lib/mysql-connector-java-8.0.21.jar"
+artifactId = "mysql-connector-java"
+groupId = "mysql"
+scope = "testOnly"
+version = "8.0.17"
