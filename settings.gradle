@@ -4,8 +4,20 @@
  * The settings file is used to specify which projects to include in your build.
  *
  * Detailed information about configuring a multi-project build in Gradle can be found
- * in the user manual at https://docs.gradle.org/6.8/userguide/multi_project_builds.html
+ * in the user manual at https://docs.gradle.org/6.3/userguide/multi_project_builds.html
  */
 
-rootProject.name = 'module-ballerinax-mssql'
-include('lib')
+plugins {
+    id "com.gradle.enterprise" version "3.2"
+}
+
+rootProject.name = 'ballerina-mssql'
+include(':build-config:checkstyle')
+include ':mssql-native', ':mssql-ballerina'
+
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
+}
