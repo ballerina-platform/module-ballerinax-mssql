@@ -16,7 +16,7 @@
  * under the License.
  */
 
-module io.ballerina.stdlib.mysql {
+module io.ballerina.stdlib.mssql {
     requires io.ballerina.runtime;
     requires io.ballerina.stdlib.sql;
     exports org.ballerinalang.mssql;

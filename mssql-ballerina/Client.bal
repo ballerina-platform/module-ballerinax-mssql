@@ -23,13 +23,13 @@ public client class Client {
     *sql:Client;
     private boolean clientActive = true;
 
-    # Initialize MySQL Client.
+    # Initialize Mssql Client.
     #
-    # + host - Hostname of the mysql server to be connected
-    # + user - If the mysql server is secured, the username to be used to connect to the mysql server
+    # + host - Hostname of the mssql server to be connected
+    # + user - If the mssql server is secured, the username to be used to connect to the mssql server
     # + password - The password of provided username of the database
     # + database - The name fo the database to be connected
-    # + port - Port number of the mysql server to be connected
+    # + port - Port number of the mssql server to be connected
     # + options - The Database specific JDBC client properties
     # + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client.
     #                   If there is no connectionPool is provided, the global connection pool will be used and it will
