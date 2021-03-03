@@ -164,7 +164,7 @@ type ClientConfiguration record {|
 
 public type Options record {|
     SSLConfig ssl = {};
-    boolean useXADatasource? = false;
+    boolean useXADatasource = false;
     int socketTimeout?;
     int queryTimeout?;
     int loginTimeout?;
