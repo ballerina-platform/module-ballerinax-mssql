@@ -22,9 +22,10 @@ import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
 import org.ballerinalang.mssql.Constants;
+import org.ballerinalang.mssql.Utils;
 import org.ballerinalang.sql.datasource.SQLDatasource;
 
-// import java.util.Properties;
+import java.util.Properties;
 
 /**
  * This class contains the utility methods for the mysql clients.
@@ -49,32 +50,32 @@ public class ClientProcessor {
         if (database != null && !database.isEmpty()) {
             url += "/" + database;
         }
-        //BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
-        //BMap properties = null;
-        //Properties poolProperties = null;
-        // if (options != null) {
-        //     properties = Utils.generateOptionsMap(options);
-        //     Object connectTimeout = properties.get(Constants.DatabaseProps.CONNECT_TIMEOUT);
-        //     if (connectTimeout != null) {
-        //         poolProperties = new Properties();
-        //         poolProperties.setProperty(Constants.POOL_CONNECT_TIMEOUT, connectTimeout.toString());
-        //     }
-        // }
+        BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
+        BMap properties = null;
+        Properties poolProperties = null;
+        if (options != null) {
+            properties = Utils.generateOptionsMap(options);
+            Object connectTimeout = properties.get(Constants.DatabaseProps.CONNECT_TIMEOUT);
+            if (connectTimeout != null) {
+                poolProperties = new Properties();
+                poolProperties.setProperty(Constants.POOL_CONNECT_TIMEOUT, connectTimeout.toString());
+            }
+        }
 
-        //BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
+        BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
 
-        // String datasourceName = Constants.MYSQL_DATASOURCE_NAME;
-        // if (options != null && options.getBooleanValue(Constants.Options.USE_XA_DATASOURCE)) {
-        //     datasourceName = Constants.MYSQL_XA_DATASOURCE_NAME;
-        // }
+        String datasourceName = Constants.MSSQL_DATASOURCE_NAME;
+        if (options != null && options.getBooleanValue(Constants.Options.USE_XA_DATASOURCE)) {
+            datasourceName = Constants.PMSSQL_DATASOURCE_NAME;
+        }
 
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
                 .setUrl(url).setUser(user)
-                .setPassword(password);
-                //.setDatasourceName(datasourceName)
-                //.setOptions(properties)
-                //.setConnectionPool(connectionPool, globalPool)
-                //.setPoolProperties(poolProperties);
+                .setPassword(password)
+                .setDatasourceName(datasourceName)
+                .setOptions(properties)
+                .setConnectionPool(connectionPool, globalPool)
+                .setPoolProperties(poolProperties);
 
         return org.ballerinalang.sql.nativeimpl.ClientProcessor.createClient(client, sqlDatasourceParams);
     }
