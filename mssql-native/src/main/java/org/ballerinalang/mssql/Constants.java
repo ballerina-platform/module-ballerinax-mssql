@@ -19,7 +19,7 @@ package org.ballerinalang.mssql;
 
 import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BString;
-import static io.ballerina.runtime.api.utils.StringUtils.fromString;
+
 /**
  * Constants for JDBC client.
  *
@@ -57,29 +57,34 @@ public final class Constants {
         public static final BString CLIENT_CERT_KEYSTORE = StringUtils.fromString("clientCertKeystore");
         public static final BString TRUST_CERT_KEYSTORE = StringUtils.fromString("trustCertKeystore");
 
-         // The following constants are used to process ballerina `crypto:KeyStore`
+        /**
+        * Constants for processing ballerina `crypto:KeyStore`.
+        */
         public static final class CryptoKeyStoreRecord {
             public static final BString KEY_STORE_RECORD_PATH_FIELD = StringUtils.fromString("path");
             public static final BString KEY_STORE_RECORD_PASSWORD_FIELD = StringUtils.fromString("password");
         }
-
-        }
+    }
     
+    /**
+    * Constants for database specific properties.
+    */
     public static final class DatabaseProps {
         public static final BString SSL_MODE = StringUtils.fromString("sslMode");
         public static final BString SSL_MODE_DISABLED = StringUtils.fromString("DISABLE");
         public static final BString SSL_MODE_VERIFY_CA = StringUtils.fromString("VERIFY_CA");
-
         public static final BString KEYSTORE_TYPE_PKCS12 = StringUtils.fromString("PKCS12");
         public static final BString CLIENT_KEYSTORE_URL = StringUtils.fromString("clientCertificateKeyStoreUrl");
-        public static final BString CLIENT_KEYSTORE_PASSWORD = StringUtils.fromString("clientCertificateKeyStorePassword");
+        public static final BString CLIENT_KEYSTORE_PASSWORD = StringUtils.fromString(
+                            "clientCertificateKeyStorePassword");
         public static final BString CLIENT_KEYSTORE_TYPE = StringUtils.fromString("clientCertificateKeyStoreType");
         public static final BString TRUST_KEYSTORE_URL = StringUtils.fromString("trustCertificateKeyStoreUrl");
-        public static final BString TRUST_KEYSTORE_PASSWORD = StringUtils.fromString("trustCertificateKeyStorePassword");
+        public static final BString TRUST_KEYSTORE_PASSWORD = StringUtils.fromString(
+                            "trustCertificateKeyStorePassword");
         public static final BString TRUST_KEYSTORE_TYPE = StringUtils.fromString("trustCertificateKeyStoreType");
-
         public static final BString DB_METADATA_CACHE_FIELDS = StringUtils.fromString("databaseMetadataCacheFields");
-        public static final BString DB_METADATA_CACHE_FIELDS_MIB = StringUtils.fromString("databaseMetadataCacheFieldsMiB");
+        public static final BString DB_METADATA_CACHE_FIELDS_MIB = StringUtils.fromString(
+                            "databaseMetadataCacheFieldsMiB");
         public static final BString PREPARE_THRESHOLD = StringUtils.fromString("prepareThreshold");
         public static final BString PREPARED_STATEMENT_CACHE_QUERIES = StringUtils.
                             fromString("preparedStatementCacheQueries");
