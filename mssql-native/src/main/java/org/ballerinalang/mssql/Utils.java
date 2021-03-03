@@ -33,45 +33,25 @@ public class Utils {
     public static BMap generateOptionsMap(BMap mssqlOptions) {
         if (mssqlOptions != null) {
             BMap<BString, Object> options = ValueCreator.createMapValue();    
-            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SSL), options);
+            // addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SSL), options);
 
-            long connectTimeout = getTimeout(mssqlOptions.get(Constants.Options.CONNECT_TIMEOUT_SECONDS));
-            if (connectTimeout > 0) {
-                options.put(Constants.DatabaseProps.CONNECT_TIMEOUT, connectTimeout);
+            long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT));
+            if (queryTimeout > 0) {
+                options.put(Constants.DatabaseProps.QUERY_TIMEOUT, queryTimeout);
             }
 
-            long socketTimeout = getTimeout(mssqlOptions.get(Constants.Options.SOCKET_TIMEOUT_SECONDS));
+            long socketTimeout = getTimeout(mssqlOptions.get(Constants.Options.SOCKET_TIMEOUT));
             if (socketTimeout > 0) {
                 options.put(Constants.DatabaseProps.SOCKET_TIMEOUT, socketTimeout);
             }
 
-            long loginTimeout = getTimeout(mssqlOptions.get(Constants.Options.LOGIN_TIMEOUT_SECONDS));
+            long loginTimeout = getTimeout(mssqlOptions.get(Constants.Options.LOGIN_TIMEOUT));
             if (loginTimeout > 0) {
                 options.put(Constants.DatabaseProps.LOGIN_TIMEOUT, loginTimeout);
             }
             return options;
         }
         return null;
-    }
-
-    private static int getBooleanValue(Object value){
-        if (value instanceof Boolean) {
-            if(((Boolean)value) == true){
-                return 1;
-            }
-            return 0;
-        }
-        return -1;
-    }
-
-    private static long getIntegerValue(Object value){
-        if (value instanceof Long) {
-            Long output_value = (Long) value;
-            if (output_value.longValue() > 0) {
-                return output_value;
-            }
-        }
-        return -1;
     }
 
     private static long getTimeout(Object secondsInt) {
@@ -84,12 +64,12 @@ public class Utils {
         return -1;
     }
 
-    private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
-        if (sslConfig == null) {
-            options.put(Constants.DatabaseProps.SSL_MODE, Constants.DatabaseProps.SSL_MODE_DISABLED);
-        } else {
-            BString mode = sslConfig.getStringValue(Constants.SSLConfig.MODE);
-            options.put(Constants.DatabaseProps.SSL_MODE, mode);
+    // private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
+    //     if (sslConfig == null) {
+    //         options.put(Constants.DatabaseProps.SSL_MODE, Constants.DatabaseProps.SSL_MODE_DISABLED);
+    //     } else {
+    //         BString mode = sslConfig.getStringValue(Constants.SSLConfig.MODE);
+    //         options.put(Constants.DatabaseProps.SSL_MODE, mode);
 
             /*
              Need to figure out
@@ -115,6 +95,6 @@ public class Utils {
             // }
 
             
-        }
-    }
+            // }
+    
 }

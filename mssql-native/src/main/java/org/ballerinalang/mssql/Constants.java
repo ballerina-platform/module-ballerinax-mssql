@@ -87,7 +87,7 @@ public final class Constants {
                             fromString("preparedStatementCacheSizeMiB");
         public static final BString CANCEL_SIGNAL_TIMEOUT = StringUtils.fromString("cancelSignalTimeout");
         public static final BString TCP_KEEP_ALIVE = StringUtils.fromString("tcpKeepAlive");
-        public static final BString CONNECT_TIMEOUT = StringUtils.fromString("connectTimeout");
+        public static final BString QUERY_TIMEOUT = StringUtils.fromString("queryTimeout");
         public static final BString SOCKET_TIMEOUT = StringUtils.fromString("socketTimeout");
         public static final BString LOGIN_TIMEOUT = StringUtils.fromString("loginTimeout");
         public static final BString ROW_FETCH_SIZE = StringUtils.fromString("defaultRowFetchSize");

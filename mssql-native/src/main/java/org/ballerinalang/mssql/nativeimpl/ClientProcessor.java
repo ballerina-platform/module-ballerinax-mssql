@@ -28,7 +28,7 @@ import org.ballerinalang.sql.datasource.SQLDatasource;
 import java.util.Properties;
 
 /**
- * This class contains the utility methods for the mysql clients.
+ * This class contains the utility methods for the mssql clients.
  *
  * @since 1.2.0
  */
@@ -55,10 +55,10 @@ public class ClientProcessor {
         Properties poolProperties = null;
         if (options != null) {
             properties = Utils.generateOptionsMap(options);
-            Object connectTimeout = properties.get(Constants.DatabaseProps.CONNECT_TIMEOUT);
-            if (connectTimeout != null) {
+            Object queryTimeout = properties.get(Constants.DatabaseProps.QUERY_TIMEOUT);
+            if (queryTimeout != null) {
                 poolProperties = new Properties();
-                poolProperties.setProperty(Constants.POOL_CONNECT_TIMEOUT, connectTimeout.toString());
+                poolProperties.setProperty(Constants.POOL_CONNECT_TIMEOUT, queryTimeout.toString());
             }
         }
 
@@ -66,7 +66,7 @@ public class ClientProcessor {
 
         String datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         if (options != null && options.getBooleanValue(Constants.Options.USE_XA_DATASOURCE)) {
-            datasourceName = Constants.PMSSQL_DATASOURCE_NAME;
+            datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         }
 
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
