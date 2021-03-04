@@ -36,10 +36,17 @@ public class ClientProcessor {
 
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {
-        String url = "jdbc:mssql://" + clientConfig.getStringValue(Constants.ClientConfiguration.HOST);
+        String url = "jdbc:sqlserver://" + clientConfig.getStringValue(Constants.ClientConfiguration.HOST);
+        BString instanceNameVal = clientConfig.getStringValue(Constants.ClientConfiguration.INSTANCE_NAME);
+        String instanceName = instanceNameVal == null ? null : instanceNameVal.getValue();
+        url += "\\" + instanceName;
         Long portValue = clientConfig.getIntValue(Constants.ClientConfiguration.PORT);
         if (portValue > 0) {
             url += ":" + portValue.intValue();
+        }
+        Boolean integratedSecurity = clientConfig.getBooleanValue(Constants.ClientConfiguration.INTEGRATED_SECURITY);
+        if (integratedSecurity == true) {
+            url += ";integratedSecurity=true";
         }
         BString userVal = clientConfig.getStringValue(Constants.ClientConfiguration.USER);
         String user = userVal == null ? null : userVal.getValue();
@@ -48,7 +55,7 @@ public class ClientProcessor {
         BString databaseVal = clientConfig.getStringValue(Constants.ClientConfiguration.DATABASE);
         String database = databaseVal == null ? null : databaseVal.getValue();
         if (database != null && !database.isEmpty()) {
-            url += "/" + database;
+            url += ";" + database;
         }
         BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
         BMap properties = null;
@@ -68,15 +75,16 @@ public class ClientProcessor {
         if (options != null && options.getBooleanValue(Constants.Options.USE_XA_DATASOURCE)) {
             datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         }
-
+        
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
-                .setUrl(url).setUser(user)
+                .setUrl(url)
+                .setUser(user)
                 .setPassword(password)
                 .setDatasourceName(datasourceName)
                 .setOptions(properties)
                 .setConnectionPool(connectionPool, globalPool)
                 .setPoolProperties(poolProperties);
-
+        
         return org.ballerinalang.sql.nativeimpl.ClientProcessor.createClient(client, sqlDatasourceParams);
     }
 
@@ -84,4 +92,3 @@ public class ClientProcessor {
         return org.ballerinalang.sql.nativeimpl.ClientProcessor.close(client);
     }
 }
-
