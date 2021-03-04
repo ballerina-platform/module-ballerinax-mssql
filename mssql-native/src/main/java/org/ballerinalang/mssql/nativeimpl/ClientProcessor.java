@@ -44,6 +44,10 @@ public class ClientProcessor {
         if (portValue > 0) {
             url += ":" + portValue.intValue();
         }
+        Boolean integratedSecurity = clientConfig.getBooleanValue(Constants.ClientConfiguration.INTEGRATED_SECURITY);
+        if (integratedSecurity == true) {
+            url += ";integratedSecurity=true";
+        }
         BString userVal = clientConfig.getStringValue(Constants.ClientConfiguration.USER);
         String user = userVal == null ? null : userVal.getValue();
         BString passwordVal = clientConfig.getStringValue(Constants.ClientConfiguration.PASSWORD);
@@ -71,7 +75,7 @@ public class ClientProcessor {
         if (options != null && options.getBooleanValue(Constants.Options.USE_XA_DATASOURCE)) {
             datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         }
-
+        
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
                 .setUrl(url)
                 .setUser(user)
@@ -80,7 +84,7 @@ public class ClientProcessor {
                 .setOptions(properties)
                 .setConnectionPool(connectionPool, globalPool)
                 .setPoolProperties(poolProperties);
-
+        
         return org.ballerinalang.sql.nativeimpl.ClientProcessor.createClient(client, sqlDatasourceParams);
     }
 

@@ -35,12 +35,13 @@ public client class Client {
     # + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client.
     #                   If there is no connectionPool is provided, the global connection pool will be used and it will
     #                   be shared by other clients which has same properties.
-    public function init(string host = "localhost", string? instanceName = (), string? user = (), string? password = (), string? database = (),
+    public function init(string host = "localhost", string? instanceName = (), boolean integratedSecurity = false, string? user = (), string? password = (), string? database = (),
         int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
             instanceName: instanceName,
             port: port,
+            integratedSecurity: integratedSecurity,
             user: user,
             password: password,
             database: database,
@@ -132,6 +133,10 @@ public client class Client {
 # + host - Hostname of the mssql server to be connected
 # + instanceName - Instance of mssql server to connect to on serverName
 # + port - Port number of the mssql server to be connected
+# + integratedSecurity - Set to "true" to indicate that Windows credentials are used by 
+#                       SQL Server on Windows operating systems. If "true," the JDBC driver 
+#                       searches the local computer credential cache for credentials that 
+#                       were provided when a user signed in to the computer or network.
 # + database - System Identifier or the Service Name of the database
 # + user - Name of a user of the database
 # + password - Password for the user
@@ -140,11 +145,12 @@ public client class Client {
 #         the jdbc client. If there is no connectionPool provided, 
 #         the global connection pool will be used
 type ClientConfiguration record {|
-    string? user;
-    string? password;
     string host;
     string? instanceName;
     int port;
+    boolean integratedSecurity;
+    string? user;
+    string? password;
     string? database;
     Options? options;
     sql:ConnectionPool?  connectionPool;
