@@ -26,6 +26,7 @@ public client class Client {
     # Initialize Mssql Client.
     #
     # + host - Hostname of the mssql server to be connected
+    # + instanceName - Instance of mssql server to connect to on serverName
     # + user - If the mssql server is secured, the username to be used to connect to the mssql server
     # + password - The password of provided username of the database
     # + database - The name fo the database to be connected
@@ -34,12 +35,13 @@ public client class Client {
     # + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client.
     #                   If there is no connectionPool is provided, the global connection pool will be used and it will
     #                   be shared by other clients which has same properties.
-    public function init(string host = "localhost", string? username = (), string? password = (), string? database = (),
-        int port = 3306, Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
+    public function init(string host = "localhost", string? instanceName = (), string? user = (), string? password = (), string? database = (),
+        int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
+            instanceName: instanceName,
             port: port,
-            user: username,
+            user: user,
             password: password,
             database: database,
             options: options,
@@ -128,6 +130,7 @@ public client class Client {
 # Client Configuration record for connection initialization
 #
 # + host - Hostname of the mssql server to be connected
+# + instanceName - Instance of mssql server to connect to on serverName
 # + port - Port number of the mssql server to be connected
 # + database - System Identifier or the Service Name of the database
 # + user - Name of a user of the database
@@ -140,6 +143,7 @@ type ClientConfiguration record {|
     string? user;
     string? password;
     string host;
+    string? instanceName;
     int port;
     string? database;
     Options? options;
@@ -156,7 +160,7 @@ type ClientConfiguration record {|
 # + queryTimeout - The number of seconds to wait before a timeout has occurred on a 
 #                  query. The default value is -1, which means infinite timeout. 
 #                  Setting this to 0 also implies to wait indefinitely.
-# +loginTimeout - The number of seconds the driver should wait before timing out a 
+# + loginTimeout - The number of seconds the driver should wait before timing out a 
 #                 failed connection. A zero value indicates that the timeout is the 
 #                 default system timeout, which is specified as 15 seconds by default. 
 #                 A non-zero value is the number of seconds the driver should wait 
