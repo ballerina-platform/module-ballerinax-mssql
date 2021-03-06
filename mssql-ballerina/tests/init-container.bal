@@ -14,18 +14,18 @@
 // // specific language governing permissions and limitations
 // // under the License.
 
-// import ballerina/io;
+ import ballerina/io;
 // import ballerina/os;
-// import ballerina/test;
-// import ballerina/file;
+ import ballerina/test;
+ import ballerina/file;
 // import ballerina/lang.runtime as runtime;
 
-// string resourcePath = check file:getAbsolutePath("tests/resources");
+string resourcePath = check file:getAbsolutePath("tests/resources");
 
-// string host = "localhost";
-// string user = "root";
-// string password = "Test123#";
-// int port = 3305;
+string host = "localhost";
+string user = "root";
+string password = "Test123#";
+int port = 1433;
 
 // @test:BeforeSuite
 // function beforeSuite() {
@@ -59,3 +59,14 @@
 //     int exitCode = checkpanic process.waitForExit();
 //     test:assertExactEquals(exitCode, 0, "Docker container 'ballerina-mssql' stop failed!");
 // }
+@test:BeforeSuite
+function beforeSuite() {
+    io:println("start test");
+    _ = initTestScripts();
+    io:println("End init test")
+}
+
+@test:AfterSuite
+function afterSuite() {
+    io:println("End Test");
+}
