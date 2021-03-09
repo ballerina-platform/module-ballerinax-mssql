@@ -83,11 +83,11 @@ public class MssqlResultParameterProcessor extends DefaultResultParameterProcess
             .getInstance(TimeZone.getTimeZone(Constants.TIMEZONE_UTC.getValue()));
 
 
-    public static DefaultResultParameterProcessor getInstance() {
+    public static MssqlResultParameterProcessor getInstance() {
         if (instance == null) {
             synchronized (lock) {
                 if (instance == null) {
-                    instance = new DefaultResultParameterProcessor();
+                    instance = new MssqlResultParameterProcessor();
                 }
             }
         }
