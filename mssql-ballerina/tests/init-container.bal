@@ -23,8 +23,9 @@
 string resourcePath = check file:getAbsolutePath("tests/resources");
 
 string host = "localhost";
-string user = "root";
-string password = "Test123#";
+string user = "sa";
+boolean integratedSecurity = false;
+string password = "Raji2098";
 int port = 1433;
 
 // @test:BeforeSuite
@@ -62,7 +63,7 @@ int port = 1433;
 @test:BeforeSuite
 function beforeSuite() {
     io:println("start test");
-    _ = initTestScripts();
+    // _ = initTestScripts();
     io:println("End init test");
 }
 

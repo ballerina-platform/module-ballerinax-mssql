@@ -38,8 +38,8 @@ public class ClientProcessor {
                                       BMap<BString, Object> globalPool) {
         String url = "jdbc:sqlserver://" + clientConfig.getStringValue(Constants.ClientConfiguration.HOST);
         BString instanceNameVal = clientConfig.getStringValue(Constants.ClientConfiguration.INSTANCE_NAME);
-        String instanceName = instanceNameVal == null ? null : instanceNameVal.getValue();
-        url += "\\" + instanceName;
+        // String instanceName = instanceNameVal == null ? null : instanceNameVal.getValue();
+        // url += "\\" + instanceName;
         Long portValue = clientConfig.getIntValue(Constants.ClientConfiguration.PORT);
         if (portValue > 0) {
             url += ":" + portValue.intValue();
@@ -55,7 +55,7 @@ public class ClientProcessor {
         BString databaseVal = clientConfig.getStringValue(Constants.ClientConfiguration.DATABASE);
         String database = databaseVal == null ? null : databaseVal.getValue();
         if (database != null && !database.isEmpty()) {
-            url += ";" + database;
+            url += ";database=" + database;
         }
         BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
         BMap properties = null;
@@ -75,7 +75,7 @@ public class ClientProcessor {
         if (options != null && options.getBooleanValue(Constants.Options.USE_XA_DATASOURCE)) {
             datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         }
-        
+        System.out.println(url);
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
                 .setUrl(url)
                 .setUser(user)
