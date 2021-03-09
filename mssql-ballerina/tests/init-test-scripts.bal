@@ -36,7 +36,7 @@ public function connectionInitDb() {
 
 public function createQuery(sql:ParameterizedQuery query) {
 
-    Client|sql:Error postgresClient = new(username="postgres",password="postgres");
+    Client|sql:Error postgresClient = new(user="postgres",password="postgres");
 
     if(postgresClient is sql:Error) {
         io:println("Client init failed\n",postgresClient);
@@ -66,7 +66,7 @@ public function createQuery(sql:ParameterizedQuery query) {
 
 public function executeQuery(string database, sql:ParameterizedQuery query) {
 
-    Client|sql:Error postgresClient = new(username="postgres",password="postgres", database = database);
+    Client|sql:Error postgresClient = new(user="postgres",password="postgres", database = database);
 
     if(postgresClient is sql:Error) {
         io:println("Client init failed\n",postgresClient);
