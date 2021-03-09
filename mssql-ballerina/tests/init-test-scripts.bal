@@ -36,23 +36,23 @@ public function connectionInitDb() {
 
 public function createQuery(sql:ParameterizedQuery query) {
 
-    Client|sql:Error postgresClient = new(user="postgres",password="postgres");
+    Client|sql:Error mssqlClient = new(user="mssql",password="mssql");
 
-    if(postgresClient is sql:Error) {
-        io:println("Client init failed\n",postgresClient);
+    if(mssqlClient is sql:Error) {
+        io:println("Client init failed\n",mssqlClient);
     }
     else{
         sql:ExecutionResult|sql:Error result__;
         sql:Error? e__;
 
-        result__ = postgresClient->execute(query);
+        result__ = mssqlClient->execute(query);
         if(result__ is sql:Error) {
             io:println("Init Database drop failed\n",result__);
         }
         else{
             io:println("Init Database drop passed\n",result__);
         }
-        e__ = postgresClient.close();
+        e__ = mssql.close();
 
         if(e__ is sql:Error) {
             io:println("Client close1 fail\n",e__);
@@ -66,23 +66,23 @@ public function createQuery(sql:ParameterizedQuery query) {
 
 public function executeQuery(string database, sql:ParameterizedQuery query) {
 
-    Client|sql:Error postgresClient = new(user="postgres",password="postgres", database = database);
+    Client|sql:Error mssqlClient = new(user="mssql",password="mssql", database = database);
 
-    if(postgresClient is sql:Error) {
-        io:println("Client init failed\n",postgresClient);
+    if(mssqlClient is sql:Error) {
+        io:println("Client init failed\n",mssqlClient);
     }
     else{
         sql:ExecutionResult|sql:Error result__;
         sql:Error? e__;
 
-        result__ = postgresClient->execute(query);
+        result__ = mssqlClient->execute(query);
         if(result__ is sql:Error) {
             io:println("Init Execute drop failed\n",result__);
         }
         else{
             io:println("Init Execute drop passed\n",result__);
         }
-        e__ = postgresClient.close();
+        e__ = mssqlClient.close();
 
         if(e__ is sql:Error) {
             io:println("Client close1 fail\n",e__);

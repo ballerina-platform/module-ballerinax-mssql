@@ -190,7 +190,7 @@ public type SSLConfig record {|
     crypto:KeyStore trustCertKeystore?;
 |};
 
-function createClient(Client 'client, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{
+function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{
     'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessor"
 } external;
 
@@ -214,6 +214,6 @@ returns sql:ProcedureCallResult|sql:Error = @java:Method {
     'class: "org.ballerinalang.mssql.nativeimpl.CallProcessor"
 } external;
 
-function close(Client sqlClient) returns sql:Error? = @java:Method {
+function close(Client mssqlClient) returns sql:Error? = @java:Method {
     'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessor"
 } external;
