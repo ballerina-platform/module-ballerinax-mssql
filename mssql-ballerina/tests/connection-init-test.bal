@@ -35,11 +35,44 @@ function testWithURLParams() {
     test:assertExactEquals(exitCode, (), "Initialising connection with params fails.");
 }
 
-// @test:Config {
-//     groups: ["connection", "connection-init"]
-// }
-// function testWithoutHost() {
-//     Client dbClient = checkpanic new (user = user, password = password, database = connectDB, port = port);
-//     var exitCode = dbClient.close();
-//     test:assertExactEquals(exitCode, (), "Initialising connection without host fails.");
-// }
+@test:Config {
+    groups: ["connection", "connection-init"]
+}
+function testWithoutHost() {
+    Client dbClient = checkpanic new (user = user, password = password, database = connectDB, port = port);
+    var exitCode = dbClient.close();
+    test:assertExactEquals(exitCode, (), "Initialising connection without host fails.");
+}
+
+@test:Config {
+    groups: ["connection", "connection-init"]
+}
+function testWithoutPort() {
+    Client dbClient = checkpanic new (user = user, password = password, database = connectDB, host = host);
+    var exitCode = dbClient.close();
+    test:assertExactEquals(exitCode, (), "Initialising connection without port fails.");
+}
+
+@test:Config {
+    groups: ["connection", "connection-init"]
+}
+function testWithoutDB() {
+    Client dbClient = checkpanic new (user = user, password = password, port = port, host = host);
+    var exitCode = dbClient.close();
+    test:assertExactEquals(exitCode, (), "Initialising connection without database fails.");
+}
+
+@test:Config {
+    groups: ["connection", "connection-init"]
+}
+function testWithOptions() {
+    Options options = {
+        // connectTimeoutInSeconds: 50,
+        socketTimeout: 60,
+        loginTimeout: 60
+    };
+    Client dbClient = checkpanic new (user= user, password = password, database = connectDB,
+        port = port, options = options);
+    var exitCode = dbClient.close();
+    test:assertExactEquals(exitCode, (), "Initialising connection with options fails.");
+}
