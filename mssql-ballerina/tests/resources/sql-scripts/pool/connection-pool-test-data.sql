@@ -5,13 +5,12 @@ USE POOL_DB_1;
 DROP TABLE IF EXISTS Customers;
 
 CREATE TABLE IF NOT EXISTS Customers(
-  customerId INTEGER NOT NULL AUTO_INCREMENT,
+  customerId INT NOT NULL IDENTITY PRIMARY KEY,
   firstName  VARCHAR(300),
   lastName  VARCHAR(300),
-  registrationID INTEGER,
+  registrationID FLOAT,
   creditLimit DOUBLE,
-  country  VARCHAR(300),
-  PRIMARY KEY (customerId)
+  country  VARCHAR(300)
 );
 
 INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
@@ -27,13 +26,12 @@ USE POOL_DB_2;
 DROP TABLE IF EXISTS Customers;
 
 CREATE TABLE IF NOT EXISTS Customers(
-  customerId INTEGER NOT NULL AUTO_INCREMENT,
+  customerId INT NOT NULL IDENTITY PRIMARY KEY,
   firstName  VARCHAR(300),
   lastName  VARCHAR(300),
-  registrationID INTEGER,
+  registrationID INT,
   creditLimit DOUBLE,
-  country  VARCHAR(300),
-  PRIMARY KEY (customerId)
+  country  VARCHAR(300)
 );
 
 INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
@@ -41,4 +39,3 @@ INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
 
 INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
   VALUES ('Dan', 'Brown', 2, 10000, 'UK');
-  

@@ -5,7 +5,7 @@ USE CONNECT_DB;
 DROP TABLE IF EXISTS Customers;
 
 CREATE TABLE Customers(
-          customerId INT PRIMARY KEY IDENTITY,
+          customerId INT NOT NULL IDENTITY PRIMARY KEY,
           firstName  VARCHAR(300),
           lastName  VARCHAR(300),
           registrationID INTEGER,
