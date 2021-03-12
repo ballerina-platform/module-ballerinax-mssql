@@ -20,7 +20,7 @@
 // //                     firstName  VARCHAR(300),
 // //                     lastName  VARCHAR(300),
 // //                     registrationID INT,
-// //                     creditLimit INT,
+// //                     creditLimit FLOAT,
 // //                     country  VARCHAR(300)
 // //             );
 
