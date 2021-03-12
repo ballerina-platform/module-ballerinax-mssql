@@ -76,3 +76,17 @@ function testWithOptions() {
     var exitCode = dbClient.close();
     test:assertExactEquals(exitCode, (), "Initialising connection with options fails.");
 }
+
+@test:Config {
+    groups: ["connection", "connection-init"]
+}
+function testWithConnectionPool() {
+    sql:ConnectionPool connectionPool = {
+        maxOpenConnections: 25
+    };
+    Client dbClient = checkpanic new (username = user, password = password, database = connectDB,
+        port = port, connectionPool = connectionPool);
+    var exitCode = dbClient.close();
+    test:assertExactEquals(exitCode, (), "Initialising connection with option max connection pool fails.");
+    test:assertEquals(connectionPool.maxOpenConnections, 25, "Configured max connection config is wrong.");
+}

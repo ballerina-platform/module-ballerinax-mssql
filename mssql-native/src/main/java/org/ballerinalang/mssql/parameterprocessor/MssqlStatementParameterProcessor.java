@@ -37,7 +37,7 @@ import org.ballerinalang.stdlib.io.channels.base.CharacterChannel;
 import org.ballerinalang.stdlib.io.readers.CharacterChannelReader;
 import org.ballerinalang.stdlib.io.utils.IOConstants;
 import org.ballerinalang.stdlib.io.utils.IOUtils;
-import org.ballerinalang.stdlib.time.util.TimeUtils;
+// import org.ballerinalang.stdlib.time.util.TimeUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -550,17 +550,17 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
                 timestamp = new Timestamp((Long) value);
             } else if (value instanceof BMap) {
                 BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
-                if (dateTimeStruct.getType().getName()
-                        .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
-                    ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
-                    timestamp = new Timestamp(zonedDateTime.toInstant().toEpochMilli());
-                } else {
-                    throw throwInvalidParameterError(value, sqlType);
-                }
+                // if (dateTimeStruct.getType().getName()
+                //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
+                //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
+                //     timestamp = new Timestamp(zonedDateTime.toInstant().toEpochMilli());
+                // } else {
+                //     throw throwInvalidParameterError(value, sqlType);
+                // }
             } else {
                 throw throwInvalidParameterError(value, sqlType);
             }
-            preparedStatement.setTimestamp(index, timestamp);
+            // preparedStatement.setTimestamp(index, timestamp);
         }
     }
 
@@ -814,17 +814,17 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
                 date = new Date((Long) value);
             } else if (value instanceof BMap) {
                 BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
-                if (dateTimeStruct.getType().getName()
-                        .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
-                    ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
-                    date = new Date(zonedDateTime.toInstant().toEpochMilli());
-                } else {
-                    throw throwInvalidParameterError(value, sqlType);
-                }
+                // if (dateTimeStruct.getType().getName()
+                //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
+                //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
+                //     date = new Date(zonedDateTime.toInstant().toEpochMilli());
+                // } else {
+                //     throw throwInvalidParameterError(value, sqlType);
+                // }
             } else {
                 throw throwInvalidParameterError(value, sqlType);
             }
-            preparedStatement.setDate(index, date);
+            // preparedStatement.setDate(index, date);
         }
     }
 
@@ -841,17 +841,17 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
                 time = new Time((Long) value);
             } else if (value instanceof BMap) {
                 BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
-                if (dateTimeStruct.getType().getName()
-                        .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
-                    ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
-                    time = new Time(zonedDateTime.toInstant().toEpochMilli());
-                } else {
-                    throw throwInvalidParameterError(value, sqlType);
-                }
+                // if (dateTimeStruct.getType().getName()
+                //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
+                //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
+                //     time = new Time(zonedDateTime.toInstant().toEpochMilli());
+                // } else {
+                //     throw throwInvalidParameterError(value, sqlType);
+                // }
             } else {
                 throw throwInvalidParameterError(value, sqlType);
             }
-            preparedStatement.setTime(index, time);
+            // preparedStatement.setTime(index, time);
         }
     }
 
