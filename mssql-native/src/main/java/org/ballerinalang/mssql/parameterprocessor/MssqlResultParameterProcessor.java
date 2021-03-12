@@ -53,15 +53,15 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.OffsetDateTime;
+// import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
+import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 
 /**
  * This class implements methods required convert SQL types into ballerina types and
