@@ -239,9 +239,9 @@ subprojects {
         ballerinaStdLibs "org.ballerinalang:encoding-ballerina:${stdlibEncodingVersion}"
         ballerinaStdLibs "org.ballerinalang:http-ballerina:${stdlibHttpVersion}"
 
-        externalJars (group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: "${msSQLDriverVersion}") {
-            transitive = false
-        }
+        // externalJars (group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: "${msSQLDriverVersion}") {
+        //     transitive = false
+        // }
     }
 }
 
