@@ -147,7 +147,7 @@ public client class Client {
 type ClientConfiguration record {|
     string host;
     string? instanceName;
-    int? port;
+    int port;
     boolean integratedSecurity;
     string? user;
     string? password;
@@ -186,6 +186,10 @@ public type Options record {|
 # + trustCertKeystore - Keystore configuration of the trust certificates
  
 public type SSLConfig record {|
+    boolean encrypt?;
+    boolean trustServerCertificate?;
+    string trustStore?;
+    string trustStorePassword?;
     crypto:KeyStore clientCertKeystore?;
     crypto:KeyStore trustCertKeystore?;
 |};

@@ -33,7 +33,7 @@ public class Utils {
     public static BMap generateOptionsMap(BMap mssqlOptions) {
         if (mssqlOptions != null) {
             BMap<BString, Object> options = ValueCreator.createMapValue();    
-            // addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SSL), options);
+            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SSL), options);
 
             long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT_SECONDS));
             if (queryTimeout > 0) {
@@ -54,6 +54,16 @@ public class Utils {
         return null;
     }
 
+    private static int getBooleanValue(Object value) {
+        if (value instanceof Boolean) {
+            if (((Boolean) value) == true) {
+                return 1;
+            }
+            return 0;
+        }
+        return -1;
+    }
+
     private static long getTimeout(Object secondsInt) {
         if (secondsInt instanceof Long) {
             Long timeoutSec = (Long) secondsInt;
@@ -64,37 +74,37 @@ public class Utils {
         return -1;
     }
 
-    // private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
-    //     if (sslConfig == null) {
-    //         options.put(Constants.DatabaseProps.SSL_MODE, Constants.DatabaseProps.SSL_MODE_DISABLED);
-    //     } else {
-    //         BString mode = sslConfig.getStringValue(Constants.SSLConfig.MODE);
-    //         options.put(Constants.DatabaseProps.SSL_MODE, mode);
-
-            /*
-             Need to figure out
-            */
-
-            // BMap sslkey = sslConfig.getMapValue(Constants.SSLConfig.SSL_KEY);
-            // if (sslkey != null) {
-            //     options.put(Constants.SSLConfig.SSL_KEY, StringUtils.fromString(
-            //             Constants.FILE + sslkey.getStringValue(
-            //                     Constants.SSLConfig.CryptoKeyStoreRecord.KEY_STORE_RECORD_PATH_FIELD)));
-            //     options.put(Constants.SSLConfig.SSL_PASWORD, sslkey
-            //             .getStringValue(Constants.SSLConfig.CryptoKeyStoreRecord.KEY_STORE_RECORD_PASSWORD_FIELD));
-            // }
-
-            // BString sslrootcert = sslConfig.getStringValue(Constants.SSLConfig.SSL_ROOT_CERT);
-            // if(sslrootcert != null){
-            //     options.put(Constants.SSLConfig.SSL_ROOT_CERT,sslrootcert);
-            // }
-
-            // BString sslcert = sslConfig.getStringValue(Constants.SSLConfig.SSL_ROOT_CERT);
-            // if(sslcert != null){
-            //     options.put(Constants.SSLConfig.SSL_CERT,sslcert);
-            // }
-
+    private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
+        if (sslConfig != null) {
+            int encrypt = getBooleanValue(sslConfig.get(Constants.SSLConfig.ENCRYPT));
+            if (encrypt == 1) {
+                options.put(Constants.SSLConfig.ENCRYPT,encrypt);
+            }
             
+            int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
+            if (trustServerCertificate == 1) {
+                options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE,trustServerCertificate);
+            }
+            // Boolean encrypt = sslConfig.getBooleanValue(Constants.SSLConfig.ENCRYPT);
+            // if (encrypt == true) {
+            //     options.put(Constants.SSLConfig.ENCRYPT,encrypt);
             // }
-    
+            
+            // Boolean trustServerCertificate = sslConfig.getBooleanValue(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE);
+            // if (trustServerCertificate == true) {
+            //     options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE,trustServerCertificate);
+            // }
+        
+            BString trustStore = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE);
+            if(trustStore != null){
+                options.put(Constants.SSLConfig.TRUST_STORE,trustStore);
+            }
+
+            BString trustStorePassword = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE_PASSWORD);
+            if(trustStorePassword != null){
+                options.put(Constants.SSLConfig.TRUST_STORE_PASSWORD,trustStorePassword);
+            }
+
+        }
+    }
 }
