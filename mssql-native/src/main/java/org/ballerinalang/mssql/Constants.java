@@ -56,8 +56,11 @@ public final class Constants {
      * Constants for ssl configuration.
      */
     public static final class SSLConfig {
-        public static final BString CLIENT_CERT_KEYSTORE = StringUtils.fromString("clientCertKeystore");
-        public static final BString TRUST_CERT_KEYSTORE = StringUtils.fromString("trustCertKeystore");
+        public static final BString ENCRYPT = StringUtils.fromString("encrypt");
+        public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
+        public static final BString TRUST_STORE = StringUtils.fromString("trustStore");
+        public static final BString TRUST_STORE_PASSWORD = StringUtils.fromString("trustStorePassword");
+
 
         /**
         * Constants for processing ballerina `crypto:KeyStore`.
@@ -72,32 +75,9 @@ public final class Constants {
     * Constants for database specific properties.
     */
     public static final class DatabaseProps {
-        public static final BString SSL_MODE = StringUtils.fromString("sslMode");
-        public static final BString SSL_MODE_DISABLED = StringUtils.fromString("DISABLE");
-        public static final BString SSL_MODE_VERIFY_CA = StringUtils.fromString("VERIFY_CA");
-        public static final BString KEYSTORE_TYPE_PKCS12 = StringUtils.fromString("PKCS12");
-        public static final BString CLIENT_KEYSTORE_URL = StringUtils.fromString("clientCertificateKeyStoreUrl");
-        public static final BString CLIENT_KEYSTORE_PASSWORD = StringUtils.fromString(
-                            "clientCertificateKeyStorePassword");
-        public static final BString CLIENT_KEYSTORE_TYPE = StringUtils.fromString("clientCertificateKeyStoreType");
-        public static final BString TRUST_KEYSTORE_URL = StringUtils.fromString("trustCertificateKeyStoreUrl");
-        public static final BString TRUST_KEYSTORE_PASSWORD = StringUtils.fromString(
-                            "trustCertificateKeyStorePassword");
-        public static final BString TRUST_KEYSTORE_TYPE = StringUtils.fromString("trustCertificateKeyStoreType");
-        public static final BString DB_METADATA_CACHE_FIELDS = StringUtils.fromString("databaseMetadataCacheFields");
-        public static final BString DB_METADATA_CACHE_FIELDS_MIB = StringUtils.fromString(
-                            "databaseMetadataCacheFieldsMiB");
-        public static final BString PREPARE_THRESHOLD = StringUtils.fromString("prepareThreshold");
-        public static final BString PREPARED_STATEMENT_CACHE_QUERIES = StringUtils.
-                            fromString("preparedStatementCacheQueries");
-        public static final BString PREPARED_STATEMENT_CACHE_SIZE_MIB = StringUtils.
-                            fromString("preparedStatementCacheSizeMiB");
-        public static final BString CANCEL_SIGNAL_TIMEOUT = StringUtils.fromString("cancelSignalTimeout");
-        public static final BString TCP_KEEP_ALIVE = StringUtils.fromString("tcpKeepAlive");
         public static final BString QUERY_TIMEOUT = StringUtils.fromString("queryTimeout");
         public static final BString SOCKET_TIMEOUT = StringUtils.fromString("socketTimeout");
         public static final BString LOGIN_TIMEOUT = StringUtils.fromString("loginTimeout");
-        public static final BString ROW_FETCH_SIZE = StringUtils.fromString("defaultRowFetchSize");
 
     }
 
