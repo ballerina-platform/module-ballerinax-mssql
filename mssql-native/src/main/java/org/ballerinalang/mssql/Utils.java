@@ -54,6 +54,16 @@ public class Utils {
         return null;
     }
 
+    private static int getBooleanValue(Object value) {
+        if (value instanceof Boolean) {
+            if (((Boolean) value) == true) {
+                return 1;
+            }
+            return 0;
+        }
+        return -1;
+    }
+
     private static long getTimeout(Object secondsInt) {
         if (secondsInt instanceof Long) {
             Long timeoutSec = (Long) secondsInt;
@@ -66,17 +76,24 @@ public class Utils {
 
     private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
         if (sslConfig != null) {
-            Boolean encrypt = sslConfig.getBooleanValue(Constants.SSLConfig.ENCRYPT);
-            if (encrypt == true) {
+            int encrypt = getBooleanValue(sslConfig.get(Constants.SSLConfig.ENCRYPT));
+            if (encrypt == 1) {
                 options.put(Constants.SSLConfig.ENCRYPT,encrypt);
-        
             }
             
-            Boolean trustServerCertificate = sslConfig.getBooleanValue(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE);
-            if (trustServerCertificate == true) {
+            int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
+            if (trustServerCertificate == 1) {
                 options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE,trustServerCertificate);
-        
             }
+            // Boolean encrypt = sslConfig.getBooleanValue(Constants.SSLConfig.ENCRYPT);
+            // if (encrypt == true) {
+            //     options.put(Constants.SSLConfig.ENCRYPT,encrypt);
+            // }
+            
+            // Boolean trustServerCertificate = sslConfig.getBooleanValue(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE);
+            // if (trustServerCertificate == true) {
+            //     options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE,trustServerCertificate);
+            // }
         
             BString trustStore = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE);
             if(trustStore != null){
