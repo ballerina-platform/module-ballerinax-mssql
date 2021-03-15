@@ -53,7 +53,7 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.sql.Time;
 import java.sql.Timestamp;
-// import java.time.OffsetDateTime;
+import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -707,10 +707,10 @@ public class MssqlResultParameterProcessor extends DefaultResultParameterProcess
                 "Out parameter of index '" + paramIndex + "'.");
     }
 
-    @Override
-    public Object getCustomOutParameters(Object value, int sqlType, Type ballerinaType) {
-        return ErrorGenerator.getSQLApplicationError("Unsupported SQL type " + sqlType);
-    }
+    // @Override
+    // public Object getCustomOutParameters(Object value, int sqlType, Type ballerinaType) {
+    //     return ErrorGenerator.getSQLApplicationError("Unsupported SQL type " + sqlType);
+    // }
 
     protected BObject getIteratorObject() {
         return null;

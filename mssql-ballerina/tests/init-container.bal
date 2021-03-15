@@ -24,7 +24,6 @@ string resourcePath = check file:getAbsolutePath("tests/resources");
 
 string host = "localhost";
 string user = "sa";
-boolean integratedSecurity = false;
 string password = "Raji2098";
 int port = 1433;
 

@@ -21,6 +21,8 @@ import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 
+import org.ballerinalang.mssql.Constants;
+
 /**
  * This class includes utility functions.
  *
@@ -33,17 +35,17 @@ public class Utils {
             BMap<BString, Object> options = ValueCreator.createMapValue();    
             // addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SSL), options);
 
-            long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT));
+            long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT_SECONDS));
             if (queryTimeout > 0) {
                 options.put(Constants.DatabaseProps.QUERY_TIMEOUT, queryTimeout);
             }
 
-            long socketTimeout = getTimeout(mssqlOptions.get(Constants.Options.SOCKET_TIMEOUT));
+            long socketTimeout = getTimeout(mssqlOptions.get(Constants.Options.SOCKET_TIMEOUT_SECONDS));
             if (socketTimeout > 0) {
                 options.put(Constants.DatabaseProps.SOCKET_TIMEOUT, socketTimeout);
             }
 
-            long loginTimeout = getTimeout(mssqlOptions.get(Constants.Options.LOGIN_TIMEOUT));
+            long loginTimeout = getTimeout(mssqlOptions.get(Constants.Options.LOGIN_TIMEOUT_SECONDS));
             if (loginTimeout > 0) {
                 options.put(Constants.DatabaseProps.LOGIN_TIMEOUT, loginTimeout);
             }
