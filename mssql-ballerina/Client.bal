@@ -35,11 +35,11 @@ public client class Client {
     # + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client.
     #                   If there is no connectionPool is provided, the global connection pool will be used and it will
     #                   be shared by other clients which has same properties.
-    public function init(string host = "localhost", boolean integratedSecurity = false, string? user = (), string? password = (), string? database = (),
+    public function init(string host = "localhost", string instanceName ="", boolean integratedSecurity = false, string? user = (), string? password = (), string? database = (),
         int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
-           // instanceName: instanceName,
+            instanceName: instanceName,
             port: port,
             integratedSecurity: integratedSecurity,
             user: user,
@@ -146,8 +146,8 @@ public client class Client {
 #         the global connection pool will be used
 type ClientConfiguration record {|
     string host;
-   // string? instanceName;
-    int port;
+    string? instanceName;
+    int? port;
     boolean integratedSecurity;
     string? user;
     string? password;
@@ -160,13 +160,13 @@ type ClientConfiguration record {|
 #
 # + ssl - SSL Configuration to be used
 # + useXADatasource - Boolean value to enable XADatasource
-# + socketTimeout - The number of milliseconds to wait before a timeout is occurred 
+# + socketTimeoutInSeconds - The number of milliseconds to wait before a timeout is occurred 
 #                   on a socket read or accept. The default value is 0, which means 
 #                   infinite timeout.
-# + queryTimeout - The number of seconds to wait before a timeout has occurred on a 
+# + queryTimeoutInSeconds - The number of seconds to wait before a timeout has occurred on a 
 #                  query. The default value is -1, which means infinite timeout. 
 #                  Setting this to 0 also implies to wait indefinitely.
-# + loginTimeout - The number of seconds the driver should wait before timing out a 
+# + loginTimeoutInSeconds - The number of seconds the driver should wait before timing out a 
 #                 failed connection. A zero value indicates that the timeout is the 
 #                 default system timeout, which is specified as 15 seconds by default. 
 #                 A non-zero value is the number of seconds the driver should wait 
@@ -175,9 +175,9 @@ type ClientConfiguration record {|
 public type Options record {|
     SSLConfig ssl = {};
     boolean useXADatasource = false;
-    int socketTimeout?;
-    int queryTimeout?;
-    int loginTimeout?;
+    int socketTimeoutInSeconds?;
+    int queryTimeoutInSeconds?;
+    int loginTimeoutInSeconds?;
 |};
 
 # SSL Configuration to be used when connecting to Mssql server.
