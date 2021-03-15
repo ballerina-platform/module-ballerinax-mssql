@@ -9,13 +9,11 @@ groupId = "org.ballerinalang"
 artifactId = "mssql-native"
 version = "0.1.0"
 
-
 [[platform.java11.dependency]]
 path = "/home/rajinthan/Documents/GitHub/module-ballerinax-mssql/mssql-ballerina/build/target/jballerina-tools-2.0.0-alpha6-SNAPSHOT/repo/bala/ballerina/sql/0.6.0-alpha5/platform/java11/sql-native-0.6.0-alpha5-SNAPSHOT.jar"
 groupId = "org.ballerinalang"
 artifactId = "ballerina-sql"
 version = "0.6.0-alpha5-SNAPSHOT"
-
 
 [[platform.java11.dependency]]
 path = "./lib/mssql-jdbc-9.2.0.jre11.jar"
