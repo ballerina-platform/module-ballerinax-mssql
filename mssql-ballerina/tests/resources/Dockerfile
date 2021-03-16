@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM mssql:9.2.0.jre11
+FROM microsoft-mssql-server
 
-# Connection test case
-COPY /sql-scripts/connection/connections-test-data.sql /docker-entrypoint-initdb.d/
-
-#ENV MSSQL_ROOT_PASSWORD mssql
+ENV MSQL_ROOT_PASSWORD root
