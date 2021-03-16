@@ -92,12 +92,13 @@ public function createDatabases() {
 public function basicExcuteInitDB() {
 
     sql:ParameterizedQuery q5 = `
-            DROP TABLE IF EXISTS NumericTypes;
+            DROP TABLE IF EXISTS ExactNumericTypes;
 
-            CREATE TABLE NumericTypes (
+            CREATE TABLE ExactNumericTypes (
                 id INT NOT NULL IDENTITY PRIMARY KEY,
                 smallint_type SMALLINT,
                 int_type INT,
+                tinyint_type TINYINT,
                 bigint_type BIGINT,
                 decimal_type DECIMAL,
                 numeric_type NUMERIC,
@@ -105,15 +106,17 @@ public function basicExcuteInitDB() {
                 float_type FLOAT
             );
 
-            INSERT INTO NumericTypes (int_type) VALUES (10);
+            INSERT INTO ExactNumericTypes (int_type) VALUES (10);
 
             DROP TABLE IF EXISTS StringTypes;
 
             CREATE TABLE StringTypes (
                 id INT PRIMARY KEY,
                 varchar_type VARCHAR(255),
-                char_type CHAR(10),
-                text_type text,
+                char_type CHAR(4),
+                text_type TEXT,
+                nchar_type NCHAR(4),
+                nvarchar_type NVARCHAR(10)
             );
 
             INSERT INTO StringTypes (id, varchar_type) VALUES (1, 'test data');
