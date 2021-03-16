@@ -37,7 +37,7 @@ import io.ballerina.runtime.api.values.BXml;
 import org.ballerinalang.sql.Constants;
 import org.ballerinalang.sql.exception.ApplicationError;
 import org.ballerinalang.sql.utils.ColumnDefinition;
-import org.ballerinalang.sql.utils.ErrorGenerator;
+// import org.ballerinalang.sql.utils.ErrorGenerator;
 import org.ballerinalang.sql.utils.ModuleUtils;
 import org.ballerinalang.sql.utils.Utils;
 
@@ -60,8 +60,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
 import static io.ballerina.runtime.api.utils.StringUtils.fromString;
+import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
 
 /**
  * This class implements methods required convert SQL types into ballerina types and
@@ -117,12 +117,12 @@ public class MssqlResultParameterProcessor extends DefaultResultParameterProcess
                         dataArray[i] != null ? ValueCreator.createDecimalValue((BigDecimal) dataArray[i]) : null);
             }
             return refValueArray;
-        } else if (firstNonNullElement == null) {
-            refValueArray = createEmptyBBRefValueArray(type);
-            for (int i = 0; i < length; i++) {
-                refValueArray.add(i, firstNonNullElement);
-            }
-            return refValueArray;
+        // } else if (firstNonNullElement == null) {
+        //     refValueArray = createEmptyBBRefValueArray(type);
+        //     for (int i = 0; i < length; i++) {
+        //         refValueArray.add(i, firstNonNullElement);
+        //     }
+        //     return refValueArray;
         } else {
             return createAndPopulateCustomBBRefValueArray(firstNonNullElement, dataArray, type);
         }

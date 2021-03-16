@@ -45,23 +45,22 @@ import java.math.MathContext;
 import java.sql.Array;
 import java.sql.Clob;
 import java.sql.Connection;
-import java.sql.Date;
+// import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.RowId;
 import java.sql.SQLException;
 import java.sql.Struct;
-import java.sql.Time;
-import java.sql.Timestamp;
+// import java.sql.Time;
+// import java.sql.Timestamp;
 import java.sql.Types;
-import java.time.ZonedDateTime;
+// import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
 import static io.ballerina.runtime.api.utils.StringUtils.fromString;
-import static org.ballerinalang.sql.utils.Utils.throwInvalidParameterError;
 import org.ballerinalang.sql.parameterprocessor.DefaultStatementParameterProcessor;
-
+import static org.ballerinalang.sql.utils.Utils.throwInvalidParameterError;
 
 /**
  * Represent the Process methods for statements.
@@ -538,31 +537,31 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         }
     }
 
-    private void setDateTimeAndTimestamp(PreparedStatement preparedStatement, String sqlType, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setTimestamp(index, null);
-        } else {
-            Timestamp timestamp;
-            if (value instanceof BString) {
-                timestamp = Timestamp.valueOf(value.toString());
-            } else if (value instanceof Long) {
-                timestamp = new Timestamp((Long) value);
-            } else if (value instanceof BMap) {
-                BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
-                // if (dateTimeStruct.getType().getName()
-                //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
-                //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
-                //     timestamp = new Timestamp(zonedDateTime.toInstant().toEpochMilli());
-                // } else {
-                //     throw throwInvalidParameterError(value, sqlType);
-                // }
-            } else {
-                throw throwInvalidParameterError(value, sqlType);
-            }
-            // preparedStatement.setTimestamp(index, timestamp);
-        }
-    }
+    // private void setDateTimeAndTimestamp(PreparedStatement preparedStatement, String sqlType, int index, Object value)
+    //         throws SQLException, ApplicationError {
+    //     if (value == null) {
+    //         preparedStatement.setTimestamp(index, null);
+    //     } else {
+    //         Timestamp timestamp;
+    //         if (value instanceof BString) {
+    //             timestamp = Timestamp.valueOf(value.toString());
+    //         } else if (value instanceof Long) {
+    //             timestamp = new Timestamp((Long) value);
+    //         } else if (value instanceof BMap) {
+    //             BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
+    //             // if (dateTimeStruct.getType().getName()
+    //             //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
+    //             //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
+    //             //     timestamp = new Timestamp(zonedDateTime.toInstant().toEpochMilli());
+    //             // } else {
+    //             //     throw throwInvalidParameterError(value, sqlType);
+    //             // }
+    //         } else {
+    //             throw throwInvalidParameterError(value, sqlType);
+    //         }
+    //         // preparedStatement.setTimestamp(index, timestamp);
+    //     }
+    // }
 
     @Override
     public int getCustomOutParameterType(BObject typedValue) throws ApplicationError {
@@ -789,71 +788,71 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         }
     }
 
-    @Override
-    protected void setDateTime(PreparedStatement preparedStatement, String sqlType, int index, Object value)
-            throws SQLException, ApplicationError {
-        setDateTimeAndTimestamp(preparedStatement, sqlType, index, value);
-    }
+    // @Override
+    // protected void setDateTime(PreparedStatement preparedStatement, String sqlType, int index, Object value)
+    //         throws SQLException, ApplicationError {
+    //     setDateTimeAndTimestamp(preparedStatement, sqlType, index, value);
+    // }
 
-    @Override
-    protected void setTimestamp(PreparedStatement preparedStatement, String sqlType, int index, Object value)
-            throws SQLException, ApplicationError {
-        setDateTimeAndTimestamp(preparedStatement, sqlType, index, value);
-    }
+    // @Override
+    // protected void setTimestamp(PreparedStatement preparedStatement, String sqlType, int index, Object value)
+    //         throws SQLException, ApplicationError {
+    //     setDateTimeAndTimestamp(preparedStatement, sqlType, index, value);
+    // }
 
-    @Override
-    protected void setDate(PreparedStatement preparedStatement, String sqlType, int index, Object value)
-            throws SQLException, ApplicationError {
-        Date date;
-        if (value == null) {
-            preparedStatement.setDate(index, null);
-        } else {
-            if (value instanceof BString) {
-                date = Date.valueOf(value.toString());
-            } else if (value instanceof Long) {
-                date = new Date((Long) value);
-            } else if (value instanceof BMap) {
-                BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
-                // if (dateTimeStruct.getType().getName()
-                //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
-                //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
-                //     date = new Date(zonedDateTime.toInstant().toEpochMilli());
-                // } else {
-                //     throw throwInvalidParameterError(value, sqlType);
-                // }
-            } else {
-                throw throwInvalidParameterError(value, sqlType);
-            }
-            // preparedStatement.setDate(index, date);
-        }
-    }
+    // @Override
+    // protected void setDate(PreparedStatement preparedStatement, String sqlType, int index, Object value)
+    //         throws SQLException, ApplicationError {
+    //     Date date;
+    //     if (value == null) {
+    //         preparedStatement.setDate(index, null);
+    //     } else {
+    //         if (value instanceof BString) {
+    //             date = Date.valueOf(value.toString());
+    //         } else if (value instanceof Long) {
+    //             date = new Date((Long) value);
+    //         } else if (value instanceof BMap) {
+    //             BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
+    //             // if (dateTimeStruct.getType().getName()
+    //             //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
+    //             //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
+    //             //     date = new Date(zonedDateTime.toInstant().toEpochMilli());
+    //             // } else {
+    //             //     throw throwInvalidParameterError(value, sqlType);
+    //             // }
+    //         } else {
+    //             throw throwInvalidParameterError(value, sqlType);
+    //         }
+    //         // preparedStatement.setDate(index, date);
+    //     }
+    // }
 
-    @Override
-    protected void setTime(PreparedStatement preparedStatement, String sqlType, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setTime(index, null);
-        } else {
-            Time time;
-            if (value instanceof BString) {
-                time = Time.valueOf(value.toString());
-            } else if (value instanceof Long) {
-                time = new Time((Long) value);
-            } else if (value instanceof BMap) {
-                BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
-                // if (dateTimeStruct.getType().getName()
-                //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
-                //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
-                //     time = new Time(zonedDateTime.toInstant().toEpochMilli());
-                // } else {
-                //     throw throwInvalidParameterError(value, sqlType);
-                // }
-            } else {
-                throw throwInvalidParameterError(value, sqlType);
-            }
-            // preparedStatement.setTime(index, time);
-        }
-    }
+    // @Override
+    // protected void setTime(PreparedStatement preparedStatement, String sqlType, int index, Object value)
+    //         throws SQLException, ApplicationError {
+    //     if (value == null) {
+    //         preparedStatement.setTime(index, null);
+    //     } else {
+    //         Time time;
+    //         if (value instanceof BString) {
+    //             time = Time.valueOf(value.toString());
+    //         } else if (value instanceof Long) {
+    //             time = new Time((Long) value);
+    //         } else if (value instanceof BMap) {
+    //             BMap<BString, Object> dateTimeStruct = (BMap<BString, Object>) value;
+    //             // if (dateTimeStruct.getType().getName()
+    //             //         .equalsIgnoreCase(org.ballerinalang.stdlib.time.util.Constants.STRUCT_TYPE_TIME)) {
+    //             //     ZonedDateTime zonedDateTime = TimeUtils.getZonedDateTime(dateTimeStruct);
+    //             //     time = new Time(zonedDateTime.toInstant().toEpochMilli());
+    //             // } else {
+    //             //     throw throwInvalidParameterError(value, sqlType);
+    //             // }
+    //         } else {
+    //             throw throwInvalidParameterError(value, sqlType);
+    //         }
+    //         // preparedStatement.setTime(index, time);
+    //     }
+    // }
 
     @Override
     protected Object[] getIntArrayData(Object value) throws ApplicationError {

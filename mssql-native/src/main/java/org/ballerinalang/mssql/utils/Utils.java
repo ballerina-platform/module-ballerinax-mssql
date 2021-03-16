@@ -20,7 +20,6 @@ package org.ballerinalang.mssql.utils;
 import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
-
 import org.ballerinalang.mssql.Constants;
 
 /**
@@ -78,12 +77,12 @@ public class Utils {
         if (sslConfig != null) {
             int encrypt = getBooleanValue(sslConfig.get(Constants.SSLConfig.ENCRYPT));
             if (encrypt == 1) {
-                options.put(Constants.SSLConfig.ENCRYPT,encrypt);
+                options.put(Constants.SSLConfig.ENCRYPT, encrypt);
             }
             
             int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
             if (trustServerCertificate == 1) {
-                options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE,trustServerCertificate);
+                options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE, trustServerCertificate);
             }
             // Boolean encrypt = sslConfig.getBooleanValue(Constants.SSLConfig.ENCRYPT);
             // if (encrypt == true) {
@@ -96,13 +95,13 @@ public class Utils {
             // }
         
             BString trustStore = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE);
-            if(trustStore != null){
-                options.put(Constants.SSLConfig.TRUST_STORE,trustStore);
+            if (trustStore != null) {
+                options.put(Constants.SSLConfig.TRUST_STORE, trustStore);
             }
 
             BString trustStorePassword = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE_PASSWORD);
-            if(trustStorePassword != null){
-                options.put(Constants.SSLConfig.TRUST_STORE_PASSWORD,trustStorePassword);
+            if (trustStorePassword != null) {
+                options.put(Constants.SSLConfig.TRUST_STORE_PASSWORD, trustStorePassword);
             }
 
         }
