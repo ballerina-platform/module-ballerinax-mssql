@@ -35,8 +35,8 @@ public client class Client {
     # + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client.
     #                   If there is no connectionPool is provided, the global connection pool will be used and it will
     #                   be shared by other clients which has same properties.
-    public function init(string host = "localhost", string instanceName ="", boolean integratedSecurity = false, string? user = (), string? password = (), string? database = (),
-        int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
+    public function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
+        int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = (),string instanceName ="", boolean? integratedSecurity = false) returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
             instanceName: instanceName,
@@ -148,7 +148,7 @@ type ClientConfiguration record {|
     string host;
     string? instanceName;
     int port;
-    boolean integratedSecurity;
+    boolean? integratedSecurity;
     string? user;
     string? password;
     string? database;
