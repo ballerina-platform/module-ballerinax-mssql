@@ -23,8 +23,8 @@
 string resourcePath = check file:getAbsolutePath("tests/resources");
 
 string host = "localhost";
-string user = "sa";
-string password = "Raji2098";
+string user = "root";
+string password = "root123#";
 int port = 1433;
 
 // @test:BeforeSuite
