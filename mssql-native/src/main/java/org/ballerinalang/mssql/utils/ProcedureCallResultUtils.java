@@ -1,4 +1,4 @@
-package org.ballerinalang.mssql;
+package org.ballerinalang.mssql.utils;
 
 import io.ballerina.runtime.api.values.BObject;
 import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
