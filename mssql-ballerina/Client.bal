@@ -1,4 +1,4 @@
-// Copyright (c) 2020 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2021 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -184,6 +184,10 @@ public type Options record {|
 #
 # + clientCertKeystore - Keystore configuration of the client certificates
 # + trustCertKeystore - Keystore configuration of the trust certificates
+# + encrypt - encryption for all the data sent between the client and the server if the server has a certificate installed
+# + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication layer is encrypted using TLS.
+# + trustStore - The path (including filename) to the certificate trustStore file. The trustStore file contains the list of certificates that the client trusts.
+# + trustStorePassword - The password used to check the integrity of the trustStore data.
  
 public type SSLConfig record {|
     boolean encrypt?;
