@@ -184,6 +184,10 @@ public type Options record {|
 #
 # + clientCertKeystore - Keystore configuration of the client certificates
 # + trustCertKeystore - Keystore configuration of the trust certificates
+# + encrypt - encryption for all the data sent between the client and the server if the server has a certificate installed
+# + trustServerCertificate - 
+# + trustStore - 
+# + trustStorePassword - 
  
 public type SSLConfig record {|
     boolean encrypt?;
