@@ -62,7 +62,7 @@ int port = 1433;
 @test:BeforeSuite
 function beforeSuite() {
     io:println("start test");
-    // _ = initTestScripts();
+    _ = initTestScripts();
     io:println("End init test");
 }
 

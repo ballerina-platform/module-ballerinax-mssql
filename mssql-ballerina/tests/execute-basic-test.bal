@@ -16,6 +16,7 @@
 
 import ballerina/sql;
 import ballerina/test;
+import ballerina/io;
 
 string executeDb = "EXECUTE_DB";
 
@@ -37,15 +38,18 @@ function testCreateTable() {
 }
 function testInsertTable() {
     Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = checkpanic dbClient->execute("Insert into NumericTypes (int_type) values (20)");
+    sql:ExecutionResult result = checkpanic dbClient->execute("Insert into ExactNumericTypes (int_type) values (20)");
     checkpanic dbClient.close();
-    
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     var insertId = result.lastInsertId;
-    if (insertId is int) {
-        test:assertTrue(insertId > 1, "Last Insert Id is nil.");
-    } else {
-        test:assertFail("Insert Id should be an integer.");
+    if (insertId is string) {
+        int|error id = int:fromString(insertId);
+        if (id is int) {
+            io:println("INteger value of id",id);
+            test:assertTrue(id > 1, "Last Insert Id is nil.");
+        } else {
+            test:assertFail("Insert Id should be an integer.");
+        }
     }
 }
 
@@ -68,24 +72,27 @@ function testInsertTableWithoutGeneratedKeys() {
 }
 function testInsertTableWithGeneratedKeys() {
     Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = checkpanic dbClient->execute("insert into NumericTypes (int_type) values (21)");
+    sql:ExecutionResult result = checkpanic dbClient->execute("insert into ExactNumericTypes (int_type) values (21)");
     checkpanic dbClient.close();
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     var insertId = result.lastInsertId;
-    if (insertId is int) {
-        test:assertTrue(insertId > 1, "Last Insert Id is nil.");
-    } else {
-        test:assertFail("Insert Id should be an integer.");
+    if (insertId is string) {
+        int|error id = int:fromString(insertId);
+        if (id is int) {
+            io:println("INteger value of id",id);
+            test:assertTrue(id > 1, "Last Insert Id is nil.");
+        } else {
+            test:assertFail("Insert Id should be an integer.");
+        }
     }
 }
 
-type NumericType record {
+type ExactNumericType record {
     int id;
     int? int_type;
     int? bigint_type;
     int? smallint_type;
     int? tinyint_type;
-    boolean? bit_type;
     decimal? decimal_type;
     decimal? numeric_type;
     float? float_type;
@@ -98,73 +105,45 @@ type NumericType record {
 }
 function testInsertAndSelectTableWithGeneratedKeys() {
     Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = checkpanic dbClient->execute("insert into NumericTypes (int_type) values (31)");
+    sql:ExecutionResult result = checkpanic dbClient->execute("insert into ExactNumericTypes (int_type) values (31)");
 
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
-    
-    string|int? insertedId = result.lastInsertId;
-    if (insertedId is int) {
-        string query = string `SELECT * from NumericTypes where id = ${insertedId}`;
-        stream<record{}, error> queryResult = dbClient->query(query, NumericType);
-
-        stream<NumericType, sql:Error> streamData = <stream<NumericType, sql:Error>>queryResult;
-        record {|NumericType value;|}? data = checkpanic streamData.next();
-        checkpanic streamData.close();
-        test:assertNotExactEquals(data?.value, (), "Incorrect InsetId returned.");
-    } else {
+    var insertId = result.lastInsertId;
+    if (insertId is string) {
+        int|error id = int:fromString(insertId);
+        if (id is int) {
+            string query = string `SELECT * from ExactNumericTypes where id = ${id}`;
+            stream<record{}, error> queryResult = dbClient->query(query, ExactNumericType);
+            stream<ExactNumericType, sql:Error> streamData = <stream<ExactNumericType, sql:Error>>queryResult;
+            record {|ExactNumericType value;|}? data = checkpanic streamData.next();
+            checkpanic streamData.close();
+            test:assertNotExactEquals(data?.value, (), "Incorrect InsetId returned.");
+        } else {
         test:assertFail("Insert Id should be an integer.");
-    }
+        }
+    }    
     checkpanic dbClient.close();
-}
-
-@test:Config {
-    groups: ["execute", "execute-basic"],
-    dependsOn: [testInsertAndSelectTableWithGeneratedKeys]
-}
-function testInsertWithAllNilAndSelectTableWithGeneratedKeys() {
-    Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = checkpanic dbClient->execute("Insert into NumericTypes (int_type, bigint_type, "
-        + "smallint_type, tinyint_type, bit_type, decimal_type, numeric_type, float_type, real_type) "
-        + "values (null,null,null,null,null,null,null,null,null)");
-
-    test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
-
-    string|int? insertedId = result.lastInsertId;
-    if (insertedId is int) {
-        string query = string `SELECT * from NumericTypes where id = ${insertedId}`;
-        stream<record{}, error> queryResult = dbClient->query(query, NumericType);
-
-        stream<NumericType, sql:Error> streamData = <stream<NumericType, sql:Error>>queryResult;
-        record {|NumericType value;|}? data = checkpanic streamData.next();
-        checkpanic streamData.close();
-        test:assertNotExactEquals(data?.value, (), "Incorrect InsetId returned.");
-    } else {
-        test:assertFail("Insert Id should be an integer.");
-    }
 }
 
 type StringData record {
     int id;
     string varchar_type;
-    string charmax_type;
     string char_type;
-    string charactermax_type;
-    string character_type;
-    string nvarcharmax_type;
-    string longvarchar_type;
-    string clob_type;
+    string text_type;
+    string nchar_type;
+    string nvarchar_type;
 };
 
 @test:Config {
     groups: ["execute", "execute-basic"],
-    dependsOn: [testInsertWithAllNilAndSelectTableWithGeneratedKeys]
+    dependsOn: [testInsertAndSelectTableWithGeneratedKeys]
 }
 function testInsertWithStringAndSelectTable() {
     Client dbClient = checkpanic new (host, user, password, executeDb, port);
     string intIDVal = "25";
-    string insertQuery = "Insert into StringTypes (id, varchar_type, charmax_type, char_type, charactermax_type, "
-        + "character_type, nvarcharmax_type, longvarchar_type, clob_type) values ("
-        + intIDVal + ",'str1','str2','s','str4','s','str6','str7','str8')";
+    string insertQuery = "Insert into StringTypes (id, varchar_type, char_type, text_type"
+        + ", nchar_type, nvarchar_type) values ("
+        + intIDVal + ",'str1','str2','str3','str4','str5')";
     sql:ExecutionResult result = checkpanic dbClient->execute(insertQuery);
     
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
@@ -178,133 +157,50 @@ function testInsertWithStringAndSelectTable() {
     StringData expectedInsertRow = {
         id: 25,
         varchar_type: "str1",
-        charmax_type: "str2",
-        char_type: "s",
-        charactermax_type: "str4",
-        character_type: "s",
-        nvarcharmax_type: "str6",
-        longvarchar_type: "str7",
-        clob_type: "str8"
+        char_type: "str2",
+        text_type: "str3",
+        nchar_type: "str4",
+        nvarchar_type: "str5"
     };
     test:assertEquals(data?.value, expectedInsertRow, "Incorrect InsetId returned.");
 
     checkpanic dbClient.close();
 }
 
+// @test:Config {
+//     groups: ["execute", "execute-basic"],
+//     dependsOn: [testInsertWithStringAndSelectTable]
+// }
+// function testInsertTableWithDatabaseError() {
+//     Client dbClient = checkpanic new (host, user, password, executeDb, port);
+//     sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into NumericTypesNonExistTable (int_type) values (20)");
+
+//     if (result is sql:DatabaseError) {
+//         test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into NumericTypesNonExistTable " + 
+//                         "(int_type) values (20). Table 'EXECUTE_DB.NumericTypesNonExistTable' doesn't exist."), 
+//                         "Error message does not match, actual :'" + result.message() + "'");
+//         sql:DatabaseErrorDetail errorDetails = result.detail();
+//         test:assertEquals(errorDetails.errorCode, 1146, "SQL Error code does not match");
+//         test:assertEquals(errorDetails.sqlState, "42S02", "SQL Error state does not match");
+//     } else {
+//         test:assertFail("Database Error expected.");
+//     }
+
+//     checkpanic dbClient.close();
+// }
+
 @test:Config {
     groups: ["execute", "execute-basic"],
+    // dependsOn: [testInsertTableWithDatabaseError]
     dependsOn: [testInsertWithStringAndSelectTable]
-}
-function testInsertWithEmptyStringAndSelectTable() {
-    Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    string intIDVal = "35";
-    string insertQuery = "Insert into StringTypes (id, varchar_type, charmax_type, char_type, charactermax_type,"
-        + " character_type, nvarcharmax_type, longvarchar_type, clob_type) values (" + intIDVal +
-        ",'','','','','','','','')";
-    sql:ExecutionResult result = checkpanic dbClient->execute(insertQuery);
-    test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
-
-    string query = string `SELECT * from StringTypes where id = ${intIDVal}`;
-    stream<record{}, error> queryResult = dbClient->query(query, StringData);
-    stream<StringData, sql:Error> streamData = <stream<StringData, sql:Error>>queryResult;
-    record {|StringData value;|}? data = checkpanic streamData.next();
-    checkpanic streamData.close();
-
-    StringData expectedInsertRow = {
-        id: 35,
-        varchar_type: "",
-        charmax_type: "",
-        char_type: "",
-        charactermax_type: "",
-        character_type: "",
-        nvarcharmax_type: "",
-        longvarchar_type: "",
-        clob_type: ""
-    };
-    test:assertEquals(data?.value, expectedInsertRow, "Incorrect InsetId returned.");
-
-    checkpanic dbClient.close();
-}
-
-type StringNilData record {
-    int id;
-    string? varchar_type;
-    string? charmax_type;
-    string? char_type;
-    string? charactermax_type;
-    string? character_type;
-    string? nvarcharmax_type;
-    string? longvarchar_type;
-    string? clob_type;
-};
-
-@test:Config {
-    groups: ["execute", "execute-basic"],
-    dependsOn: [testInsertWithEmptyStringAndSelectTable]
-}
-function testInsertWithNilStringAndSelectTable() {
-    Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    string intIDVal = "45";
-    string insertQuery = "Insert into StringTypes (id, varchar_type, charmax_type, char_type, charactermax_type,"
-        + " character_type, nvarcharmax_type, longvarchar_type, clob_type) values ("
-        + intIDVal + ",null,null,null,null,null,null,null,null)";
-    sql:ExecutionResult result = checkpanic dbClient->execute(insertQuery);
-    test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
-
-    string query = string `SELECT * from StringTypes where id = ${intIDVal}`;
-    stream<record{}, error> queryResult = dbClient->query(query, StringNilData);
-    stream<StringNilData, sql:Error> streamData = <stream<StringNilData, sql:Error>>queryResult;
-    record {|StringNilData value;|}? data = checkpanic streamData.next();
-    checkpanic streamData.close();
-    
-    StringNilData expectedInsertRow = {
-        id: 45,
-        varchar_type: (),
-        charmax_type: (),
-        char_type: (),
-        charactermax_type: (),
-        character_type: (),
-        nvarcharmax_type: (),
-        longvarchar_type: (),
-        clob_type: ()
-    };
-    test:assertEquals(data?.value, expectedInsertRow, "Incorrect InsetId returned.");
-    checkpanic dbClient.close();
-}
-
-@test:Config {
-    groups: ["execute", "execute-basic"],
-    dependsOn: [testInsertWithNilStringAndSelectTable]
-}
-function testInsertTableWithDatabaseError() {
-    Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into NumericTypesNonExistTable (int_type) values (20)");
-
-    if (result is sql:DatabaseError) {
-        test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into NumericTypesNonExistTable " + 
-                        "(int_type) values (20). Table 'EXECUTE_DB.NumericTypesNonExistTable' doesn't exist."), 
-                        "Error message does not match, actual :'" + result.message() + "'");
-        sql:DatabaseErrorDetail errorDetails = result.detail();
-        test:assertEquals(errorDetails.errorCode, 1146, "SQL Error code does not match");
-        test:assertEquals(errorDetails.sqlState, "42S02", "SQL Error state does not match");
-    } else {
-        test:assertFail("Database Error expected.");
-    }
-
-    checkpanic dbClient.close();
-}
-
-@test:Config {
-    groups: ["execute", "execute-basic"],
-    dependsOn: [testInsertTableWithDatabaseError]
 }
 function testInsertTableWithDataTypeError() {
     Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into NumericTypes (int_type) values"
+    sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into ExactNumericTypes (int_type) values"
         + " ('This is wrong type')");
 
     if (result is sql:DatabaseError) {
-        test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into NumericTypes " + 
+        test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into ExactNumericTypes " + 
                     "(int_type) values ('This is wrong type'). Incorrect integer value: 'This is wrong type' for column 'int_type'"), 
                     "Error message does not match, actual :'" + result.message() + "'");
         sql:DatabaseErrorDetail errorDetails = result.detail();
@@ -323,14 +219,15 @@ type ResultCount record {
 
 @test:Config {
     groups: ["execute", "execute-basic"],
-    dependsOn: [testInsertTableWithDataTypeError]
+    // dependsOn: [testInsertTableWithDataTypeError]
+    dependsOn: [testInsertWithStringAndSelectTable]
 }
 function testUpdateData() {
     Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = checkpanic dbClient->execute("Update NumericTypes set int_type = 11 where int_type = 10");
+    sql:ExecutionResult result = checkpanic dbClient->execute("Update ExactNumericTypes set int_type = 11 where int_type = 10");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query("SELECT count(*) as countval from NumericTypes"
+    stream<record{}, error> queryResult = dbClient->query("SELECT count(*) as countval from ExactNumericTypes"
         + " where int_type = 11", ResultCount);
     stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
     record {|ResultCount value;|}? data = checkpanic streamData.next();

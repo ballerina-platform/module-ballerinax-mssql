@@ -3,17 +3,20 @@ import ballerina/sql;
 
 public function initTestScripts() {
     _ = createDatabases();
-    // _ = initPool();
+    _ = basicExcuteInitDB();
+    _ = initPool();
     _ = connectionInitDb();
 }
 
 public function createDatabases() {
      _ = createQuery(`DROP DATABASE IF EXISTS CONNECT_DB`);
      _ = createQuery(`CREATE DATABASE CONNECT_DB`);
-    // _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_1`);
-    // _ = createQuery(`CREATE DATABASE POOL_DB_1`);
-    // _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_2`);
-    // _ = createQuery(`CREATE DATABASE POOL_DB_2`);
+    _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_1`);
+    _ = createQuery(`CREATE DATABASE POOL_DB_1`);
+    _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_2`);
+    _ = createQuery(`CREATE DATABASE POOL_DB_2`);
+    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_DB`);
+    _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
 }
 
 public function connectionInitDb() {
@@ -86,6 +89,43 @@ function initPool() {
     _ = executeQuery("pool_db_2", q3);
 }
 
+public function basicExcuteInitDB() {
+
+    sql:ParameterizedQuery q5 = `
+            DROP TABLE IF EXISTS ExactNumericTypes;
+
+            CREATE TABLE ExactNumericTypes (
+                id INT NOT NULL IDENTITY PRIMARY KEY,
+                smallint_type SMALLINT,
+                int_type INT,
+                tinyint_type TINYINT,
+                bigint_type BIGINT,
+                decimal_type DECIMAL,
+                numeric_type NUMERIC,
+                real_type REAL,
+                float_type FLOAT
+            );
+
+            INSERT INTO ExactNumericTypes (int_type) VALUES (10);
+
+            DROP TABLE IF EXISTS StringTypes;
+
+            CREATE TABLE StringTypes (
+                id INT PRIMARY KEY,
+                varchar_type VARCHAR(255),
+                char_type CHAR(4),
+                text_type TEXT,
+                nchar_type NCHAR(4),
+                nvarchar_type NVARCHAR(10)
+            );
+
+            INSERT INTO StringTypes (id, varchar_type) VALUES (1, 'test data');
+            
+        `;
+
+    _ = executeQuery("execute_db", q5);
+
+}
 
 public function createQuery(sql:ParameterizedQuery query) {
 
