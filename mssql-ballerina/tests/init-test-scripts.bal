@@ -129,7 +129,7 @@ public function basicExcuteInitDB() {
 
 public function createQuery(sql:ParameterizedQuery query) {
 
-    Client|sql:Error mssqlClient = new(user="sa",password="Raji2098");
+    Client|sql:Error mssqlClient = new(user="root",password="root123#");
 
     if(mssqlClient is sql:Error) {
         io:println("Client init failed\n",mssqlClient);
@@ -159,7 +159,7 @@ public function createQuery(sql:ParameterizedQuery query) {
 
 public function executeQuery(string database, sql:ParameterizedQuery query) {
 
-    Client|sql:Error mssqlClient = new(user="sa",password="Raji2098", database = database);
+    Client|sql:Error mssqlClient = new(user="root",password="root123#", database = database);
 
     if(mssqlClient is sql:Error) {
         io:println("Client init failed\n",mssqlClient);
