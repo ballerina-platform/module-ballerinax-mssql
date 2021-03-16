@@ -45,7 +45,6 @@ function testInsertTable() {
     if (insertId is string) {
         int|error id = int:fromString(insertId);
         if (id is int) {
-            io:println("INteger value of id",id);
             test:assertTrue(id > 1, "Last Insert Id is nil.");
         } else {
             test:assertFail("Insert Id should be an integer.");
@@ -79,7 +78,6 @@ function testInsertTableWithGeneratedKeys() {
     if (insertId is string) {
         int|error id = int:fromString(insertId);
         if (id is int) {
-            io:println("INteger value of id",id);
             test:assertTrue(id > 1, "Last Insert Id is nil.");
         } else {
             test:assertFail("Insert Id should be an integer.");
@@ -189,29 +187,29 @@ function testInsertWithStringAndSelectTable() {
 //     checkpanic dbClient.close();
 // }
 
-@test:Config {
-    groups: ["execute", "execute-basic"],
-    // dependsOn: [testInsertTableWithDatabaseError]
-    dependsOn: [testInsertWithStringAndSelectTable]
-}
-function testInsertTableWithDataTypeError() {
-    Client dbClient = checkpanic new (host, user, password, executeDb, port);
-    sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into ExactNumericTypes (int_type) values"
-        + " ('This is wrong type')");
+// @test:Config {
+//     groups: ["execute", "execute-basic"],
+//     // dependsOn: [testInsertTableWithDatabaseError]
+//     dependsOn: [testInsertWithStringAndSelectTable]
+// }
+// function testInsertTableWithDataTypeError() {
+//     Client dbClient = checkpanic new (host, user, password, executeDb, port);
+//     sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into ExactNumericTypes (int_type) values"
+//         + " ('This is wrong type')");
 
-    if (result is sql:DatabaseError) {
-        test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into ExactNumericTypes " + 
-                    "(int_type) values ('This is wrong type'). Incorrect integer value: 'This is wrong type' for column 'int_type'"), 
-                    "Error message does not match, actual :'" + result.message() + "'");
-        sql:DatabaseErrorDetail errorDetails = result.detail();
-        test:assertEquals(errorDetails.errorCode, 1366, "SQL Error code does not match");
-        test:assertEquals(errorDetails.sqlState, "HY000", "SQL Error state does not match");
-    } else {
-        test:assertFail("Database Error expected.");
-    }
+//     if (result is sql:DatabaseError) {
+//         test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into ExactNumericTypes " + 
+//                     "(int_type) values ('This is wrong type'). Incorrect integer value: 'This is wrong type' for column 'int_type'"), 
+//                     "Error message does not match, actual :'" + result.message() + "'");
+//         sql:DatabaseErrorDetail errorDetails = result.detail();
+//         test:assertEquals(errorDetails.errorCode, 1366, "SQL Error code does not match");
+//         test:assertEquals(errorDetails.sqlState, "HY000", "SQL Error state does not match");
+//     } else {
+//         test:assertFail("Database Error expected.");
+//     }
 
-    checkpanic dbClient.close();
-}
+//     checkpanic dbClient.close();
+// }
 
 type ResultCount record {
     int countVal;
