@@ -148,10 +148,10 @@ public function createQuery(sql:ParameterizedQuery query) {
         e__ = mssqlClient.close();
 
         if(e__ is sql:Error) {
-            io:println("Client close1 fail\n",e__);
+            io:println("Client close failed\n",e__);
         }
         else{
-            io:println("Client close 1 pass");
+            io:println("Client closed");
         }
     }
 
@@ -178,10 +178,10 @@ public function executeQuery(string database, sql:ParameterizedQuery query) {
         e__ = mssqlClient.close();
 
         if(e__ is sql:Error) {
-            io:println("Client close1 fail\n",e__);
+            io:println("Client close1 failed\n",e__);
         }
         else{
-            io:println("Client close 1 pass");
+            io:println("Client closed");
         }
     }
 
