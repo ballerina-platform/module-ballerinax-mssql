@@ -1,36 +1,30 @@
-CREATE DATABASE IF NOT EXISTS EXECUTE_DB;
+CREATE DATABASE EXECUTE_DB;
 
 USE EXECUTE_DB;
 
-DROP TABLE IF EXISTS NumericTypes;
+CREATE TABLE ExactNumericTypes (
+      id INT NOT NULL IDENTITY PRIMARY KEY,
+      smallint_type SMALLINT,
+      int_type INT,
+      tinyint_type TINYINT,
+      bigint_type BIGINT,
+      decimal_type DECIMAL,
+      numeric_type NUMERIC,
+      real_type REAL,
+      float_type FLOAT
+   );
 
-CREATE TABLE NumericTypes (
-   id INT AUTO_INCREMENT,
-   int_type INT,
-   bigint_type BIGINT,
-   smallint_type SMALLINT,
-   tinyint_type TINYINT,
-   bit_type BIT,
-   decimal_type DECIMAL(10,2),
-   numeric_type NUMERIC(10,2),
-   float_type FLOAT,
-   real_type REAL,
-   PRIMARY KEY (id)
-);
-
-INSERT INTO NumericTypes (int_type) VALUES (10);
-
-DROP TABLE IF EXISTS StringTypes;
+INSERT INTO ExactNumericTypes (int_type) VALUES (10);
 
 CREATE TABLE StringTypes (
-   id INT,
-   varchar_type VARCHAR(255),
-   charmax_type CHAR(10),
-   char_type CHAR,
-   charactermax_type CHARACTER(10),
-   character_type CHARACTER,
-   nvarcharmax_type NVARCHAR(255),
-   longvarchar_type VARCHAR(511),
-   clob_type TEXT,
-   PRIMARY KEY (id)
+      id INT PRIMARY KEY,
+      varchar_type VARCHAR(255),
+      char_type CHAR(4),
+      text_type TEXT,
+      nchar_type NCHAR(4),
+      nvarchar_type NVARCHAR(10)
 );
+
+INSERT INTO StringTypes (id, varchar_type) VALUES (1, 'test data');
+
+GO;

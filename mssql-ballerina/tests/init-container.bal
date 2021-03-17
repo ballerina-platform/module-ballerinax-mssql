@@ -15,54 +15,19 @@
 // // under the License.
 
  import ballerina/io;
-// import ballerina/os;
  import ballerina/test;
  import ballerina/file;
-// import ballerina/lang.runtime as runtime;
 
 string resourcePath = check file:getAbsolutePath("tests/resources");
 
 string host = "localhost";
-string user = "root";
-string password = "root123#";
+string user = "sa";
+string password = "1234qwerASDF";
 int port = 1433;
 
-// @test:BeforeSuite
-// function beforeSuite() {
-    
-//     os:Process process = checkpanic os:exec("docker", {}, resourcePath, "build", "-t", "ballerina-mssql", ".");
-//     int exitCode = checkpanic process.waitForExit();
-//     test:assertExactEquals(exitCode, 0, "Docker image 'ballerina-mssql' creation failed!");
- 
-//     process = checkpanic os:exec("docker", {}, resourcePath,
-//                     "run", "--rm", "-d", "--name", "ballerina-mssql", "-p", "3305:3306", "-t", "ballerina-mssql");
-//     exitCode = checkpanic process.waitForExit();
-//     test:assertExactEquals(exitCode, 0, "Docker container 'ballerina-mssql' creation failed!");
-//     runtime:sleep(50);
-
-//     int healthCheck = 1;
-//     int counter = 0;
-//     while(healthCheck > 0 && counter < 12) {
-//         runtime:sleep(10);
-//         process = checkpanic os:exec("docker", {}, resourcePath,
-//                     "exec", "ballerina-mssql", "mssqladmin", "ping", "-hlocalhost", "-uroot", "-pTest123#", "--silent");
-//         healthCheck = checkpanic process.waitForExit();
-//         counter = counter + 1;
-//     }
-//     test:assertExactEquals(healthCheck, 0, "Docker container 'ballerina-mssql' health test exceeded timeout!");    
-//     io:println("Docker container started.");
-// }
-
-// @test:AfterSuite {}
-// function afterSuite() {
-//     os:Process process = checkpanic os:exec("docker", {}, resourcePath, "stop", "ballerina-mssql");
-//     int exitCode = checkpanic process.waitForExit();
-//     test:assertExactEquals(exitCode, 0, "Docker container 'ballerina-mssql' stop failed!");
-// }
 @test:BeforeSuite
 function beforeSuite() {
     io:println("start test");
-    _ = initTestScripts();
 }
 
 @test:AfterSuite
