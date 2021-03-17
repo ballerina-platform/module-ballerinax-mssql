@@ -22,11 +22,12 @@ string resourcePath = check file:getAbsolutePath("tests/resources");
 
 string host = "localhost";
 string user = "sa";
-string password = "1234qwerASDF";
+string password = "Test123#";
 int port = 1433;
 
 @test:BeforeSuite
 function beforeSuite() {
+    _ = initTestScripts();
     io:println("start test");
 }
 

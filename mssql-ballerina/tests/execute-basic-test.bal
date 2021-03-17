@@ -16,7 +16,6 @@
 
 import ballerina/sql;
 import ballerina/test;
-// import ballerina/io;
 
 string executeDb = "EXECUTE_DB";
 

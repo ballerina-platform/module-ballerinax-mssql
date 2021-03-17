@@ -6,6 +6,7 @@ public function initTestScripts() {
     _ = basicExcuteInitDB();
     _ = initPool();
     _ = connectionInitDb();
+    _ = executeParamsInitDB();
 }
 
 public function createDatabases() {
@@ -17,6 +18,8 @@ public function createDatabases() {
     _ = createQuery(`CREATE DATABASE POOL_DB_2`);
     _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_DB`);
     _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
+    _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
 }
 
 public function connectionInitDb() {
@@ -127,9 +130,73 @@ public function basicExcuteInitDB() {
 
 }
 
+public function executeParamsInitDB() {
+    sql:ParameterizedQuery query = `
+    
+    DROP TABLE IF EXISTS ExactNumeric;
+
+    CREATE TABLE ExactNumeric(
+    row_id INT PRIMARY KEY,
+    bigint_type  bigint,
+    numeric_type  numeric(10,5), 
+    bit_type  bit, 
+    smallint_type smallint, 
+    decimal_type decimal(5,2), 
+    smallmoney_type smallmoney,
+    int_type int,
+    tinyint_type tinyint,
+    money_type money
+    );
+
+    INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, smallmoney_type, int_type, tinyint_type, money_type)
+    VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.00, 214748.3647, 2147483647, 255, 922337203685477.2807);
+
+    DROP TABLE IF EXISTS ApproximateNumeric;
+
+    CREATE TABLE ApproximateNumeric(
+    row_id INT PRIMARY KEY,
+    float_type float,  
+    real_type real
+    );
+
+    INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES
+    (1, 1.79E+308, -1.18E-38);
+
+    DROP TABLE IF EXISTS DateandTime;
+
+    CREATE TABLE DateandTime(
+    row_id INT PRIMARY KEY,
+    Date_col  date, 
+    DateTimeOffset_col  datetimeoffset,
+    DateTime2_col datetime2, 
+    SmallDateTime_col smalldatetime, 
+    DateTime_col datetime,
+    Time_col time
+    );
+
+    INSERT INTO DateandTime (row_id, Date_col, DateTimeOffset_col, DateTime2_col, SmallDateTime_col , DateTime_col, Time_col)
+     VALUES (1, '2017-06-26', '2020-01-01 19:14:51', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
+
+    DROP TABLE IF EXISTS StringTypes;
+    
+    CREATE TABLE StringTypes (
+        raw_id INT PRIMARY KEY,
+        varchar_type VARCHAR(255),
+        char_type CHAR(4),
+        text_type TEXT,
+        nchar_type NCHAR(4),
+        nvarchar_type NVARCHAR(10)
+    );
+
+    `;
+    _ = executeQuery("execute_params_db", query);
+}  
+
+
+
 public function createQuery(sql:ParameterizedQuery query) {
 
-    Client|sql:Error mssqlClient = new(user="root",password="root123#");
+    Client|sql:Error mssqlClient = new(user="sa",password="Test123#");
 
     if(mssqlClient is sql:Error) {
         io:println("Client init failed\n",mssqlClient);
@@ -159,7 +226,7 @@ public function createQuery(sql:ParameterizedQuery query) {
 
 public function executeQuery(string database, sql:ParameterizedQuery query) {
 
-    Client|sql:Error mssqlClient = new(user="root",password="root123#", database = database);
+    Client|sql:Error mssqlClient = new(user="sa",password="Test123#", database = database);
 
     if(mssqlClient is sql:Error) {
         io:println("Client init failed\n",mssqlClient);
