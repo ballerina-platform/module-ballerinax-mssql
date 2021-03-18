@@ -21,9 +21,13 @@ package org.ballerinalang.mssql.utils;
 import io.ballerina.runtime.api.values.BObject;
 import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
 
+/**
+ * This class provides functionality for the `RecordIterator` to iterate through the PostgreSQL result set.
+ * 
+ * @since 0.1.0
+ */
 public class RecordIteratorUtils {
     public static Object nextResult(BObject mssqlRecordIterator, BObject recordIterator) {
-        System.out.println("\nMssql RecordIteratorUtilsn");
         return org.ballerinalang.sql.utils.RecordIteratorUtils.nextResult(recordIterator, 
                         MssqlResultParameterProcessor.getInstance());
     }
