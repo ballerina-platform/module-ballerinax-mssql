@@ -66,11 +66,8 @@ Execute the commands below to build from the source.
    ---| ---
    connection | connection-init<br> ssl
    pool | pool
-   transaction | local-transaction <br> xa-transaction
    execute | execute-basic <br> execute-params
-   batch-execute | batch-execute 
    query | query-simple-params<br>query-numeric-params<br>query-complex-params
-   procedures | procedures
 
 5. To disable some specific groups during test,
 
