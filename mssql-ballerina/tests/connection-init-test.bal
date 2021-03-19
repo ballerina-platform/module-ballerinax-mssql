@@ -67,9 +67,9 @@ function testWithoutDB() {
 }
 function testWithOptions() {
     Options options = {
-        queryTimeoutInSeconds: 50,
-        socketTimeoutInSeconds: 60,
-        loginTimeoutInSeconds: 60
+        queryTimeout: 50,
+        socketTimeout: 60,
+        loginTimeout: 60
     };
     Client dbClient = checkpanic new (user= user, password = password, database = connectDB,
         port = port, options = options);
@@ -100,9 +100,9 @@ function testWithConnectionParams() {
         minIdleConnections : 15
     };
     Options options = {
-        queryTimeoutInSeconds: 50,
-        socketTimeoutInSeconds: 60,
-        loginTimeoutInSeconds: 60
+        queryTimeout: 50,
+        socketTimeout: 60,
+        loginTimeout: 60
     };
     Client dbClient = checkpanic new (host = host, user = user, password = password, database = connectDB, port = port, options = options, connectionPool = connectionPool);
     var exitCode = dbClient.close();

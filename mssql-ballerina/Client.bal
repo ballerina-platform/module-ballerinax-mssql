@@ -160,24 +160,24 @@ type ClientConfiguration record {|
 #
 # + ssl - SSL Configuration to be used
 # + useXADatasource - Boolean value to enable XADatasource
-# + socketTimeoutInSeconds - The number of milliseconds to wait before a timeout is occurred 
+# + socketTimeout - The number of milliseconds to wait before a timeout is occurred 
 #                   on a socket read or accept. The default value is 0, which means 
 #                   infinite timeout.
-# + queryTimeoutInSeconds - The number of seconds to wait before a timeout has occurred on a 
+# + queryTimeout - The number of seconds to wait before a timeout has occurred on a 
 #                  query. The default value is -1, which means infinite timeout. 
 #                  Setting this to 0 also implies to wait indefinitely.
-# + loginTimeoutInSeconds - The number of seconds the driver should wait before timing out a 
+# + loginTimeout - The number of seconds the driver should wait before timing out a 
 #                 failed connection. A zero value indicates that the timeout is the 
 #                 default system timeout, which is specified as 15 seconds by default. 
 #                 A non-zero value is the number of seconds the driver should wait 
 #                 before timing out a failed connection.
 
 public type Options record {|
-    SSLConfig ssl = {};
+    SecureSocket ssl = {};
     boolean useXADatasource = false;
-    int socketTimeoutInSeconds?;
-    int queryTimeoutInSeconds?;
-    int loginTimeoutInSeconds?;
+    decimal socketTimeout?;
+    decimal queryTimeout?;
+    decimal loginTimeout?;
 |};
 
 # SSL Configuration to be used when connecting to Mssql server.
@@ -188,8 +188,9 @@ public type Options record {|
 # + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication layer is encrypted using TLS.
 # + trustStore - The path (including filename) to the certificate trustStore file. The trustStore file contains the list of certificates that the client trusts.
 # + trustStorePassword - The password used to check the integrity of the trustStore data.
- 
-public type SSLConfig record {|
+
+//TODO 
+public type SecureSocket record {|
     boolean encrypt?;
     boolean trustServerCertificate?;
     string trustStore?;
