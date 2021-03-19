@@ -44,10 +44,6 @@ public class ClientProcessor {
         if (portValue > 0) {
             url += ":" + portValue.intValue();
         }
-        Boolean integratedSecurity = clientConfig.getBooleanValue(Constants.ClientConfiguration.INTEGRATED_SECURITY);
-        if (integratedSecurity == true) {
-            url += ";integratedSecurity=true";
-        }
         BString userVal = clientConfig.getStringValue(Constants.ClientConfiguration.USER);
         String user = userVal == null ? null : userVal.getValue();
         BString passwordVal = clientConfig.getStringValue(Constants.ClientConfiguration.PASSWORD);
