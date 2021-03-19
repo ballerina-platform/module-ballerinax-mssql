@@ -22,7 +22,7 @@ import io.ballerina.runtime.api.values.BObject;
 import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
 
 /**
- * This class provides functionality for the `RecordIterator` to iterate through the PostgreSQL result set.
+ * This class provides functionality for the `RecordIterator` to iterate through the MsSQL result set.
  * 
  * @since 0.1.0
  */

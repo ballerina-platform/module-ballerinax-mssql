@@ -3,10 +3,11 @@ import ballerina/sql;
 
 public function initTestScripts() {
     _ = createDatabases();
-    _ = basicExcuteInitDB();
     _ = initPool();
     _ = connectionInitDb();
+    _ = basicExcuteInitDB();
     _ = executeParamsInitDB();
+    _ = createBatchExecuteDB();
     _ = simpleQueryInitDB();
 }
 
@@ -21,6 +22,8 @@ public function createDatabases() {
     _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
     _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
+    _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
     _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
 }
@@ -194,6 +197,42 @@ public function executeParamsInitDB() {
     `;
     _ = executeQuery("execute_params_db", query);
 }  
+
+public function createBatchExecuteDB(){
+    sql:ParameterizedQuery query = `
+    
+    DROP TABLE IF EXISTS ExactNumeric;
+
+    CREATE TABLE ExactNumeric(
+    row_id INT PRIMARY KEY,
+    bigint_type  bigint,
+    numeric_type  numeric(10,5), 
+    bit_type  bit, 
+    smallint_type smallint, 
+    decimal_type decimal(5,2), 
+    smallmoney_type smallmoney,
+    int_type int,
+    tinyint_type tinyint,
+    money_type money
+    );
+
+    INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, smallmoney_type, int_type, tinyint_type, money_type)
+    VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.00, 214748.3647, 2147483647, 255, 922337203685477.2807);
+
+    DROP TABLE IF EXISTS StringTypes;
+    
+    CREATE TABLE StringTypes (
+        raw_id INT PRIMARY KEY,
+        varchar_type VARCHAR(255),
+        char_type CHAR(4),
+        text_type TEXT,
+        nchar_type NCHAR(4),
+        nvarchar_type NVARCHAR(10)
+    );
+
+    `;
+    _ = executeQuery("batch_execute_db", query);
+}
 
 public function simpleQueryInitDB() {
     sql:ParameterizedQuery query = `
