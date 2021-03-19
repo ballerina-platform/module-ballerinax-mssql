@@ -1,26 +1,9 @@
 [[dependency]]
 org = "ballerina"
-name = "test"
-version = "0.0.0"
-
-[[dependency]]
-org = "ballerina"
-name = "file"
-version = "0.7.0-alpha5"
+name = "sql"
+version = "@stdlib.sql.version@"
 
 [[dependency]]
 org = "ballerina"
 name = "crypto"
-version = "1.1.0-alpha5"
-
-[[dependency]]
-org = "ballerina"
-name = "sql"
-version = "0.6.0-alpha5"
-
-[[dependency]]
-org = "ballerina"
-name = "io"
-version = "0.6.0-alpha5"
-
-
+version = "@stdlib.crypto.version@"

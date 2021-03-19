@@ -1,19 +1,19 @@
 [package]
 org = "ballerinax"
 name = "mssql"
-version = "0.1.0"
+version = "@toml.version@"
 
 [[platform.java11.dependency]]
-path = "../mssql-native/build/libs/mssql-native-0.1.0-SNAPSHOT.jar"
+path = "../mssql-native/build/libs/mssql-native-@project.version@.jar"
 groupId = "org.ballerinalang"
 artifactId = "mssql-native"
-version = "0.1.0-SNAPSHOT"
+version = "@project.version@"
 
 [[platform.java11.dependency]]
-path = "/home/rajinthan/Documents/GitHub/module-ballerinax-mssql/mssql-ballerina/build/target/jballerina-tools-2.0.0-alpha6-SNAPSHOT/repo/bala/ballerina/sql/0.6.0-alpha5/java11/platform/java11/sql-native-0.6.0-alpha5-SNAPSHOT.jar"
+path = "@project.path@/repo/bala/ballerina/sql/@stdlib.sql.version@/java11/platform/java11/sql-native-@stdlib.sql.native.version@.jar"
 groupId = "org.ballerinalang"
 artifactId = "ballerina-sql"
-version = "0.6.0-alpha5-SNAPSHOT"
+version = "@stdlib.sql.native.version@.jar"
 
 [[platform.java11.dependency]]
 path = "./lib/mssql-jdbc-9.2.0.jre11.jar"
