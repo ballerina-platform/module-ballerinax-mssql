@@ -163,59 +163,12 @@ function testInsertWithStringAndSelectTable() {
     checkpanic dbClient.close();
 }
 
-// @test:Config {
-//     groups: ["execute", "execute-basic"],
-//     dependsOn: [testInsertWithStringAndSelectTable]
-// }
-// function testInsertTableWithDatabaseError() {
-//     Client dbClient = checkpanic new (host, user, password, executeDb, port);
-//     sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into NumericTypesNonExistTable (int_type) values (20)");
-
-//     if (result is sql:DatabaseError) {
-//         test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into NumericTypesNonExistTable " + 
-//                         "(int_type) values (20). Table 'EXECUTE_DB.NumericTypesNonExistTable' doesn't exist."), 
-//                         "Error message does not match, actual :'" + result.message() + "'");
-//         sql:DatabaseErrorDetail errorDetails = result.detail();
-//         test:assertEquals(errorDetails.errorCode, 1146, "SQL Error code does not match");
-//         test:assertEquals(errorDetails.sqlState, "42S02", "SQL Error state does not match");
-//     } else {
-//         test:assertFail("Database Error expected.");
-//     }
-
-//     checkpanic dbClient.close();
-// }
-
-// @test:Config {
-//     groups: ["execute", "execute-basic"],
-//     // dependsOn: [testInsertTableWithDatabaseError]
-//     dependsOn: [testInsertWithStringAndSelectTable]
-// }
-// function testInsertTableWithDataTypeError() {
-//     Client dbClient = checkpanic new (host, user, password, executeDb, port);
-//     sql:ExecutionResult|sql:Error result = dbClient->execute("Insert into ExactNumericTypes (int_type) values"
-//         + " ('This is wrong type')");
-
-//     if (result is sql:DatabaseError) {
-//         test:assertTrue(result.message().startsWith("Error while executing SQL query: Insert into ExactNumericTypes " + 
-//                     "(int_type) values ('This is wrong type'). Incorrect integer value: 'This is wrong type' for column 'int_type'"), 
-//                     "Error message does not match, actual :'" + result.message() + "'");
-//         sql:DatabaseErrorDetail errorDetails = result.detail();
-//         test:assertEquals(errorDetails.errorCode, 1366, "SQL Error code does not match");
-//         test:assertEquals(errorDetails.sqlState, "HY000", "SQL Error state does not match");
-//     } else {
-//         test:assertFail("Database Error expected.");
-//     }
-
-//     checkpanic dbClient.close();
-// }
-
 type ResultCount record {
     int countVal;
 };
 
 @test:Config {
     groups: ["execute", "execute-basic"],
-    // dependsOn: [testInsertTableWithDataTypeError]
     dependsOn: [testInsertWithStringAndSelectTable]
 }
 function testUpdateData() {

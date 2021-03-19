@@ -84,15 +84,6 @@ public class Utils {
             if (trustServerCertificate == 1) {
                 options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE, trustServerCertificate);
             }
-            // Boolean encrypt = sslConfig.getBooleanValue(Constants.SSLConfig.ENCRYPT);
-            // if (encrypt == true) {
-            //     options.put(Constants.SSLConfig.ENCRYPT,encrypt);
-            // }
-            
-            // Boolean trustServerCertificate = sslConfig.getBooleanValue(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE);
-            // if (trustServerCertificate == true) {
-            //     options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE,trustServerCertificate);
-            // }
         
             BString trustStore = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE);
             if (trustStore != null) {
