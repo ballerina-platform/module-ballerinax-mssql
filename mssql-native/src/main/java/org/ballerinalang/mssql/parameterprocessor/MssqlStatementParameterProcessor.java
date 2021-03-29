@@ -18,7 +18,18 @@
 
 package org.ballerinalang.mssql.parameterprocessor;
 
+import com.microsoft.sqlserver.jdbc.Geometry;
+import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
+import io.ballerina.runtime.api.values.BObject;
+import org.ballerinalang.mssql.Constants;
+import org.ballerinalang.mssql.utils.ConvertorUtils;
+import org.ballerinalang.sql.exception.ApplicationError;
 import org.ballerinalang.sql.parameterprocessor.DefaultStatementParameterProcessor;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * This class overrides DefaultStatementParameterProcessor to implement methods required to convert ballerina types
@@ -41,4 +52,70 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         }
         return instance;
     }
+
+    @Override
+    protected void setCustomSqlTypedParam(Connection connection, PreparedStatement preparedStatement,
+                                          int index, BObject typedValue)
+            throws SQLException, ApplicationError, IOException {
+        String sqlType = typedValue.getType().getName();
+        Object value = typedValue.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+        switch (sqlType) {
+            case Constants.CustomTypeNames.POINT:
+                setPoint(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.LINESTRING:
+                setLineString(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.MONEY:
+                setMoney(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.SMALLMONEY:
+                setSmallMoney(preparedStatement, index, value);
+                break;
+            default:
+                throw new ApplicationError("Unsupported SQL type: " + sqlType);
+        }
+    }
+
+    private void setPoint(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConvertorUtils.convertPoint(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setLineString(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConvertorUtils.convertLineString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setMoney(PreparedStatement preparedStatement, int index, Object value)
+        throws SQLException {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Object object = ConvertorUtils.convertMoney(value);
+            preparedStatement.setObject(index, object);
+        }
+    }  
+
+    private void setSmallMoney(PreparedStatement preparedStatement, int index, Object value)
+        throws SQLException {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Object object = ConvertorUtils.convertMoney(value);
+            preparedStatement.setObject(index, object);
+        }
+    } 
 }

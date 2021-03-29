@@ -30,6 +30,7 @@ configurations {
 
 dependencies {
     jacocoRuntime "org.jacoco:org.jacoco.agent:${jacoco.toolVersion}:runtime"
+    compile "com.microsoft.sqlserver:mssql-jdbc:${msSQLDriverVersion}"
     checkstyle project(":build-config:checkstyle")
     checkstyle "com.puppycrawl.tools:checkstyle:${puppycrawlCheckstyleVersion}"
 }

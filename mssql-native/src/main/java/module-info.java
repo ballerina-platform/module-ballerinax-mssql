@@ -22,5 +22,6 @@ module io.ballerina.stdlib.mssql {
     requires io.ballerina.stdlib.time;
     requires io.ballerina.stdlib.sql;
     requires io.ballerina.lang;
+    requires com.microsoft.sqlserver.jdbc;
     exports org.ballerinalang.mssql;
 }

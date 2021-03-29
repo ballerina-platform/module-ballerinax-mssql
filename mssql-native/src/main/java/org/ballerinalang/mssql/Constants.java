@@ -80,6 +80,32 @@ public final class Constants {
 
     }
 
+    /**
+    * Constants for MsSQLGeometric datatypes.
+    */
+    public static final class Geometric {
+        public static final String X = "x";
+        public static final String Y = "y";
+        public static final String X1 = "x1";
+        public static final String Y1 = "y1";
+        public static final String X2 = "x2";
+        public static final String Y2 = "y2";
+    }
+
+    /**
+    * Constants for Mssql Ballerina datatypes names.
+    */
+    public static final class CustomTypeNames {
+        public static final String POINT = "PointValue";
+        public static final String LINESTRING = "LineStringValue";
+        public static final String CIRCULARSTRING = "CircularStringValue";
+        public static final String COMPOUNDCURVE = "CompoundCurveValue";
+        public static final String POLYGON = "PolygonValue";
+        public static final String CURVEPOLYGON = "CurvePolygonValue";
+        public static final String MONEY = "MoneyValue";
+        public static final String SMALLMONEY = "SmallMoneyValue";
+    }
+
     public static final String MSSQL_DATASOURCE_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDataSource";
     public static final String MSSQL_XA_DATASOURCE_NAME = "com.microsoft.sqlserver.jdbc.SQLServerXADataSource";
     public static final String POOL_CONNECT_TIMEOUT = "ConnectionTimeout";
