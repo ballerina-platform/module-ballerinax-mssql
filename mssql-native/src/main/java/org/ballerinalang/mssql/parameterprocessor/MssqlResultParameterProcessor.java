@@ -26,17 +26,13 @@ import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
  * @since 0.1.0
  */
 public class MssqlResultParameterProcessor extends DefaultResultParameterProcessor {
-    private static final Object lock = new Object();
-    private static volatile MssqlResultParameterProcessor instance;
+    private static final MssqlResultParameterProcessor instance = new MssqlResultParameterProcessor();
 
+    /**
+    * Singleton static method that returns an instance of `MssqlResultParameterProcessor`.
+    * @return MssqlResultParameterProcessor
+    */
     public static MssqlResultParameterProcessor getInstance() {
-        if (instance == null) {
-            synchronized (lock) {
-                if (instance == null) {
-                    instance = new MssqlResultParameterProcessor();
-                }
-            }
-        }
         return instance;
     }
 }

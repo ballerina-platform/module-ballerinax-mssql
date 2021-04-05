@@ -22,7 +22,7 @@ import com.microsoft.sqlserver.jdbc.Geometry;
 import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import io.ballerina.runtime.api.values.BObject;
 import org.ballerinalang.mssql.Constants;
-import org.ballerinalang.mssql.utils.ConvertorUtils;
+import org.ballerinalang.mssql.utils.ConverterUtils;
 import org.ballerinalang.sql.exception.ApplicationError;
 import org.ballerinalang.sql.parameterprocessor.DefaultStatementParameterProcessor;
 
@@ -39,17 +39,13 @@ import java.sql.SQLException;
  */
 public class MssqlStatementParameterProcessor extends DefaultStatementParameterProcessor {
 
-    private static final Object lock = new Object();
-    private static volatile MssqlStatementParameterProcessor instance;
+    private static final MssqlStatementParameterProcessor instance = new MssqlStatementParameterProcessor();
 
+    /**
+    * Singleton static method that returns an instance of `MssqlStatementParameterProcessor`.
+    * @return MssqlStatementParameterProcessor
+    */
     public static MssqlStatementParameterProcessor getInstance() {
-        if (instance == null) {
-            synchronized (lock) {
-                if (instance == null) {
-                    instance = new MssqlStatementParameterProcessor();
-                }
-            }
-        }
         return instance;
     }
 
@@ -82,7 +78,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
-            Geometry object = ConvertorUtils.convertPoint(value);
+            Geometry object = ConverterUtils.convertPoint(value);
             SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
             sqlServerStatement.setGeometry(index, object);
         }
@@ -93,7 +89,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
-            Geometry object = ConvertorUtils.convertLineString(value);
+            Geometry object = ConverterUtils.convertLineString(value);
             SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
             sqlServerStatement.setGeometry(index, object);
         }
@@ -104,7 +100,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
-            Object object = ConvertorUtils.convertMoney(value);
+            Object object = ConverterUtils.convertMoney(value);
             preparedStatement.setObject(index, object);
         }
     }  
@@ -114,7 +110,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
-            Object object = ConvertorUtils.convertMoney(value);
+            Object object = ConverterUtils.convertMoney(value);
             preparedStatement.setObject(index, object);
         }
     } 
