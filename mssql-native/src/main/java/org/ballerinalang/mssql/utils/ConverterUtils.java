@@ -24,7 +24,7 @@ import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 /**
  * This class implements the utils methods for the MsSQL Datatypes.
 */
-public class ConvertorUtils {
+public class ConverterUtils {
     public static Geometry convertPoint(Object value) throws ApplicationError, SQLException {
         Geometry point;
         if (value instanceof BString) {
