@@ -18,27 +18,23 @@
 
 package org.ballerinalang.mssql.nativeimpl;
 
+import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BObject;
-import io.ballerina.runtime.api.values.BStream;
 import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
 import org.ballerinalang.mssql.parameterprocessor.MssqlStatementParameterProcessor;
 
 /**
- * This class provides the methods for query processing which executes sql queries.
- * 
- * @since 1.2.0
+ * This class holds the utility methods involved with executing the call statements.
+ *
+ * @since 0.1.0
  */
-public class QueryProcessor {
-    private QueryProcessor() {
+public class CallProcessorUtils { 
+    private CallProcessorUtils() { 
     }
-
-    public static BStream nativeQuery(BObject client, Object paramSQLString,
-                                      Object recordType) {
-        MssqlStatementParameterProcessor statementParametersProcessor = MssqlStatementParameterProcessor
-                .getInstance();
-        MssqlResultParameterProcessor resultParametersProcessor = MssqlResultParameterProcessor
-                .getInstance();
-        return org.ballerinalang.sql.nativeimpl.QueryProcessor.nativeQuery(client, paramSQLString, recordType,
-                statementParametersProcessor, resultParametersProcessor);
+    
+    public static Object nativeCall(BObject client, Object paramSQLString, BArray recordTypes) {
+        return org.ballerinalang.sql.nativeimpl.CallProcessor.nativeCall(client, paramSQLString,
+            recordTypes, MssqlStatementParameterProcessor.getInstance(),
+            MssqlResultParameterProcessor.getInstance());
     }
 }

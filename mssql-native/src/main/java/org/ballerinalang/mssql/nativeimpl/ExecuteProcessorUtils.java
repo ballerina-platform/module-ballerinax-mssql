@@ -25,10 +25,10 @@ import org.ballerinalang.mssql.parameterprocessor.MssqlStatementParameterProcess
 /**
  * This class contains methods for executing SQL queries.
  *
- * @since 1.2.0
+ * @since 0.1.0
  */
-public class ExecuteProcessor {
-    private ExecuteProcessor() {
+public class ExecuteProcessorUtils {
+    private ExecuteProcessorUtils() {
     }
 
     public static Object nativeExecute(BObject client, Object paramSQLString) {

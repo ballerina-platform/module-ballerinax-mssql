@@ -195,29 +195,29 @@ public type SecureSocket record {|
 |};
 
 isolated function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{
-    'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessor"
+    'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessorUtils"
 } external;
 
 isolated function nativeQuery(Client sqlClient, string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? rowType)
 returns stream <record {}, sql:Error> = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.QueryProcessor"
+    'class: "org.ballerinalang.mssql.nativeimpl.QueryProcessorUtils"
 } external;
 
 isolated function nativeExecute(Client sqlClient, string|sql:ParameterizedQuery sqlQuery)
 returns sql:ExecutionResult|sql:Error = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessor"
+    'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessorUtils"
 } external;
 
 isolated function nativeBatchExecute(Client sqlClient, sql:ParameterizedQuery[] sqlQueries)
 returns sql:ExecutionResult[]|sql:Error = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessor"
+    'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessorUtils"
 } external;
 
 isolated function nativeCall(Client sqlClient, string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes)
 returns sql:ProcedureCallResult|sql:Error = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.CallProcessor"
+    'class: "org.ballerinalang.mssql.nativeimpl.CallProcessorUtils"
 } external;
 
 isolated function close(Client mssqlClient) returns sql:Error? = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessor"
+    'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessorUtils"
 } external;

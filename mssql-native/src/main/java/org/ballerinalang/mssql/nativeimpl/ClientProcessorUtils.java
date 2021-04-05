@@ -30,9 +30,9 @@ import java.util.Properties;
 /**
  * This class contains the utility methods for the mssql clients.
  *
- * @since 1.2.0
+ * @since 0.1.0
  */
-public class ClientProcessor {
+public class ClientProcessorUtils {
 
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {

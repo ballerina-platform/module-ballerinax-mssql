@@ -24,8 +24,10 @@ import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
 
 /**
  * This class provides the implementation of processing InOut/Out parameters of procedure calls.
+ * 
+ * @since 0.1.0
  */
-public class OutParameterProcessor {
+public class OutParameterProcessorUtils {
     public static Object get(BObject result, BTypedesc typeDesc) {
         return org.ballerinalang.sql.nativeimpl.OutParameterProcessor
             .get(result, typeDesc, MssqlResultParameterProcessor.getInstance());
