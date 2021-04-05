@@ -31,7 +31,7 @@ public final class Constants {
      */
     public static final class ClientConfiguration {
         public static final BString HOST = StringUtils.fromString("host");
-        public static final BString INSTANCE_NAME = StringUtils.fromString("instanceName");
+        public static final BString INSTANCE = StringUtils.fromString("instance");
         public static final BString PORT = StringUtils.fromString("port");
         public static final BString USER = StringUtils.fromString("user");
         public static final BString PASSWORD = StringUtils.fromString("password");

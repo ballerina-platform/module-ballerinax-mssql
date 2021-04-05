@@ -26,7 +26,8 @@ public client class Client {
     # Initialize Mssql Client.
     #
     # + host - Hostname of the mssql server to be connected
-    # + instanceName - Instance of mssql server to connect to on serverName
+    # + instance - Instance name of the server to be connected as mssql can have installations of multiple versions 
+    #              under a single server.
     # + user - If the mssql server is secured, the username to be used to connect to the mssql server
     # + password - The password of provided username of the database
     # + database - The name fo the database to be connected
@@ -36,10 +37,10 @@ public client class Client {
     #                   If there is no connectionPool is provided, the global connection pool will be used and it will
     #                   be shared by other clients which has same properties.
     public isolated function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
-        int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = (),string instanceName ="") returns sql:Error? {
+        int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = (), string instance ="") returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
-            instanceName: instanceName,
+            instance: instance,
             port: port,
             user: user,
             password: password,
@@ -130,7 +131,7 @@ public client class Client {
 # Client Configuration record for connection initialization
 #
 # + host - Hostname of the mssql server to be connected
-# + instanceName - Instance of mssql server to connect to on serverName
+# + instance - Instance of mssql server to connect to on serverName
 # + port - Port number of the mssql server to be connected
 # + database - System Identifier or the Service Name of the database
 # + user - Name of a user of the database
@@ -141,7 +142,7 @@ public client class Client {
 #         the global connection pool will be used
 type ClientConfiguration record {|
     string host;
-    string? instanceName;
+    string? instance;
     int port;
     string? user;
     string? password;

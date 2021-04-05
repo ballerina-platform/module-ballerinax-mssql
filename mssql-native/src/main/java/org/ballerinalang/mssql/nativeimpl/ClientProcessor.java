@@ -37,9 +37,9 @@ public class ClientProcessor {
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {
         String url = "jdbc:sqlserver://" + clientConfig.getStringValue(Constants.ClientConfiguration.HOST);
-        BString instanceNameVal = clientConfig.getStringValue(Constants.ClientConfiguration.INSTANCE_NAME);
-        String instanceName = instanceNameVal == null ? null : instanceNameVal.getValue();
-        url += "\\" + instanceName;
+        BString instanceVal = clientConfig.getStringValue(Constants.ClientConfiguration.INSTANCE_NAME);
+        String instance = instanceVal == null ? null : instanceVal.getValue();
+        url += "\\" + instance;
         Long portValue = clientConfig.getIntValue(Constants.ClientConfiguration.PORT);
         if (portValue > 0) {
             url += ":" + portValue.intValue();
