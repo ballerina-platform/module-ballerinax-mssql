@@ -73,8 +73,8 @@ function batchInsertIntoExactNumericTableFailure() {
 }
 
 @test:Config {
-    groups: ["batch-execute"]
-    // dependsOn: [batchInsertIntoDataTableFailure]
+    groups: ["batch-execute"],
+    dependsOn: [batchInsertIntoExactNumericTableFailure]
 }
 function batchInsertIntoStringTypesTable() {
     var data = [
@@ -103,9 +103,9 @@ function batchUpdateStringTypesTable() {
                WHERE row_id = ${row.row_id}`;
 }
 
-function batchExecuteQueryMsSQLClient(sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[] {
-    Client dbClient = checkpanic new (host, user, password, batchExecuteDB, port);
-    sql:ExecutionResult[] result = checkpanic dbClient->batchExecute(sqlQueries);
-    checkpanic dbClient.close();
+function batchExecuteQueryMsSQLClient(sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[] | error {
+    Client dbClient = check new (host, user, password, batchExecuteDB, port);
+    sql:ExecutionResult[] result = check dbClient->batchExecute(sqlQueries);
+    check dbClient.close();
     return result;
 }

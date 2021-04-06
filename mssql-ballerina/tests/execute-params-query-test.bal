@@ -16,87 +16,110 @@
 
 import ballerina/sql;
 import ballerina/test;
+import ballerina/time;
 
 string executeParamsDb = "EXECUTE_PARAMS_DB";
 
 @test:Config {
     groups: ["execute", "execute-params"]
 }
-function insertIntoExactNumericTable1() {
+function insertIntoExactNumericTable1() returns error? {
     int rowId = 6;
     int big_int = 9223372036854775807;
     decimal numeric = 12.12000;
     int bit = 1;
     float small_int = 32767;
     float decimalc = 123.00;
-    float small_money = 214748.3647;
     decimal intc = 2147483647;
     int tiny_int = 255;
-    float money = 922337203685477.2807;
 
     sql:ParameterizedQuery sqlQuery = `INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, 
-             smallint_type, decimal_type, smallmoney_type, int_type,tinyint_type, money_type) VALUES (${rowId},${
-    big_int}, ${numeric},
-             ${bit}, ${small_int}, ${decimalc}, ${small_money},${intc},${tiny_int},${money})`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+             smallint_type, decimal_type, int_type,tinyint_type) VALUES (${rowId},${big_int}, ${numeric},
+             ${bit}, ${small_int}, ${decimalc},${intc},${tiny_int})`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
     groups: ["execute", "execute-params"],
     dependsOn: [insertIntoExactNumericTable1]
 }
-function insertIntoExactNumericTable2() {
+function insertIntoExactNumericTable2() returns error? {
     int rowId = 5;
     sql:ParameterizedQuery sqlQuery = `INSERT INTO ExactNumeric (row_id) VALUES(${rowId})`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
-    groups: ["execute", "execute-params"]
+    groups: ["execute", "execute-params"],
+    dependsOn: [insertIntoExactNumericTable2]
 }
-function insertIntoExactNumericTable3() {
-    sql:IntegerValue rowId = new (7);
+function insertIntoExactNumericTable3() returns error? {
+    int rowId = 7;
     sql:IntegerValue big_int = new (9223372036854775807);
     sql:DecimalValue numeric = new (12.12000);
     sql:IntegerValue bit = new (1);
     sql:FloatValue small_int = new (32767);
     sql:DecimalValue decimalc = new (123.00);
-    sql:FloatValue small_money = new (214748.3647);
     sql:IntegerValue intc = new (2147483647);
     sql:IntegerValue tiny_int = new (255);
-    sql:FloatValue money = new (922337203685477.2807);
 
     sql:ParameterizedQuery sqlQuery = `INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, 
-             smallint_type, decimal_type, smallmoney_type, int_type,tinyint_type, money_type) VALUES (${rowId},${
-    big_int}, ${numeric},
-             ${bit}, ${small_int}, ${decimalc}, ${small_money},${intc},${tiny_int},${money})`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+             smallint_type, decimal_type, int_type,tinyint_type) VALUES (${rowId},${big_int}, ${numeric},
+             ${bit}, ${small_int}, ${decimalc}, ${intc}, ${tiny_int})`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
     groups: ["execute", "execute-params"],
     dependsOn: [insertIntoExactNumericTable3]
 }
-function deleteExactNumeric1() {
+function insertIntoApproximateNumericTable1() returns error? {
+    int rowId = 7;
+    float float_value = 1.79E+308;
+    decimal real_value = -1.18E-38;
+
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES (${rowId},
+    ${float_value}, ${real_value})`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute", "execute-params"],
+    dependsOn: [insertIntoApproximateNumericTable1]
+}
+function insertIntoApproximateNumericTable2() returns error? {
+    int rowId = 8;
+    float float_value = 1.79E+308;
+    float real_value = -1.18E-38;
+
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES (${rowId},
+    ${float_value}, ${real_value})`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute", "execute-params"],
+    dependsOn: [insertIntoExactNumericTable3]
+}
+function deleteExactNumeric() returns error? {
     int rowId = 1;
     int big_int = 9223372036854775807;
     decimal numeric = 12.12000;
     int bit = 1;
     float small_int = 32767;
     float decimalc = 123.00;
-    float small_money = 214748.3647;
 
     sql:ParameterizedQuery sqlQuery =
             `DELETE FROM ExactNumeric where row_id=${rowId} AND bigint_type=${big_int} AND numeric_type=${numeric}
-              AND bit_type=${bit} AND smallint_type=${small_int} AND decimal_type=${decimalc} AND smallmoney_type=${small_money}`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+             AND bit_type=${bit} AND smallint_type=${small_int} AND decimal_type=${decimalc}`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
     groups: ["execute", "execute-params"],
-    dependsOn: [insertIntoExactNumericTable3]
+    dependsOn: [insertIntoApproximateNumericTable2]
 }
-function insertIntoStringTypeTable1() {
+function insertIntoStringTypeTable1() returns error? {
     int rowId = 2;
     string varchar_type = "This is a varchar";
     string char_type = "test";
@@ -105,17 +128,17 @@ function insertIntoStringTypeTable1() {
     string nvarchar_type = "nvarchar";
 
     sql:ParameterizedQuery sqlQuery = `
-            Insert into StringTypes (raw_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) 
+            Insert into StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) 
             values (${rowId},${varchar_type},${char_type},${text_type},${nchar_type},${nvarchar_type})`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
     groups: ["execute", "execute-params"],
     dependsOn: [insertIntoStringTypeTable1]
 }
-function insertIntoStringTypeTable2() {
-    sql:IntegerValue rowId = new (3);
+function insertIntoStringTypeTable2() returns error? {
+    int rowId = 3;
     sql:VarcharValue varchar_type = new ("This is a varchar");
     sql:CharValue char_type = new ("test");
     sql:TextValue text_type = new ("This is a text");
@@ -123,19 +146,37 @@ function insertIntoStringTypeTable2() {
     sql:VarcharValue nvarchar_type = new ("nvarchar");
 
     sql:ParameterizedQuery sqlQuery = `
-            Insert into StringTypes (raw_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) 
+            Insert into StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) 
             values (${rowId},${varchar_type},${char_type},${text_type},${nchar_type},${nvarchar_type})`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
     groups: ["execute", "execute-params"],
     dependsOn: [insertIntoStringTypeTable2]
 }
-function insertIntoDateTimeTable1() {
+function insertIntoStringTypeTable3() returns error? {
+    int rowId = 4;
+    sql:VarcharValue varchar_type = new ();
+    sql:CharValue char_type = new ();
+    sql:TextValue text_type = new ();
+    sql:CharValue nchar_type = new ();
+    sql:VarcharValue nvarchar_type = new ();
+
+    sql:ParameterizedQuery sqlQuery = `
+            Insert into StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) 
+            values (${rowId},${varchar_type},${char_type},${text_type},${nchar_type},${nvarchar_type})`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute", "execute-params"],
+    dependsOn: [insertIntoStringTypeTable3]
+}
+function insertIntoDateTimeTable1() returns error? {
     int rowId = 2;
     string date = "2017-06-26";
-    string date_time_offset = "2020-01-01 19:14:51";
+    string date_time_offset = "1900-01-01 00:25:00.0021425 +05:30";
     string date_time2 = "1900-01-01 00:25:00.0021425";
     string small_date_time = "2007-05-10 10:00:20";
     string date_time = "2017-06-26 09:54:21.325";
@@ -145,33 +186,198 @@ function insertIntoDateTimeTable1() {
              (${rowId},${
     date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
             )`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
     groups: ["execute", "execute-params"],
     dependsOn: [insertIntoDateTimeTable1]
 }
-function insertIntoDateTimeTable2() {
-    sql:IntegerValue rowId = new (3);
+function insertIntoDateTimeTable2() returns error? {
+    int rowId = 3;
     sql:DateValue date = new ("2017-06-26");
-    sql:TimestampValue date_time_offset = new ("2020-01-01 19:14:51");
-    sql:TimestampValue date_time2 = new ("1900-01-01 00:25:00.0021425");
-    sql:TimestampValue small_date_time = new ("2007-05-10 10:00:20");
-    sql:TimestampValue date_time = new ("2017-06-26 09:54:21.325");
+    sql:DateTimeValue date_time_offset = new("1900-01-01 00:25:00.0021425 +05:30");
+    sql:DateTimeValue date_time2 = new ("1900-01-01 00:25:00.0021425");
+    sql:DateTimeValue small_date_time = new ("2007-05-10 10:00:20");
+    sql:DateTimeValue date_time = new ("2017-06-26 09:54:21.325");
     sql:TimeValue time = new ("09:46:22");
 
     sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,Date_col,DateTimeOffset_col,DateTime2_col,SmallDateTime_col,DateTime_col,Time_col) VALUES
              (${rowId},${
     date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
             )`;
-    validateResult(executeQueryMssqlClient(sqlQuery), 1);
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
-function executeQueryMssqlClient(sql:ParameterizedQuery sqlQuery) returns sql:ExecutionResult {
-    Client dbClient = checkpanic new (host, user, password, executeParamsDb, port);
-    sql:ExecutionResult result = checkpanic dbClient->execute(sqlQuery);
-    checkpanic dbClient.close();
+@test:Config {
+    groups: ["execute", "execute-params"],
+    dependsOn: [insertIntoDateTimeTable2]
+}
+function insertIntoDateTimeTable3() returns error? {
+    int rowId = 4;
+    sql:DateValue date = new ();
+    sql:DateTimeValue date_time_offset = new();
+    sql:DateTimeValue date_time2 = new ();
+    sql:DateTimeValue small_date_time = new ();
+    sql:DateTimeValue date_time = new ();
+    sql:TimeValue time = new ();
+
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,Date_col,DateTimeOffset_col,DateTime2_col,SmallDateTime_col,DateTime_col,Time_col) VALUES
+             (${rowId},${
+    date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
+            )`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute", "execute-params"],
+    dependsOn: [insertIntoDateTimeTable3]
+}
+function insertIntoDateTimeTable4() returns error? {
+    int rowId = 5;
+    time:Date dateValue = {year: 2017, month: 12, day: 18};
+    time:TimeOfDay timeValue = {hour: 23, minute: 12, second: 18};
+    time:Civil timestamp = {year: 2017, month:2, day: 3, hour: 11, minute: 53, second:0, "utcOffset": {hours: 8, minutes: 30}};
+    sql:DateValue date = new (dateValue);
+    sql:DateTimeValue date_time_offset = new(timestamp);
+    sql:DateTimeValue date_time2 = new ();
+    sql:DateTimeValue small_date_time = new ();
+    sql:DateTimeValue date_time = new ();
+    sql:TimeValue time = new (timeValue);
+
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,Date_col,DateTimeOffset_col,DateTime2_col,SmallDateTime_col,DateTime_col,Time_col) VALUES
+             (${rowId},${
+    date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
+            )`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [insertIntoDateTimeTable3]
+}
+function testInsertIntoGeometricDataTable1() returns error? {
+    int rowId = 43;
+    PointValue pointType = new ({x: 4.34, y:6});
+    LineStringValue lineStringType = new ({x1:2, y1:4, x2:3, y2:6});
+
+    sql:ParameterizedQuery sqlQuery =
+      `
+    INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
+            VALUES(${rowId}, ${pointType}, ${lineStringType})
+    `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoGeometricDataTable1]
+}
+function testInsertIntoGeometricDataTable2() returns error? {
+    int rowId = 21;
+    PointValue pointType = new ("POINT(2 3)");
+    LineStringValue lineStringType = new ("LINESTRING(2 4 3 8)");
+
+    sql:ParameterizedQuery sqlQuery =
+      `
+    INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
+            VALUES(${rowId}, ${pointType}, ${lineStringType})
+    `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoGeometricDataTable2]
+}
+function testInsertIntoGeometricDataTable3() returns error? {
+    int rowId = 22;
+    PointValue pointType = new ();
+    LineStringValue lineStringType = new ();
+
+    sql:ParameterizedQuery sqlQuery =
+      `
+    INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
+            VALUES(${rowId}, ${pointType}, ${lineStringType})
+    `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoGeometricDataTable3]
+}
+function testInsertIntoGeometricDataTable4() returns error? {
+    int rowId = 24;
+    Point point = {x: 2, y:2};
+    LineString lineString = {x1:2, y1:4, x2:3, y2:6};
+
+     PointValue pointType = new (point);
+    LineStringValue lineStringType = new (lineString);
+
+    sql:ParameterizedQuery sqlQuery =
+      `
+    INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
+            VALUES(${rowId}, ${pointType}, ${lineStringType})
+    `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoGeometricDataTable4]
+}
+function testInsertIntoMoneyDataTable1() returns error? {
+    int rowId = 2;
+    MoneyValue moneyType = new (12223233837.7868);
+    SmallMoneyValue smallMoneyType = new (2345.56);
+
+    sql:ParameterizedQuery sqlQuery =
+      `
+    INSERT INTO MoneyTypes (row_id, money_type, smallmoney_type)
+            VALUES(${rowId}, ${moneyType}, ${smallMoneyType})
+    `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoMoneyDataTable1]
+}
+function testInsertIntoMoneyDataTable2() returns error? {
+    int rowId = 3;
+    float moneyType = 12223233837.7868;
+    decimal smallMoneyType = 2345.56;
+
+    sql:ParameterizedQuery sqlQuery =
+      `
+    INSERT INTO MoneyTypes (row_id, money_type, smallmoney_type)
+            VALUES(${rowId}, ${moneyType}, ${smallMoneyType})
+    `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoMoneyDataTable2]
+}
+function testInsertIntoMoneyDataTable3() returns error? {
+    int rowId = 4;
+    MoneyValue moneyType = new ();
+    SmallMoneyValue smallMoneyType = new ();
+
+    sql:ParameterizedQuery sqlQuery =
+      `
+    INSERT INTO MoneyTypes (row_id, money_type, smallmoney_type)
+            VALUES(${rowId}, ${moneyType}, ${smallMoneyType})
+    `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+function executeQueryMssqlClient(sql:ParameterizedQuery sqlQuery, string database) returns sql:ExecutionResult | error {
+    Client dbClient = check new (host, user, password, database, port);
+    sql:ExecutionResult result = check dbClient->execute(sqlQuery);
+    check dbClient.close();
     return result;
 }
 
@@ -191,5 +397,4 @@ isolated function validateResult(sql:ExecutionResult result, int rowCount, int? 
             }
         }
     }
-
 }
