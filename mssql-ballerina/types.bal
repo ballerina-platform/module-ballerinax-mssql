@@ -14,9 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// import ballerina/jballerina.java;
-// import ballerina/sql;
-
 ## Represents Point MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
