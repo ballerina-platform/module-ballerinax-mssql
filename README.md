@@ -1,4 +1,4 @@
-Ballerina Mssql Library
+Ballerina MSSQL Library
 ===================
 
   [![Build](https://github.com/ballerina-platform/module-ballerinax-mssql/workflows/Build/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-mssql/actions?query=workflow%3ABuild)
@@ -11,13 +11,15 @@ The Mssql library is one of the standard library packages of the<a target="_blan
 
 This provides the functionality required to access and manipulate data stored in a SQL Server database.  
 
-Currently the following operations are supported by the `mssql:Client`
+For more information on the operations supported by the `mssql:Client`, which includes the below, go to the [MSSQL Package](https://ballerina.io/learn/api-docs/ballerina/mssql/).
 
 - Pooling connections
 - Querying data
 - Inserting data
 - Updating data
 - Deleting data
+- Updating data in batches
+- Executing stored procedures
 - Closing the client
 
 ## Issues and Projects 
@@ -67,7 +69,9 @@ Execute the commands below to build from the source.
    connection | connection-init<br> ssl
    pool | pool
    execute | execute-basic <br> execute-params
-   query | query-simple-params<br>query-numeric-params<br>query-complex-params
+   batch-execute | batch-execute 
+   query | query<br>query-simple-params
+   procedures | procedures
 
 5. To disable some specific groups during test,
 
