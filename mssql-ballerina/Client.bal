@@ -26,18 +26,18 @@ public client class Client {
     # Initialize Mssql Client.
     #
     # + host - Hostname of the mssql server to be connected
-    # + instance - Instance name of the server to be connected as mssql can have installations of multiple versions 
-    #              under a single server.
     # + user - If the mssql server is secured, the username to be used to connect to the mssql server
     # + password - The password of provided username of the database
     # + database - The name fo the database to be connected
     # + port - Port number of the mssql server to be connected
+    # + instance - Instance name of the server to be connected as mssql can have installations of multiple versions 
+    #              under a single server.
     # + options - The Database specific JDBC client properties
     # + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client.
     #                   If there is no connectionPool is provided, the global connection pool will be used and it will
     #                   be shared by other clients which has same properties.
-    public isolated function init(string host = "localhost", string instance ="", string? user = (), string? password = (), string? database = (),
-        int port = 1433, Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
+    public isolated function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
+        int port = 1433, string instance ="", Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
             instance: instance,
