@@ -14,16 +14,12 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/io;
-import ballerina/test;
+import ballerina/file;
 
-@test:BeforeSuite
-function beforeSuite() {
-    _ = initTestScripts();
-    io:println("Test suite initiated");
-}
+string resourcePath = check file:getAbsolutePath("tests/resources");
 
-@test:AfterSuite
-isolated function afterSuite() {
-    io:println("Test suite finished");
-}
+string host = "localhost";
+string user = "sa";
+string password = "Test123#";
+int port = 1433;
+int poolPort = 1433;

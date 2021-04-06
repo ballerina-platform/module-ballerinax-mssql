@@ -1,3 +1,19 @@
+// Copyright (c) 2021 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+//
+// WSO2 Inc. licenses this file to you under the Apache License,
+// Version 2.0 (the "License"); you may not use this file except
+// in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
 import ballerina/io;
 import ballerina/sql;
 
@@ -29,7 +45,7 @@ public function createDatabases() {
 }
 
 public function connectionInitDb() {
-        sql:ParameterizedQuery q2 = `
+        sql:ParameterizedQuery q1 = `
             DROP TABLE IF EXISTS Customers;
 
             CREATE TABLE Customers(
@@ -48,7 +64,7 @@ public function connectionInitDb() {
             CREATE DATABASE SSL_CONNECT_DB;
         
         `;
-        _ = executeQuery("connect_db", q2);
+        _ = executeQuery("connect_db", q1);
 }
 
 function initPool() {
@@ -72,8 +88,6 @@ function initPool() {
     
     `;
     _ = executeQuery("pool_db_1", q2);
-
-    
 
     sql:ParameterizedQuery q3 = `
             DROP TABLE IF EXISTS Customers;
@@ -100,7 +114,7 @@ function initPool() {
 
 public function basicExcuteInitDB() {
 
-    sql:ParameterizedQuery q5 = `
+    sql:ParameterizedQuery q4 = `
             DROP TABLE IF EXISTS ExactNumericTypes;
 
             CREATE TABLE ExactNumericTypes (
@@ -111,11 +125,7 @@ public function basicExcuteInitDB() {
                 bigint_type BIGINT,
                 decimal_type DECIMAL,
                 numeric_type NUMERIC,
-                real_type REAL,
-                float_type FLOAT
             );
-
-            INSERT INTO ExactNumericTypes (int_type) VALUES (10);
 
             DROP TABLE IF EXISTS StringTypes;
 
@@ -129,10 +139,28 @@ public function basicExcuteInitDB() {
             );
 
             INSERT INTO StringTypes (id, varchar_type) VALUES (1, 'test data');
+
+            DROP TABLE IF EXISTS GeometricTypes;
+        
+            CREATE TABLE GeometricTypes (
+                row_id INT PRIMARY KEY,
+                point_type geometry,
+                pointCol AS point_type.STAsText(), 
+                lineString_type geometry,
+                lineCol AS lineString_type.STAsText()
+            );
+
+            DROP TABLE IF EXISTS MoneyTypes;
+        
+            CREATE TABLE MoneyTypes (
+                row_id INT PRIMARY KEY,
+                money_type money,
+                smallmoney_type smallmoney 
+            );
             
         `;
 
-    _ = executeQuery("execute_db", q5);
+    _ = executeQuery("execute_db", q4);
 
 }
 
@@ -142,20 +170,18 @@ public function executeParamsInitDB() {
     DROP TABLE IF EXISTS ExactNumeric;
 
     CREATE TABLE ExactNumeric(
-    row_id INT PRIMARY KEY,
-    bigint_type  bigint,
-    numeric_type  numeric(10,5), 
-    bit_type  bit, 
-    smallint_type smallint, 
-    decimal_type decimal(5,2), 
-    smallmoney_type smallmoney,
-    int_type int,
-    tinyint_type tinyint,
-    money_type money
+        row_id INT PRIMARY KEY,
+        bigint_type  bigint,
+        numeric_type  numeric(10,5), 
+        bit_type  bit, 
+        smallint_type smallint, 
+        decimal_type decimal(5,2), 
+        int_type int,
+        tinyint_type tinyint
     );
 
-    INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, smallmoney_type, int_type, tinyint_type, money_type)
-    VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.00, 214748.3647, 2147483647, 255, 922337203685477.2807);
+    INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, int_type, tinyint_type)
+    VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.00, 2147483647, 255);
 
     DROP TABLE IF EXISTS ApproximateNumeric;
 
@@ -186,12 +212,30 @@ public function executeParamsInitDB() {
     DROP TABLE IF EXISTS StringTypes;
     
     CREATE TABLE StringTypes (
-        raw_id INT PRIMARY KEY,
+        row_id INT PRIMARY KEY,
         varchar_type VARCHAR(255),
         char_type CHAR(4),
         text_type TEXT,
         nchar_type NCHAR(4),
         nvarchar_type NVARCHAR(10)
+    );
+
+    DROP TABLE IF EXISTS GeometricTypes;
+    
+    CREATE TABLE GeometricTypes (
+        row_id INT PRIMARY KEY,
+        point_type geometry,
+        pointCol AS point_type.STAsText(), 
+        lineString_type geometry,
+        lineCol AS lineString_type.STAsText(),
+    );
+
+    DROP TABLE IF EXISTS MoneyTypes;
+        
+    CREATE TABLE MoneyTypes (
+        row_id INT PRIMARY KEY,
+        money_type money,
+        smallmoney_type smallmoney 
     );
 
     `;
@@ -222,7 +266,7 @@ public function createBatchExecuteDB(){
     DROP TABLE IF EXISTS StringTypes;
     
     CREATE TABLE StringTypes (
-        raw_id INT PRIMARY KEY,
+        row_id INT PRIMARY KEY,
         varchar_type VARCHAR(255),
         char_type CHAR(4),
         text_type TEXT,
@@ -230,6 +274,23 @@ public function createBatchExecuteDB(){
         nvarchar_type NVARCHAR(10)
     );
 
+    DROP TABLE IF EXISTS GeometricTypes;
+    
+    CREATE TABLE GeometricTypes (
+        row_id INT PRIMARY KEY,
+        point_type geometry,
+        pointCol AS point_type.STAsText(), 
+        lineString_type geometry,
+        lineCol AS lineString_type.STAsText(),
+    );
+
+    DROP TABLE IF EXISTS MoneyTypes;
+        
+    CREATE TABLE MoneyTypes (
+        row_id INT PRIMARY KEY,
+        money_type money,
+        smallmoney_type smallmoney 
+    );
     `;
     _ = executeQuery("batch_execute_db", query);
 }
@@ -293,6 +354,18 @@ public function simpleQueryInitDB() {
     );
 
     INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'str1','str2','assume a long text','str4','str5');
+
+    DROP TABLE IF EXISTS GeometricTypes;
+    
+    CREATE TABLE GeometricTypes (
+        row_id INT PRIMARY KEY,
+        point_type geometry,
+        pointCol AS point_type.STAsText(), 
+        lineString_type geometry,
+        lineCol AS lineString_type.STAsText(),
+    );
+
+    INSERT INTO GeometricTypes (row_id, point_type) VALUES (1,'POINT (4 6)');
 
     `;
     _ = executeQuery("simple_params_query_db", query);
