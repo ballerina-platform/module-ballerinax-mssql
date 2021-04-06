@@ -182,7 +182,7 @@ function insertIntoDateTimeTable1() returns error? {
     string date_time = "2017-06-26 09:54:21.325";
     string time = "09:46:22";
 
-    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,Date_col,DateTimeOffset_col,DateTime2_col,SmallDateTime_col,DateTime_col,Time_col) VALUES
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,date_type,dateTimeOffset_type,dateTime2_type,smallDateTime_type,dateTime_type,time_type) VALUES
              (${rowId},${
     date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
             )`;
@@ -202,7 +202,7 @@ function insertIntoDateTimeTable2() returns error? {
     sql:DateTimeValue date_time = new ("2017-06-26 09:54:21.325");
     sql:TimeValue time = new ("09:46:22");
 
-    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,Date_col,DateTimeOffset_col,DateTime2_col,SmallDateTime_col,DateTime_col,Time_col) VALUES
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,date_type,dateTimeOffset_type,dateTime2_type,smallDateTime_type,dateTime_type,time_type) VALUES
              (${rowId},${
     date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
             )`;
@@ -222,7 +222,7 @@ function insertIntoDateTimeTable3() returns error? {
     sql:DateTimeValue date_time = new ();
     sql:TimeValue time = new ();
 
-    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,Date_col,DateTimeOffset_col,DateTime2_col,SmallDateTime_col,DateTime_col,Time_col) VALUES
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,date_type,dateTimeOffset_type,dateTime2_type,smallDateTime_type,dateTime_type,time_type) VALUES
              (${rowId},${
     date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
             )`;
@@ -245,7 +245,7 @@ function insertIntoDateTimeTable4() returns error? {
     sql:DateTimeValue date_time = new ();
     sql:TimeValue time = new (timeValue);
 
-    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,Date_col,DateTimeOffset_col,DateTime2_col,SmallDateTime_col,DateTime_col,Time_col) VALUES
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO DateandTime (row_id,date_type,dateTimeOffset_type,dateTime2_type,smallDateTime_type,dateTime_type,time_type) VALUES
              (${rowId},${
     date},${date_time_offset},${date_time2},${small_date_time},${date_time},${time}
             )`;

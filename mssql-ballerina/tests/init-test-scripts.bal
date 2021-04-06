@@ -198,15 +198,15 @@ public function executeParamsInitDB() {
 
     CREATE TABLE DateandTime(
     row_id INT PRIMARY KEY,
-    Date_col  date, 
-    DateTimeOffset_col  datetimeoffset,
-    DateTime2_col datetime2, 
-    SmallDateTime_col smalldatetime, 
-    DateTime_col datetime,
-    Time_col time
+    date_type  date, 
+    dateTimeOffset_type  datetimeoffset,
+    dateTime2_type datetime2, 
+    smallDateTime_type smalldatetime, 
+    dateTime_type datetime,
+    time_type time
     );
 
-    INSERT INTO DateandTime (row_id, Date_col, DateTimeOffset_col, DateTime2_col, SmallDateTime_col , DateTime_col, Time_col)
+    INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
      VALUES (1, '2017-06-26', '2020-01-01 19:14:51', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
 
     DROP TABLE IF EXISTS StringTypes;
@@ -331,29 +331,29 @@ public function simpleQueryInitDB() {
 
     CREATE TABLE DateandTime(
     row_id INT PRIMARY KEY,
-    Date_col  date, 
-    DateTimeOffset_col  datetimeoffset,
-    DateTime2_col datetime2, 
-    SmallDateTime_col smalldatetime, 
-    DateTime_col datetime,
-    Time_col time
+    date_type  date, 
+    dateTimeOffset_type  datetimeoffset,
+    dateTime2_type datetime2, 
+    smallDateTime_type smalldatetime, 
+    dateTime_type datetime,
+    time_type time
     );
 
-    INSERT INTO DateandTime (row_id, Date_col, DateTimeOffset_col, DateTime2_col, SmallDateTime_col , DateTime_col, Time_col)
-     VALUES (1, '2017-06-26', '2020-01-01 19:14:51', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
+    INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
+     VALUES (1, '2017-06-26', '2020-01-01 19:14:51 +05:30', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
 
     DROP TABLE IF EXISTS StringTypes;
     
     CREATE TABLE StringTypes (
         row_id INT PRIMARY KEY,
         varchar_type VARCHAR(255),
-        char_type CHAR(4),
+        char_type CHAR(14),
         text_type TEXT,
         nchar_type NCHAR(4),
         nvarchar_type NVARCHAR(10)
     );
 
-    INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'str1','str2','assume a long text','str4','str5');
+    INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'This is a varchar','This is a char','This is a long text','str4','str5');
 
     DROP TABLE IF EXISTS GeometricTypes;
     
