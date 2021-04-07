@@ -25,6 +25,8 @@ public function initTestScripts() {
     _ = executeParamsInitDB();
     _ = createBatchExecuteDB();
     _ = simpleQueryInitDB();
+    _ = complexQueryInitDB();
+    _ = proceduresInit(); 
 }
 
 public function createDatabases() {
@@ -42,6 +44,10 @@ public function createDatabases() {
     _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
     _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
+    _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
+    _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
 }
 
 public function connectionInitDb() {
@@ -370,6 +376,173 @@ public function simpleQueryInitDB() {
     `;
     _ = executeQuery("simple_params_query_db", query);
 }  
+
+public function complexQueryInitDB() {
+    sql:ParameterizedQuery query = `
+    
+    DROP TABLE IF EXISTS ExactNumeric;
+
+    CREATE TABLE ExactNumeric(
+    row_id INT PRIMARY KEY,
+    bigint_type  bigint,
+    numeric_type  numeric(10,5), 
+    smallint_type smallint, 
+    decimal_type decimal(5,2), 
+    int_type INT,
+    tinyint_type tinyint,
+    );
+
+    INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, smallint_type, decimal_type, int_type, tinyint_type)
+    VALUES(1, 9223372036854775807, 12.12000, 32767, 123.41, 2147483647, 255);
+
+    DROP TABLE IF EXISTS ApproximateNumeric;
+
+    CREATE TABLE ApproximateNumeric(
+    row_id INT PRIMARY KEY,
+    float_type float,  
+    real_type real
+    );
+
+    INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES
+    (1, 1.79E+308, -1.18E-38);
+
+    DROP TABLE IF EXISTS DateandTime;
+
+    CREATE TABLE DateandTime(
+    row_id INT PRIMARY KEY,
+    date_type  date, 
+    dateTimeOffset_type  datetimeoffset,
+    dateTime2_type datetime2, 
+    smallDateTime_type smalldatetime, 
+    dateTime_type datetime,
+    time_type time
+    );
+
+    INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
+     VALUES (1, '2017-06-26', '2020-01-01 19:14:51 +05:30', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
+
+    DROP TABLE IF EXISTS StringTypes;
+    
+    CREATE TABLE StringTypes (
+        row_id INT PRIMARY KEY,
+        varchar_type VARCHAR(255),
+        char_type CHAR(14),
+        text_type TEXT,
+        nchar_type NCHAR(4),
+        nvarchar_type NVARCHAR(10)
+    );
+
+    INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'This is a varchar','This is a char','This is a long text','str4','str5');
+
+    DROP TABLE IF EXISTS MoneyTypes;
+        
+    CREATE TABLE MoneyTypes (
+        row_id INT PRIMARY KEY,
+        money_type money,
+        smallmoney_type smallmoney 
+    );
+    `;
+    _ = executeQuery("complex_query_db", query);
+}  
+
+public function proceduresInit(){
+    sql:ParameterizedQuery query1 = `
+
+    CREATE PROCEDURE StringProcedure   
+    @row_id_in int,
+    @char_in char(14),
+    @varchar_in varchar(255),
+    @text_in text    
+    AS   
+    SET NOCOUNT ON
+    INSERT INTO
+    StringTypes ([row_id], [char_type], [varchar_type], [text_type]) 
+    VALUES(
+    @row_id_in, @char_in, @varchar_in, @text_in
+    )
+
+    `;
+    
+    sql:ParameterizedQuery query2 = `
+
+    CREATE PROCEDURE ExactNumericProcedure   
+    @row_id_in int, 
+    @smallint_in smallint, 
+    @int_in int, 
+    @bigint_in bigint, 
+    @decimal_in decimal(5,2), 
+    @numeric_in numeric(10,5), 
+    @tinyint_in tinyint
+    AS   
+    SET NOCOUNT ON
+    INSERT INTO
+    ExactNumeric ([row_id], [smallint_type], [int_type], [bigint_type], [decimal_type], [numeric_type], [tinyint_type]) 
+    VALUES(
+    @row_id_in, @smallint_in, @int_in, @bigint_in, @decimal_in, @numeric_in, @tinyint_in
+    )
+
+    `;
+
+    sql:ParameterizedQuery query3 = `
+
+    CREATE PROCEDURE DateTimeProcedure
+    @row_id_in int,
+    @date_type_in  date, 
+    @dateTimeOffset_type_in  datetimeoffset,
+    @dateTime2_type_in datetime2, 
+    @smallDateTime_type_in smalldatetime, 
+    @dateTime_type_in datetime,
+    @time_type_in time
+    AS   
+    SET NOCOUNT ON
+    INSERT INTO
+    DateandTime ([row_id], [date_type], [dateTimeOffset_type], [dateTime2_type], [smallDateTime_type], [dateTime_type], [time_type])
+    VALUES(
+    @row_id_in, @date_type_in, @dateTimeOffset_type_in, @dateTime2_type_in, @smallDateTime_type_in,
+    @dateTime_type_in, @time_type_in
+    )
+
+    `;
+
+    sql:ParameterizedQuery query4 = `
+
+    CREATE PROCEDURE ApproximateNumericProcedure
+    @row_id_in int,
+    @float_type_in float,  
+    @real_type_in real
+    AS   
+    SET NOCOUNT ON
+    INSERT INTO 
+    ApproximateNumeric ([row_id], [float_type], [real_type]) 
+    VALUES(
+    @row_id_in, @float_type_in, @real_type_in
+    )
+
+    `;
+
+    sql:ParameterizedQuery query5 = `
+
+    CREATE PROCEDURE MoneyProcedure
+    @row_id_in int,
+    @money_type_in money,
+    @smallmoney_type_in smallmoney 
+    AS   
+    SET NOCOUNT ON
+    INSERT INTO 
+    MoneyTypes ([row_id], [money_type], [smallMoney_type]) 
+    VALUES(
+    @row_id_in, @money_type_in,  @smallmoney_type_in
+    )
+    
+    `;
+
+    _ = executeQuery("complex_query_db", query1);
+    _ = executeQuery("complex_query_db", query2);
+    _ = executeQuery("complex_query_db", query3);
+    _ = executeQuery("complex_query_db", query4);
+    _ = executeQuery("complex_query_db", query5);
+
+}
 
 
 public function createQuery(sql:ParameterizedQuery query) {
