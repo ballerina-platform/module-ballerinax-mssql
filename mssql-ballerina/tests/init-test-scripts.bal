@@ -395,6 +395,9 @@ public function complexQueryInitDB() {
     INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, smallint_type, decimal_type, int_type, tinyint_type)
     VALUES(1, 9223372036854775807, 12.12000, 32767, 123.41, 2147483647, 255);
 
+    INSERT INTO ExactNumeric (row_id)
+    VALUES(2);
+
     DROP TABLE IF EXISTS ApproximateNumeric;
 
     CREATE TABLE ApproximateNumeric(
@@ -427,12 +430,12 @@ public function complexQueryInitDB() {
         row_id INT PRIMARY KEY,
         varchar_type VARCHAR(255),
         char_type CHAR(14),
-        text_type TEXT,
-        nchar_type NCHAR(4),
-        nvarchar_type NVARCHAR(10)
+        text_type TEXT
     );
 
-    INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'This is a varchar','This is a char','This is a long text','str4','str5');
+    INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type) VALUES (1,'This is a varchar','This is a char','This is a long text');
+
+     INSERT INTO StringTypes (row_id) VALUES (3);
 
     DROP TABLE IF EXISTS MoneyTypes;
         
@@ -536,12 +539,37 @@ public function proceduresInit(){
     
     `;
 
+    sql:ParameterizedQuery query6 = `
+
+    CREATE PROCEDURE ExactNumericOutProcedure
+    (@row_id_in int,
+    @smallint_out smallint OUTPUT, 
+    @int_out int OUTPUT, 
+    @bigint_out bigint OUTPUT, 
+    @tinyint_out tinyint OUTPUT,
+    @decimal_out decimal(5,2) OUTPUT, 
+    @numeric_out numeric(10,5) OUTPUT)
+    AS
+    SET NOCOUNT ON
+    SELECT
+    @smallint_out, 
+    @int_out, 
+    @bigint_out, 
+    @tinyint_out,
+    @decimal_out, 
+    @numeric_out
+    FROM
+      ExactNumeric
+    WHERE
+      ExactNumeric.row_id = @row_id_in
+    `;
+
     _ = executeQuery("complex_query_db", query1);
     _ = executeQuery("complex_query_db", query2);
     _ = executeQuery("complex_query_db", query3);
     _ = executeQuery("complex_query_db", query4);
     _ = executeQuery("complex_query_db", query5);
-
+    _ = executeQuery("complex_query_db", query6);
 }
 
 
