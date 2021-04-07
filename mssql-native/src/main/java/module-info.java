@@ -18,8 +18,6 @@
 
 module io.ballerina.stdlib.mssql {
     requires io.ballerina.runtime;
-    requires io.ballerina.stdlib.io;
-    requires io.ballerina.stdlib.time;
     requires io.ballerina.stdlib.sql;
     requires io.ballerina.lang;
     requires com.microsoft.sqlserver.jdbc;
