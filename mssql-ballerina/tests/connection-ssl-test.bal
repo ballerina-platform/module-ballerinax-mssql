@@ -13,9 +13,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/file;
-// import ballerina/lang.'string as strings;
-// import ballerina/sql;
 import ballerina/test;
 
 string sslDb = "SSL_CONNECT_DB";
