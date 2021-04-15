@@ -44,7 +44,7 @@ public final class Constants {
      * Constants for database options.
      */
     public static final class Options {
-        public static final BString SSL = StringUtils.fromString("ssl");
+        public static final BString SECURESOCKET = StringUtils.fromString("secureSocket");
         public static final BString USE_XA_DATASOURCE = StringUtils.fromString("useXADatasource");
         public static final BString SOCKET_TIMEOUT_SECONDS = StringUtils.fromString("socketTimeout");
         public static final BString QUERY_TIMEOUT_SECONDS = StringUtils.fromString("queryTimeout");

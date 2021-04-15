@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/crypto;
 import ballerina/jballerina.java;
 import ballerina/sql;
 
@@ -153,7 +152,7 @@ type ClientConfiguration record {|
 
 # MsSQL database options.
 #
-# + ssl - SSL Configuration to be used
+# + secureSocket - SSL Configuration to be used
 # + useXADatasource - Boolean value to enable XADatasource
 # + socketTimeout - The number of milliseconds to wait before a timeout is occurred 
 #                   on a socket read or accept. The default value is 0, which means 
@@ -168,7 +167,7 @@ type ClientConfiguration record {|
 #                 before timing out a failed connection.
 
 public type Options record {|
-    SecureSocket ssl = {};
+    SecureSocket secureSocket = {};
     boolean useXADatasource = false;
     decimal socketTimeout?;
     decimal queryTimeout?;
@@ -177,21 +176,12 @@ public type Options record {|
 
 # SSL Configuration to be used when connecting to Mssql server.
 #
-# + clientCertKeystore - Keystore configuration of the client certificates
-# + trustCertKeystore - Keystore configuration of the trust certificates
 # + encrypt - encryption for all the data sent between the client and the server if the server has a certificate installed
 # + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication layer is encrypted using TLS.
-# + trustStore - The path (including filename) to the certificate trustStore file. The trustStore file contains the list of certificates that the client trusts.
-# + trustStorePassword - The password used to check the integrity of the trustStore data.
 
-//TODO 
 public type SecureSocket record {|
     boolean encrypt?;
     boolean trustServerCertificate?;
-    string trustStore?;
-    string trustStorePassword?;
-    crypto:KeyStore clientCertKeystore?;
-    crypto:KeyStore trustCertKeystore?;
 |};
 
 isolated function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{

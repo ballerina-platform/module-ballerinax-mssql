@@ -34,6 +34,8 @@ public function createDatabases() {
     _ = createQuery(`CREATE DATABASE CONNECT_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_1`);
     _ = createQuery(`CREATE DATABASE POOL_DB_1`);
+    _ = createQuery(`DROP DATABASE IF EXISTS SSL_CONNECT_DB`);
+    _ = createQuery(`CREATE DATABASE SSL_CONNECT_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_2`);
     _ = createQuery(`CREATE DATABASE POOL_DB_2`);
     _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_DB`);
@@ -65,10 +67,6 @@ public function connectionInitDb() {
 
             INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
                             VALUES ('Peter', 'Stuart', 1, 5000.75, 'USA');
-
-            DROP DATABASE IF EXISTS SSL_CONNECT_DB;
-            CREATE DATABASE SSL_CONNECT_DB;
-        
         `;
         _ = executeQuery("connect_db", q1);
 }

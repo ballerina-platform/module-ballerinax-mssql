@@ -32,7 +32,7 @@ public class Utils {
     public static BMap generateOptionsMap(BMap mssqlOptions) {
         if (mssqlOptions != null) {
             BMap<BString, Object> options = ValueCreator.createMapValue();    
-            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SSL), options);
+            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SECURESOCKET), options);
 
             long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT_SECONDS));
             if (queryTimeout > 0) {
@@ -77,24 +77,13 @@ public class Utils {
         if (sslConfig != null) {
             int encrypt = getBooleanValue(sslConfig.get(Constants.SSLConfig.ENCRYPT));
             if (encrypt == 1) {
-                options.put(Constants.SSLConfig.ENCRYPT, encrypt);
+                options.put(Constants.SSLConfig.ENCRYPT, true);
             }
             
             int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
             if (trustServerCertificate == 1) {
-                options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE, trustServerCertificate);
+                options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE, true);
             }
-        
-            BString trustStore = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE);
-            if (trustStore != null) {
-                options.put(Constants.SSLConfig.TRUST_STORE, trustStore);
-            }
-
-            BString trustStorePassword = sslConfig.getStringValue(Constants.SSLConfig.TRUST_STORE_PASSWORD);
-            if (trustStorePassword != null) {
-                options.put(Constants.SSLConfig.TRUST_STORE_PASSWORD, trustStorePassword);
-            }
-
         }
     }
 }
