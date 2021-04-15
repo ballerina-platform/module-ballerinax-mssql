@@ -26,7 +26,6 @@ import org.ballerinalang.mssql.utils.Utils;
 import org.ballerinalang.sql.datasource.SQLDatasource;
 
 import java.util.Properties;
-
 /**
  * This class contains the utility methods for the mssql clients.
  *
@@ -64,13 +63,10 @@ public class ClientProcessorUtils {
                 poolProperties.setProperty(Constants.POOL_CONNECT_TIMEOUT, queryTimeout.toString());
             }
         }
-
+       
         BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
 
         String datasourceName = Constants.MSSQL_DATASOURCE_NAME;
-        if (options != null && options.getBooleanValue(Constants.Options.USE_XA_DATASOURCE)) {
-            datasourceName = Constants.MSSQL_DATASOURCE_NAME;
-        }
         
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
                 .setUrl(url)

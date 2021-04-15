@@ -153,7 +153,6 @@ type ClientConfiguration record {|
 # MsSQL database options.
 #
 # + secureSocket - SSL Configuration to be used
-# + useXADatasource - Boolean value to enable XADatasource
 # + socketTimeout - The number of milliseconds to wait before a timeout is occurred 
 #                   on a socket read or accept. The default value is 0, which means 
 #                   infinite timeout.
@@ -168,7 +167,6 @@ type ClientConfiguration record {|
 
 public type Options record {|
     SecureSocket secureSocket = {};
-    boolean useXADatasource = false;
     decimal socketTimeout?;
     decimal queryTimeout?;
     decimal loginTimeout?;
