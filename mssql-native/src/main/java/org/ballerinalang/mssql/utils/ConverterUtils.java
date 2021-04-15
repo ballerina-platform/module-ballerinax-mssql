@@ -22,7 +22,7 @@ import java.util.Map;
 import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 
 /**
- * This class implements the utils methods for the MsSQL Datatypes.
+* This class implements the utils methods for the MsSQL Datatypes.
 */
 public class ConverterUtils {
     public static Geometry convertPoint(Object value) throws ApplicationError, SQLException {
@@ -38,7 +38,7 @@ public class ConverterUtils {
             double x = ((BDecimal) pointValue.get(Constants.Geometric.X)).decimalValue().doubleValue();
             double y = ((BDecimal) pointValue.get(Constants.Geometric.Y)).decimalValue().doubleValue();
             point = Geometry.point(x, y, 0);
-        };
+        }
         return point;
     }
 

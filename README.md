@@ -24,7 +24,7 @@ For more information on the operations supported by the `mssql:Client`, which in
 
 ## Issues and Projects 
 
-Issues and Projects tabs are disabled for this repository as this is part of the Ballerina Standard Library. To report bugs, request new features, start new discussions, view project boards, etc. please visit Ballerina Standard Library [parent repository](https://github.com/ballerina-platform/ballerina-standard-library). 
+Issues and Projects tabs are disabled for this repository as this is part of the Ballerina Standard Library. To report bugs, request new features, start new discussions, view project boards, etc.,visit the Ballerina Standard Library [parent repository](https://github.com/ballerina-platform/ballerina-standard-library). 
 
 This repository only contains the source code for the package.
 
@@ -36,9 +36,9 @@ This repository only contains the source code for the package.
    * [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
    * [OpenJDK](http://openjdk.java.net/install/index.html)
 
-2. Download and install [Docker](https://www.docker.com/get-started)
+2. Download and install [Docker](https://www.docker.com/get-started).
    
-3. Export Github Personal access token with read package permissions as follows,
+3. Export your Github Personal access token with the read package permissions as follows.
         
         export packageUser=<Username>
         export packagePAT=<Personal access token>
@@ -73,7 +73,7 @@ Execute the commands below to build from the source.
    query | query<br>query-simple-params
    procedures | procedures
 
-5. To disable some specific groups during test,
+5. To disable some specific groups during the test:
 
         ./gradlew clean build -Pdisable-groups=<Comma separated groups/test cases>
 
@@ -81,13 +81,13 @@ Execute the commands below to build from the source.
 
         ./gradlew clean build -Pdebug=<port>
 
-7. To debug the package with Ballerina language:
+7. To debug the package with the Ballerina language:
 
         ./gradlew clean build -PbalJavaDebug=<port>     
 
 ## Contributing to Ballerina
 
-As an open source project, Ballerina welcomes contributions from the community. 
+As an open-source project, Ballerina welcomes contributions from the community. 
 
 For more information, go to the [contribution guidelines](https://github.com/ballerina-platform/ballerina-lang/blob/master/CONTRIBUTING.md).
 

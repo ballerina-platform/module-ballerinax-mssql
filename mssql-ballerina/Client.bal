@@ -22,19 +22,19 @@ public client class Client {
     *sql:Client;
     private boolean clientActive = true;
 
-    # Initialize Mssql Client.
+    # Initialize the Mssql client.
     #
-    # + host - Hostname of the mssql server to be connected
-    # + user - If the mssql server is secured, the username to be used to connect to the mssql server
-    # + password - The password of provided username of the database
-    # + database - The name fo the database to be connected
-    # + port - Port number of the mssql server to be connected
-    # + instance - Instance name of the server to be connected as mssql can have installations of multiple versions 
+    # + host - Hostname of the MsSQL server to be connected
+    # + user - If the MsSQL server is secured, the username to be used to connect to the SQL server
+    # + password - The password associated with the username of the database
+    # + database - The name of the database to be connected
+    # + port - Port of the MsSQL server to be connected
+    # + instance - Instance name of the MsSQL server to be connected as MsSQL can have installations of multiple versions 
     #              under a single server.
-    # + options - The Database specific JDBC client properties
-    # + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client.
-    #                   If there is no connectionPool is provided, the global connection pool will be used and it will
-    #                   be shared by other clients which has same properties.
+    # + options - The database-specific JDBC client properties
+    # + connectionPool - The `sql:ConnectionPool` object to be used within the MsSQL client.
+    #                   If there is no `connectionPool` provided, the global connection pool will be used and it will
+    #                   be shared by other clients which have the same properties.
     public isolated function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
         int port = 1433, string instance ="", Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
@@ -50,12 +50,12 @@ public client class Client {
         return createClient(self, clientConfig, sql:getGlobalConnectionPool());
     }
 
-    # Queries the database with the query provided by the user, and returns the result as stream.
+    # Queries the database with the query provided by the user and returns the result as a stream.
     #
-    # + sqlQuery - The query which needs to be executed as `string` or `ParameterizedQuery` when the SQL query has
+    # + sqlQuery - The query which needs to be executed as  a `string` or `ParameterizedQuery` when the SQL query has
     #              params to be passed in
-    # + rowType - The `typedesc` of the record that should be returned as a result. If this is not provided the default
-    #             column names of the query result set be used for the record attributes.
+    # + rowType - The `typedesc` of the record that should be returned as a result. If this is not provided, the default
+    #             column names of the query result set will be used for the record attributes.
     # + return - Stream of records in the type of `rowType`
     remote isolated function query(@untainted string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? rowType = ())
     returns @tainted stream <record {}, sql:Error> {
@@ -67,11 +67,11 @@ public client class Client {
         }
     }
 
-    # Executes the DDL or DML sql queries provided by the user, and returns summary of the execution.
+    # Executes the DDL or DML SQL queries provided by the user, and returns a summary of the execution.
     #
-    # + sqlQuery - The DDL or DML query such as INSERT, DELETE, UPDATE, etc as `string` or `ParameterizedQuery`
+    # + sqlQuery - The DDL or DML query such as INSERT, DELETE, UPDATE, etc. as a `string` or `ParameterizedQuery`
     #              when the query has params to be passed in
-    # + return - Summary of the sql update query as `ExecutionResult` or returns `Error`
+    # + return - Summary of the SQL update query as an `ExecutionResult` or returns an `Error`
     #           if any error occurred when executing the query
     remote isolated function execute(@untainted string|sql:ParameterizedQuery sqlQuery) returns sql:ExecutionResult|sql:Error {
         if (self.clientActive) {
@@ -81,15 +81,15 @@ public client class Client {
         }
     }
 
-    # Executes a batch of parameterized DDL or DML sql query provided by the user,
+    # Executes a batch of parameterized DDL or DML SQL query provided by the user
     # and returns the summary of the execution.
     #
-    # + sqlQueries - The DDL or DML query such as INSERT, DELETE, UPDATE, etc as `ParameterizedQuery` with an array
+    # + sqlQueries - The DDL or DML query such as INSERT, DELETE, UPDATE, etc. as a `ParameterizedQuery` with an array
     #                of values passed in
-    # + return - Summary of the executed SQL queries as `ExecutionResult[]` which includes details such as
+    # + return - Summary of the executed SQL queries as an `ExecutionResult[]` which includes details such as
     #            `affectedRowCount` and `lastInsertId`. If one of the commands in the batch fails, this function
-    #            will return `BatchExecuteError`, however the JDBC driver may or may not continue to process the
-    #            remaining commands in the batch after a failure. The summary of the executed queries in case of error
+    #            will return a `BatchExecuteError`. However, the JDBC driver may or may not continue to process the
+    #            remaining commands in the batch after a failure. The summary of the executed queries in case of an error
     #            can be accessed as `(<sql:BatchExecuteError> result).detail()?.executionResults`.
     remote isolated function batchExecute(@untainted sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[]|sql:Error {
         if (sqlQueries.length() == 0) {
@@ -102,12 +102,12 @@ public client class Client {
         }
     }
 
-    # Executes a SQL stored procedure and returns the result as stream and execution summary.
+    # Executes a SQL stored procedure and returns the result as a stream and an execution summary.
     #
     # + sqlQuery - The query to execute the SQL stored procedure
-    # + rowTypes - The array of `typedesc` of the records that should be returned as a result. If this is not provided
-    #               the default column names of the query result set be used for the record attributes.
-    # + return - Summary of the execution is returned in `ProcedureCallResult` or `sql:Error`
+    # + rowTypes - The array of `typedesc` of the records that should be returned as a result. If this is not provided,
+    #               the default column names of the query result set will be used for the record attributes.
+    # + return - Summary of the execution is returned in a `ProcedureCallResult` or an `sql:Error`
     remote isolated function call(@untainted string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
     returns sql:ProcedureCallResult|sql:Error {
         if (self.clientActive) {
@@ -130,12 +130,13 @@ public client class Client {
 # Client Configuration record for connection initialization
 #
 # + host - Hostname of the mssql server to be connected
-# + instance - Instance of mssql server to connect to on serverName
+# + instance - Instance name of the server to be connected as mssql can have installations of multiple versions 
+#              under a single server
 # + port - Port number of the mssql server to be connected
-# + database - System Identifier or the Service Name of the database
-# + user - Name of a user of the database
-# + password - Password for the user
-# + options - Mssql database specific JDBC options
+# + database - Name of the database
+# + user - Username for the database connection
+# + password - Password for the database connection
+# + options - MsSQL database specific options
 # + connectionPool - The `sql:ConnectionPool` object to be used within 
 #         the jdbc client. If there is no connectionPool provided, 
 #         the global connection pool will be used
@@ -155,15 +156,15 @@ type ClientConfiguration record {|
 # + secureSocket - SSL Configuration to be used
 # + socketTimeout - The number of milliseconds to wait before a timeout is occurred 
 #                   on a socket read or accept. The default value is 0, which means 
-#                   infinite timeout.
+#                   infinite timeout
 # + queryTimeout - The number of seconds to wait before a timeout has occurred on a 
-#                  query. The default value is -1, which means infinite timeout. 
-#                  Setting this to 0 also implies to wait indefinitely.
+#                  query. The default value is -1, which means infinite timeout.
+#                  Setting this to 0 also implies to wait indefinitely
 # + loginTimeout - The number of seconds the driver should wait before timing out a 
 #                 failed connection. A zero value indicates that the timeout is the 
 #                 default system timeout, which is specified as 15 seconds by default. 
 #                 A non-zero value is the number of seconds the driver should wait 
-#                 before timing out a failed connection.
+#                 before timing out a failed connection
 
 public type Options record {|
     SecureSocket secureSocket = {};
@@ -172,10 +173,10 @@ public type Options record {|
     decimal loginTimeout?;
 |};
 
-# SSL Configuration to be used when connecting to Mssql server.
+# SSL configuration to be used when connecting to the MsSQL server
 #
 # + encrypt - encryption for all the data sent between the client and the server if the server has a certificate installed
-# + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication layer is encrypted using TLS.
+# + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication layer is encrypted using TLS
 
 public type SecureSocket record {|
     boolean encrypt?;

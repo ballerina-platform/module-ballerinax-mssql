@@ -16,8 +16,8 @@ artifactId = "ballerina-sql"
 version = "@stdlib.sql.native.version@.jar"
 
 [[platform.java11.dependency]]
-path = "./lib/mssql-jdbc-9.2.0.jre11.jar"
+path = "./lib/mssql-jdbc-@mssqlDriverVersion@.jar"
 artifactId = "mssql-jdbc"
 groupId = "mssql"
 scope = "testOnly"
-version = "9.2.0.jre11"
+version = "@mssqlDriverVersion@"

@@ -56,11 +56,21 @@ public class SmallMoneyValue {
     }  
 }
 
+# Represents Point Datatype in MsSQL.
+#
+# + x - The x Cordinate of the Point
+# + y - The y Cordinate of the Point
 public type Point record {
     decimal x;
     decimal y;
 };
 
+# Represents LineString Datatype in MsSQL.
+#
+# + x1 - The x cordinate of the first point of the line segment
+# + y1 - The y cordinate of the first point of the line segment
+# + x2 - The x cordinate of the second point of the line segment
+# + y2 - The y cordinate of the second point of the line segment
 public type LineString record {
     decimal x1;
     decimal y1;
