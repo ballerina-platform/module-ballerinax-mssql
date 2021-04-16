@@ -34,6 +34,10 @@ import java.util.Properties;
  */
 public class ClientProcessorUtils {
 
+    private ClientProcessorUtils() {
+
+    }
+
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {
         String url = "jdbc:sqlserver://" + clientConfig.getStringValue(Constants.ClientConfiguration.HOST);
