@@ -42,14 +42,14 @@ public function createDatabases() {
     _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
     _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
-    // _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
-    // _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
-    // _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
-    // _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
-    // _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
-    // _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
-    // _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
-    // _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
+    _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
+    _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
+    _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
+    _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
+    _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
 }
 
 public function connectionInitDb() {
