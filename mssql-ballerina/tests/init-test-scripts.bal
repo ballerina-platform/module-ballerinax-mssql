@@ -42,14 +42,14 @@ public function createDatabases() {
     _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
     _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
-    _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
-    _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
-    _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
-    _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
+    // _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
+    // _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
+    // _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
+    // _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
+    // _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
+    // _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
+    // _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
+    // _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
 }
 
 public function connectionInitDb() {
@@ -149,9 +149,15 @@ public function basicExcuteInitDB() {
             CREATE TABLE GeometricTypes (
                 row_id INT PRIMARY KEY,
                 point_type geometry,
-                pointCol AS point_type.STAsText(), 
                 lineString_type geometry,
-                lineCol AS lineString_type.STAsText()
+                geometry_type geometry,
+                circularstring_type geometry,
+                compoundcurve_type geometry,
+                polygon_type geometry,
+                curvepolygon_type geometry,
+                multipolygon_type geometry,
+                multilinestring_type geometry,
+                multipoint_type geometry
             );
 
             DROP TABLE IF EXISTS MoneyTypes;
@@ -229,9 +235,15 @@ public function executeParamsInitDB() {
     CREATE TABLE GeometricTypes (
         row_id INT PRIMARY KEY,
         point_type geometry,
-        pointCol AS point_type.STAsText(), 
         lineString_type geometry,
-        lineCol AS lineString_type.STAsText(),
+        geometry_type geometry,
+        circularstring_type geometry,
+        compoundcurve_type geometry,
+        polygon_type geometry,
+        curvepolygon_type geometry,
+        multipolygon_type geometry,
+        multilinestring_type geometry,
+        multipoint_type geometry
     );
 
     DROP TABLE IF EXISTS MoneyTypes;
@@ -282,10 +294,16 @@ public function createBatchExecuteDB(){
     
     CREATE TABLE GeometricTypes (
         row_id INT PRIMARY KEY,
-        point_type geometry,
-        pointCol AS point_type.STAsText(), 
+        point_type geometry, 
         lineString_type geometry,
-        lineCol AS lineString_type.STAsText(),
+        geometry_type geometry,
+        circularstring_type geometry,
+        compoundcurve_type geometry,
+        polygon_type geometry,
+        curvepolygon_type geometry,
+        multipolygon_type geometry,
+        multilinestring_type geometry,
+        multipoint_type geometry
     );
 
     DROP TABLE IF EXISTS MoneyTypes;

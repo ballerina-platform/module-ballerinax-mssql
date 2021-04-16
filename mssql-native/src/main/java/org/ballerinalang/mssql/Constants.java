@@ -101,6 +101,10 @@ public final class Constants {
         public static final String COMPOUNDCURVE = "CompoundCurveValue";
         public static final String POLYGON = "PolygonValue";
         public static final String CURVEPOLYGON = "CurvePolygonValue";
+        public static final String MULTIPOLYGON = "MultiPolygonValue";
+        public static final String MULTILINESTRING = "MultiLineStringValue";
+        public static final String MULTIPOINT = "MultiPointValue";
+        public static final String GEOMETRYCOLLECTION = "GeometryCollectionValue";
         public static final String MONEY = "MoneyValue";
         public static final String SMALLMONEY = "SmallMoneyValue";
     }

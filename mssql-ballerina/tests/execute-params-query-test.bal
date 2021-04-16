@@ -276,12 +276,22 @@ function testInsertIntoGeometricDataTable1() returns error? {
 function testInsertIntoGeometricDataTable2() returns error? {
     int rowId = 21;
     PointValue pointType = new ("POINT(2 3)");
-    LineStringValue lineStringType = new ("LINESTRING(2 4 3 8)");
+    LineStringValue lineStringType = new ("LINESTRING(1 1,2 3,4 8, -6 3)");
+    GeometryCollectionValue geometryType = new ("GEOMETRYCOLLECTION (POINT (4 0), LINESTRING (4 2, 5 3), POLYGON ((0 0, 3 0, 3 3, 0 3, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1)))");
+    CircularStringValue circularStringType = new ("CIRCULARSTRING(2 0, 1 1, 0 0)");
+    CompoundCurveValue compoundCurveType = new ("COMPOUNDCURVE(CIRCULARSTRING(1 0, 0 1, -1 0), (-1 0, 1.25 0))");
+    PolygonValue polygonType = new ("POLYGON((1 1, 3 1, 3 7, 1 7, 1 1))");
+    MultiPolygonValue multiPolygonType = new ("MultiPolygon(((2 0, 3 1, 2 2, 1.5 1.5, 2 1, 1.5 0.5, 2 0)), ((1 0, 1.5 0.5, 1 1, 1.5 1.5, 1 2, 0 1, 1 0)))");
+    CurvePolygonValue curvePolygonType = new ("CURVEPOLYGON ((4 2, 8 2, 8 6, 4 6, 4 2))");
+    MultiLineStringValue multiLineStringType = new ("MultiLineString ((0 2, 1 1), (2 1, 1 2))");
+    MultiPointValue multiPointType = new ("MULTIPOINT((21 2), (12 2), (30 40))");
 
     sql:ParameterizedQuery sqlQuery =
       `
-    INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
-            VALUES(${rowId}, ${pointType}, ${lineStringType})
+    INSERT INTO GeometricTypes (row_id, point_type, lineString_type, geometry_type, circularstring_type, compoundcurve_type, 
+                            polygon_type, curvepolygon_type, multipolygon_type, multilinestring_type, multipoint_type)
+            VALUES(${rowId}, ${pointType}, ${lineStringType}, ${geometryType}, ${circularStringType}, ${compoundCurveType}, 
+                    ${polygonType}, ${multiPolygonType}, ${curvePolygonType}, ${multiLineStringType}, ${multiPointType})
     `;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
@@ -294,11 +304,21 @@ function testInsertIntoGeometricDataTable3() returns error? {
     int rowId = 22;
     PointValue pointType = new ();
     LineStringValue lineStringType = new ();
+    GeometryCollectionValue geometryType = new ();
+    CircularStringValue circularStringType = new ();
+    CompoundCurveValue compoundCurveType = new ();
+    PolygonValue polygonType = new ();
+    MultiPolygonValue multiPolygonType = new ();
+    CurvePolygonValue curvePolygonType = new ();
+    MultiLineStringValue multiLineStringType = new ();
+    MultiPointValue multiPointType = new ();
 
     sql:ParameterizedQuery sqlQuery =
       `
-    INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
-            VALUES(${rowId}, ${pointType}, ${lineStringType})
+     INSERT INTO GeometricTypes (row_id, point_type, lineString_type, geometry_type, circularstring_type, compoundcurve_type, 
+                            polygon_type, curvepolygon_type, multipolygon_type, multilinestring_type, multipoint_type)
+            VALUES(${rowId}, ${pointType}, ${lineStringType}, ${geometryType}, ${circularStringType}, ${compoundCurveType}, 
+                    ${polygonType}, ${multiPolygonType}, ${curvePolygonType}, ${multiLineStringType}, ${multiPointType})
     `;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }

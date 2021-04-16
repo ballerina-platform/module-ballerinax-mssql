@@ -14,13 +14,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
+# MsSQL Geometric Data types.
+
 ## Represents Point MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public class PointValue {
     public Point | string? value;
-
-    public function init(Point | string? value = ()) {
+    public isolated function init(Point | string? value = ()) {
         self.value =value;
     }
 }
@@ -30,11 +31,92 @@ public class PointValue {
 # + value - Value of parameter passed into the SQL statement
 public class LineStringValue {
     public LineString | string? value;
-
-    public function init(LineString | string? value = ()) {
+    public isolated function init(LineString | string? value = ()) {
         self.value =value;
     }
 }
+
+## Represents CircularString MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class CircularStringValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+## Represents CompoundCurve MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class CompoundCurveValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+## Represents Polygon MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class PolygonValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+## Represents MultiPolygon MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class MultiPolygonValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+## Represents CurvePolygon MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class CurvePolygonValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+## Represents MultiLineString MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class MultiLineStringValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+## Represents MultiPoint MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class MultiPointValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+## Represents GeometryCollection MsSQL Field
+#
+# + value - Value of parameter passed into the SQL statement
+public class GeometryCollectionValue {
+    public string? value;
+    public isolated function init(string? value = ()) {
+        self.value =value;
+    }
+}
+
+# MsSQL Money Data types.
 
 # Represents Money MsSQL Field
 #

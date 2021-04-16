@@ -62,6 +62,30 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
             case Constants.CustomTypeNames.LINESTRING:
                 setLineString(preparedStatement, index, value);
                 break;
+            case Constants.CustomTypeNames.CIRCULARSTRING:
+                setCircularString(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.COMPOUNDCURVE:
+                setCompoundCurve(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.POLYGON:
+                setPolygon(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.CURVEPOLYGON:
+                setCurvePolygon(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.MULTIPOLYGON:
+                setMultiPolygon(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.MULTIPOINT:
+                setMultiPoint(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.MULTILINESTRING:
+                setMultiLineString(preparedStatement, index, value);
+                break;
+            case Constants.CustomTypeNames.GEOMETRYCOLLECTION:
+                setGeometryCollection(preparedStatement, index, value);
+                break;
             case Constants.CustomTypeNames.MONEY:
                 setMoney(preparedStatement, index, value);
                 break;
@@ -90,6 +114,94 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
             preparedStatement.setObject(index, null);
         } else {
             Geometry object = ConverterUtils.convertLineString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setCircularString(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setCompoundCurve(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setPolygon(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setCurvePolygon(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setMultiPolygon(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setMultiPoint(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setMultiLineString(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
+            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
+            sqlServerStatement.setGeometry(index, object);
+        }
+    }
+
+    private void setGeometryCollection(PreparedStatement preparedStatement, int index, Object value)
+            throws SQLException, ApplicationError {
+        if (value == null) {
+            preparedStatement.setObject(index, null);
+        } else {
+            Geometry object = ConverterUtils.convertGeometryString(value);
             SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
             sqlServerStatement.setGeometry(index, object);
         }

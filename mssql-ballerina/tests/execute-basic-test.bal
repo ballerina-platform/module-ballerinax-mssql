@@ -295,6 +295,25 @@ function testPointTypeError() returns error? {
 @test:Config {
     groups: ["execute", "execute-basic"]
 }
+function testGeometryCollectionTypeError() returns error? {
+    int id =11;
+    GeometryCollectionValue GeometryValue = new ("Invalid Value");
+    sql:ParameterizedQuery sqlQuery = `Insert Into GeometricTypes (row_id, geometry_type) values (${id}, ${GeometryValue});`;
+    sql:ExecutionResult|sql:Error result = executeMsSQLClient(sqlQuery);
+    test:assertTrue(result is error);
+    string expectedErrorMessage = "Error while executing SQL query: Insert Into GeometricTypes (row_id, geometry_type) "+
+        "values ( ? ,  ? );. Unsupported Value: Invalid Value for type: geometry";
+    if (result is sql:Error) {
+        test:assertTrue(result.message().startsWith(expectedErrorMessage), 
+           "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
+    } else {
+        test:assertFail("Error expected");
+    }
+}
+
+@test:Config {
+    groups: ["execute", "execute-basic"]
+}
 function testMoneyTypeError() returns error? {
     int id =11;
     MoneyValue moneyValue = new ("Invalid Value");

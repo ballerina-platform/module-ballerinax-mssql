@@ -48,7 +48,7 @@ public class ConverterUtils {
             try {
                 lineString = Geometry.STGeomFromText(value.toString(), 0);
             } catch (SQLException ex) {
-                throw new SQLException("Unsupported Value: " + value + " for type: " + "point");
+                throw new SQLException("Unsupported Value: " + value + " for type: " + "linestring");
             }
         } else {
             Map<String, Object> lineStringValue = getRecordData(value);
@@ -78,6 +78,20 @@ public class ConverterUtils {
         return money;
     }
 
+    public static Geometry convertGeometryString(Object value) throws ApplicationError, SQLException {
+        Geometry geometryString;
+        if (value instanceof BString) {
+            try {
+                geometryString = Geometry.STGeomFromText(value.toString(), 0);
+            } catch (SQLException ex) {
+                throw new SQLException("Unsupported Value: " + value + " for type: " + "geometry");
+            }
+        } else {
+            throw new SQLException("Unsupported Value: " + value + " for type: " + "geometry");
+        }
+        return geometryString;
+    }
+    
     private static Map<String, Object> getRecordData(Object value) throws SQLException, ApplicationError {
         Type type = TypeUtils.getType(value);
         Map<String, Field> structFields = ((StructureType) type).getFields();
