@@ -30,7 +30,7 @@ function testConnectionWithNoFields() {
     groups: ["connection", "connection-init"]
 }
 function testWithURLParams() returns error? {
-    Client dbClient = check new (host=host, port = port, user = user, password = password, database = connectDB);
+    Client dbClient = check new (host = host, port = port, user = user, password = password, database = connectDB);
     var exitCode = dbClient.close();
     test:assertExactEquals(exitCode, (), "Initialising connection with params fails.");
 }
