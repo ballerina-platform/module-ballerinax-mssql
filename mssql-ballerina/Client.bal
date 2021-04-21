@@ -36,7 +36,7 @@ public client class Client {
     #                   If there is no `connectionPool` provided, the global connection pool will be used and it will
     #                   be shared by other clients which have the same properties.
     public isolated function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
-        int port = 1433, string instance ="", Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
+        int port = 1433, string instance = "", Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
             instance: instance,
@@ -154,7 +154,7 @@ type ClientConfiguration record {|
 # MsSQL database options.
 #
 # + secureSocket - SSL Configuration to be used
-# + socketTimeout - The number of milliseconds to wait before a timeout is occurred 
+# + socketTimeout - The number of milliseconds to wait before a timeout occurs
 #                   on a socket read or accept. The default value is 0, which means 
 #                   infinite timeout
 # + queryTimeout - The number of seconds to wait before a timeout has occurred on a 
