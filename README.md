@@ -7,7 +7,7 @@ Ballerina MSSQL Library
   [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
   [![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql)
 
-The Mssql library is one of the standard library packages of the<a target="_blank" href="https://ballerina.io/"> Ballerina</a> language.
+The MSSQL library is one of the standard library packages of the<a target="_blank" href="https://ballerina.io/"> Ballerina</a> language.
 
 This provides the functionality required to access and manipulate data stored in a SQL Server database.  
 
