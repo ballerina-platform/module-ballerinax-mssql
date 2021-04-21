@@ -14,13 +14,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import ballerina/sql;
+
 # MsSQL Geometric Data types.
 
 ## Represents Point MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class PointValue {
+public distinct class PointValue {
+    *sql:TypedValue;
     public Point | string? value;
+    
     public isolated function init(Point | string? value = ()) {
         self.value =value;
     }
@@ -29,8 +33,10 @@ public class PointValue {
 ## Represents LineString MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class LineStringValue {
+public distinct class LineStringValue {
+    *sql:TypedValue;
     public LineString | string? value;
+
     public isolated function init(LineString | string? value = ()) {
         self.value =value;
     }
@@ -39,8 +45,10 @@ public class LineStringValue {
 ## Represents CircularString MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class CircularStringValue {
+public distinct class CircularStringValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -49,8 +57,10 @@ public class CircularStringValue {
 ## Represents CompoundCurve MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class CompoundCurveValue {
+public distinct class CompoundCurveValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -59,8 +69,10 @@ public class CompoundCurveValue {
 ## Represents Polygon MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class PolygonValue {
+public distinct class PolygonValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -69,8 +81,10 @@ public class PolygonValue {
 ## Represents MultiPolygon MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class MultiPolygonValue {
+public distinct class MultiPolygonValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -79,8 +93,10 @@ public class MultiPolygonValue {
 ## Represents CurvePolygon MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class CurvePolygonValue {
+public distinct class CurvePolygonValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -89,8 +105,10 @@ public class CurvePolygonValue {
 ## Represents MultiLineString MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class MultiLineStringValue {
+public distinct class MultiLineStringValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -99,8 +117,10 @@ public class MultiLineStringValue {
 ## Represents MultiPoint MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class MultiPointValue {
+public distinct class MultiPointValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -109,8 +129,10 @@ public class MultiPointValue {
 ## Represents GeometryCollection MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class GeometryCollectionValue {
+public distinct class GeometryCollectionValue {
+    *sql:TypedValue;
     public string? value;
+
     public isolated function init(string? value = ()) {
         self.value =value;
     }
@@ -121,8 +143,10 @@ public class GeometryCollectionValue {
 # Represents Money MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class MoneyValue {
+public distinct class MoneyValue {
+    *sql:TypedValue;
     public decimal|float|string? value;
+
     public isolated function init(decimal|float|string? value = ()) {
         self.value = value;
     }  
@@ -131,8 +155,10 @@ public class MoneyValue {
 # Represents Smallmoney MsSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
-public class SmallMoneyValue {
+public distinct class SmallMoneyValue {
+    *sql:TypedValue;
     public decimal|float|string? value;
+
     public isolated function init(decimal|float|string? value = ()) {
         self.value = value;
     }  
