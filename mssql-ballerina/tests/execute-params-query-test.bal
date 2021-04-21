@@ -332,7 +332,7 @@ function testInsertIntoGeometricDataTable4() returns error? {
     Point point = {x: 2, y:2};
     LineString lineString = {x1:2, y1:4, x2:3, y2:6};
 
-     PointValue pointType = new (point);
+    PointValue pointType = new (point);
     LineStringValue lineStringType = new (lineString);
 
     sql:ParameterizedQuery sqlQuery =

@@ -48,7 +48,7 @@ function testWithoutHost() returns error? {
     groups: ["connection", "connection-init"]
 }
 function testWithoutPort() returns error? {
-    Client dbClient = check new ( host = host, user = user, password = password, database = connectDB);
+    Client dbClient = check new (host = host, user = user, password = password, database = connectDB);
     var exitCode = dbClient.close();
     test:assertExactEquals(exitCode, (), "Initialising connection without port fails.");
 }
