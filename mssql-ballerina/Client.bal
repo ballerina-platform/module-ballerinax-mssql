@@ -35,8 +35,9 @@ public client class Client {
     # + connectionPool - The `sql:ConnectionPool` object to be used within the MsSQL client.
     #                   If there is no `connectionPool` provided, the global connection pool will be used and it will
     #                   be shared by other clients which have the same properties.
-    public isolated function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
-        int port = 1433, string instance = "", Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
+    public isolated function init(string host = "localhost", string? user = (), string? password = (),
+                                  string? database = (), int port = 1433, string instance = "", Options? options = (),
+                                  sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
             host: host,
             instance: instance,
@@ -72,7 +73,7 @@ public client class Client {
     # + sqlQuery - The DDL or DML query such as INSERT, DELETE, UPDATE, etc. as a `string` or `ParameterizedQuery`
     #              when the query has params to be passed in
     # + return - Summary of the SQL update query as an `ExecutionResult` or returns an `Error`
-    #           if any error occurred when executing the query
+    #            if any error occurred when executing the query
     remote isolated function execute(@untainted string|sql:ParameterizedQuery sqlQuery) returns sql:ExecutionResult|sql:Error {
         if (self.clientActive) {
             return nativeExecute(self, sqlQuery);
@@ -89,9 +90,10 @@ public client class Client {
     # + return - Summary of the executed SQL queries as an `ExecutionResult[]` which includes details such as
     #            `affectedRowCount` and `lastInsertId`. If one of the commands in the batch fails, this function
     #            will return a `BatchExecuteError`. However, the JDBC driver may or may not continue to process the
-    #            remaining commands in the batch after a failure. The summary of the executed queries in case of an error
-    #            can be accessed as `(<sql:BatchExecuteError> result).detail()?.executionResults`.
-    remote isolated function batchExecute(@untainted sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[]|sql:Error {
+    #            remaining commands in the batch after a failure. The summary of the executed queries in case of an
+    #            error can be accessed as `(<sql:BatchExecuteError> result).detail()?.executionResults`.
+    remote isolated function batchExecute(@untainted sql:ParameterizedQuery[] sqlQueries)
+    returns sql:ExecutionResult[]|sql:Error {
         if (sqlQueries.length() == 0) {
             return error sql:ApplicationError(" Parameter 'sqlQueries' cannot be empty array");
         }
@@ -106,7 +108,7 @@ public client class Client {
     #
     # + sqlQuery - The query to execute the SQL stored procedure
     # + rowTypes - The array of `typedesc` of the records that should be returned as a result. If this is not provided,
-    #               the default column names of the query result set will be used for the record attributes.
+    #              the default column names of the query result set will be used for the record attributes.
     # + return - Summary of the execution is returned in a `ProcedureCallResult` or an `sql:Error`
     remote isolated function call(@untainted string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
     returns sql:ProcedureCallResult|sql:Error {
@@ -133,13 +135,12 @@ public client class Client {
 # + instance - Instance name of the server to be connected as mssql can have installations of multiple versions 
 #              under a single server
 # + port - Port number of the mssql server to be connected
-# + database - Name of the database
 # + user - Username for the database connection
 # + password - Password for the database connection
+# + database - Name of the database
 # + options - MsSQL database specific options
-# + connectionPool - The `sql:ConnectionPool` object to be used within 
-#         the jdbc client. If there is no connectionPool provided, 
-#         the global connection pool will be used
+# + connectionPool - The `sql:ConnectionPool` object to be used within the jdbc client. If there is no connectionPool
+#                    provided, the global connection pool will be used
 type ClientConfiguration record {|
     string host;
     string? instance;
@@ -154,18 +155,14 @@ type ClientConfiguration record {|
 # MsSQL database options.
 #
 # + secureSocket - SSL Configuration to be used
-# + socketTimeout - The number of milliseconds to wait before a timeout occurs
-#                   on a socket read or accept. The default value is 0, which means 
-#                   infinite timeout
-# + queryTimeout - The number of seconds to wait before a timeout has occurred on a 
-#                  query. The default value is -1, which means infinite timeout.
-#                  Setting this to 0 also implies to wait indefinitely
-# + loginTimeout - The number of seconds the driver should wait before timing out a 
-#                 failed connection. A zero value indicates that the timeout is the 
-#                 default system timeout, which is specified as 15 seconds by default. 
-#                 A non-zero value is the number of seconds the driver should wait 
-#                 before timing out a failed connection
-
+# + socketTimeout - The number of milliseconds to wait before a timeout occurs on a socket read or accept.
+#                   The default value is 0, which means infinite timeout
+# + queryTimeout - The number of seconds to wait before a timeout has occurred on a query. The default value is -1,
+#                  which means infinite timeout. Setting this to 0 also implies to wait indefinitely
+# + loginTimeout - The number of seconds the driver should wait before timing out a failed connection.
+#                  A zero value indicates that the timeout is the default system timeout, which is specified as
+#                  15 seconds by default. A non-zero value is the number of seconds the driver should wait
+#                  before timing out a failed connection
 public type Options record {|
     SecureSocket secureSocket = {};
     decimal socketTimeout?;
@@ -177,7 +174,6 @@ public type Options record {|
 #
 # + encrypt - encryption for all the data sent between the client and the server if the server has a certificate installed
 # + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication layer is encrypted using TLS
-
 public type SecureSocket record {|
     boolean encrypt?;
     boolean trustServerCertificate?;
