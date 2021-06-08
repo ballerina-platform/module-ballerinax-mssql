@@ -76,7 +76,6 @@ public final class Constants {
         public static final BString QUERY_TIMEOUT = StringUtils.fromString("queryTimeout");
         public static final BString SOCKET_TIMEOUT = StringUtils.fromString("socketTimeout");
         public static final BString LOGIN_TIMEOUT = StringUtils.fromString("loginTimeout");
-
     }
 
     /**

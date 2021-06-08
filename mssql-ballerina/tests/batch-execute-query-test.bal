@@ -22,7 +22,7 @@ string batchExecuteDB = "batch_execute_db";
 @test:Config {
     groups: ["batch-execute"]
 }
-function batchInsertIntoExactNumericTable1() {
+isolated function batchInsertIntoExactNumericTable1() {
     var data = [
         {row_id: 10, bigintValue: 9223372036854775807, numericValue: 123.34},
         {row_id: 11, bigintValue: 9223372036854775807, numericValue: 123.34},
@@ -37,7 +37,7 @@ function batchInsertIntoExactNumericTable1() {
     groups: ["batch-execute"],
     dependsOn: [batchInsertIntoExactNumericTable1]
 }
-function batchInsertIntoExactNumericTable2() {
+isolated function batchInsertIntoExactNumericTable2() {
     int rowId = 15;
     int intValue = 5;
     sql:ParameterizedQuery sqlQuery = `INSERT INTO NumericTypes (row_id, int_type) VALUES(${rowId}, ${intValue})`;
@@ -76,7 +76,7 @@ function batchInsertIntoExactNumericTableFailure() {
     groups: ["batch-execute"],
     dependsOn: [batchInsertIntoExactNumericTableFailure]
 }
-function batchInsertIntoStringTypesTable() {
+isolated function batchInsertIntoStringTypesTable() {
     var data = [
         {row_id: 14, charValue: "This is char2", varcharValue: "This is varchar2"},
         {row_id: 15, charValue: "This is char3", varcharValue: "This is varchar3"},
@@ -91,7 +91,7 @@ function batchInsertIntoStringTypesTable() {
     groups: ["batch-execute"],
     dependsOn: [batchInsertIntoStringTypesTable]
 }
-function batchUpdateStringTypesTable() {
+isolated function batchUpdateStringTypesTable() {
     var data = [
         {row_id: 14, varcharValue: "Updated varchar2"},
         {row_id: 15, varcharValue: "Updated varchar3"},

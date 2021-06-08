@@ -17,7 +17,7 @@
 import ballerina/io;
 import ballerina/sql;
 
-public function initTestScripts() {
+isolated function initTestScripts() {
     _ = createDatabases();
     _ = initPool();
     _ = connectionInitDb();
@@ -29,30 +29,39 @@ public function initTestScripts() {
     _ = proceduresInit(); 
 }
 
-public function createDatabases() {
+isolated function createDatabases() {
     _ = createQuery(`DROP DATABASE IF EXISTS CONNECT_DB`);
     _ = createQuery(`CREATE DATABASE CONNECT_DB`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_1`);
     _ = createQuery(`CREATE DATABASE POOL_DB_1`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS SSL_CONNECT_DB`);
     _ = createQuery(`CREATE DATABASE SSL_CONNECT_DB`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_2`);
     _ = createQuery(`CREATE DATABASE POOL_DB_2`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_DB`);
     _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
     _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
     _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
     _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
     _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
+
     _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
     _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
 }
 
-public function connectionInitDb() {
+isolated function connectionInitDb() {
         sql:ParameterizedQuery q1 = `
             DROP TABLE IF EXISTS Customers;
 
@@ -71,7 +80,7 @@ public function connectionInitDb() {
         _ = executeQuery("connect_db", q1);
 }
 
-function initPool() {
+isolated function initPool() {
     sql:ParameterizedQuery q2 = `
             DROP TABLE IF EXISTS Customers;
 
@@ -116,7 +125,7 @@ function initPool() {
     _ = executeQuery("pool_db_2", q3);
 }
 
-public function basicExcuteInitDB() {
+isolated function basicExcuteInitDB() {
 
     sql:ParameterizedQuery q4 = `
             DROP TABLE IF EXISTS ExactNumericTypes;
@@ -174,7 +183,7 @@ public function basicExcuteInitDB() {
 
 }
 
-public function executeParamsInitDB() {
+isolated function executeParamsInitDB() {
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -258,7 +267,7 @@ public function executeParamsInitDB() {
     _ = executeQuery("execute_params_db", query);
 }  
 
-public function createBatchExecuteDB(){
+isolated function createBatchExecuteDB(){
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -317,7 +326,7 @@ public function createBatchExecuteDB(){
     _ = executeQuery("batch_execute_db", query);
 }
 
-public function simpleQueryInitDB() {
+isolated function simpleQueryInitDB() {
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -393,7 +402,7 @@ public function simpleQueryInitDB() {
     _ = executeQuery("simple_params_query_db", query);
 }  
 
-public function complexQueryInitDB() {
+isolated function complexQueryInitDB() {
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -464,7 +473,7 @@ public function complexQueryInitDB() {
     _ = executeQuery("complex_query_db", query);
 }  
 
-public function proceduresInit(){
+isolated function proceduresInit(){
     sql:ParameterizedQuery query1 = `
 
     CREATE PROCEDURE StringProcedure   
@@ -589,7 +598,7 @@ public function proceduresInit(){
 }
 
 
-public function createQuery(sql:ParameterizedQuery query) {
+isolated function createQuery(sql:ParameterizedQuery query) {
 
     Client|sql:Error mssqlClient = new(user="sa",password="Test123#");
 
@@ -619,7 +628,7 @@ public function createQuery(sql:ParameterizedQuery query) {
 
 }
 
-public function executeQuery(string database, sql:ParameterizedQuery query) {
+isolated function executeQuery(string database, sql:ParameterizedQuery query) {
 
     Client|sql:Error mssqlClient = new(user="sa",password="Test123#", database = database);
 
