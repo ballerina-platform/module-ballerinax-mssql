@@ -32,7 +32,7 @@ public class Utils {
     public static BMap generateOptionsMap(BMap mssqlOptions) {
         if (mssqlOptions != null) {
             BMap<BString, Object> options = ValueCreator.createMapValue();    
-            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SECURESOCKET), options);
+            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SECURE_SOCKET), options);
 
             long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT_SECONDS));
             if (queryTimeout > 0) {
@@ -55,7 +55,7 @@ public class Utils {
 
     private static int getBooleanValue(Object value) {
         if (value instanceof Boolean) {
-            if (((Boolean) value) == true) {
+            if (((Boolean) value)) {
                 return 1;
             }
             return 0;
@@ -65,9 +65,9 @@ public class Utils {
 
     private static long getTimeout(Object secondsInt) {
         if (secondsInt instanceof Long) {
-            Long timeoutSec = (Long) secondsInt;
-            if (timeoutSec.longValue() > 0) {
-                return Long.valueOf(timeoutSec.longValue() * 1000).longValue();
+            long timeoutSec = (Long) secondsInt;
+            if (timeoutSec > 0) {
+                return timeoutSec * 1000;
             }
         }
         return -1;
@@ -75,14 +75,39 @@ public class Utils {
 
     private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
         if (sslConfig != null) {
+            int integratedSecurity = getBooleanValue(sslConfig.get(Constants.SSLConfig.INTEGRATED_SECURITY));
+            if (integratedSecurity == 1) {
+                options.put(Constants.DatabaseProps.INTEGRATED_SECURITY, true);
+            }
+
             int encrypt = getBooleanValue(sslConfig.get(Constants.SSLConfig.ENCRYPT));
             if (encrypt == 1) {
-                options.put(Constants.SSLConfig.ENCRYPT, true);
+                options.put(Constants.DatabaseProps.ENCRYPT, true);
             }
             
             int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
             if (trustServerCertificate == 1) {
-                options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE, true);
+                options.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, true);
+            }
+
+            BMap trustCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_CERT);
+            if (trustCertKeystore != null) {
+                options.put(Constants.DatabaseProps.TRUST_KEYSTORE_URL,
+                        trustCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUST_STORE_RECORD_PATH_FIELD));
+                options.put(Constants.DatabaseProps.TRUST_KEYSTORE_PASSWORD,
+                        trustCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUST_STORE_RECORD_PASSWORD_FIELD));
+            }
+
+            BString hostNameInCertificate = sslConfig.getStringValue(Constants.SSLConfig.HOST_NAME_IN_CERTIFICATE);
+            if (hostNameInCertificate != null) {
+                options.put(Constants.DatabaseProps.HOST_NAME_IN_CERTIFICATE, hostNameInCertificate);
+            }
+
+            BString keyStoreAuthentication = sslConfig.getStringValue(Constants.SSLConfig.KEYSTORE_AUTHENTICATION);
+            if (keyStoreAuthentication != null) {
+                options.put(Constants.DatabaseProps.KEYSTORE_AUTHENTICATION, keyStoreAuthentication);
             }
         }
     }

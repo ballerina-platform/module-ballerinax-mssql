@@ -44,7 +44,7 @@ public final class Constants {
      * Constants for database options.
      */
     public static final class Options {
-        public static final BString SECURESOCKET = StringUtils.fromString("secureSocket");
+        public static final BString SECURE_SOCKET = StringUtils.fromString("secureSocket");
         public static final BString SOCKET_TIMEOUT_SECONDS = StringUtils.fromString("socketTimeout");
         public static final BString QUERY_TIMEOUT_SECONDS = StringUtils.fromString("queryTimeout");
         public static final BString LOGIN_TIMEOUT_SECONDS = StringUtils.fromString("loginTimeout");
@@ -54,18 +54,19 @@ public final class Constants {
      * Constants for ssl configuration.
      */
     public static final class SSLConfig {
+        public static final BString INTEGRATED_SECURITY = StringUtils.fromString("integratedSecurity");
         public static final BString ENCRYPT = StringUtils.fromString("encrypt");
         public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
-        public static final BString TRUST_STORE = StringUtils.fromString("trustStore");
-        public static final BString TRUST_STORE_PASSWORD = StringUtils.fromString("trustStorePassword");
-
+        public static final BString HOST_NAME_IN_CERTIFICATE = StringUtils.fromString("hostNameInCertificate");
+        public static final BString CLIENT_CERT = StringUtils.fromString("cert");
+        public static final BString KEYSTORE_AUTHENTICATION = StringUtils.fromString("keyStoreAuthentication");
 
         /**
-        * Constants for processing ballerina `crypto:KeyStore`.
-        */
-        public static final class CryptoKeyStoreRecord {
-            public static final BString KEY_STORE_RECORD_PATH_FIELD = StringUtils.fromString("path");
-            public static final BString KEY_STORE_RECORD_PASSWORD_FIELD = StringUtils.fromString("password");
+         * Constants for processing ballerina crypto:TrustStore.
+         */
+        public static final class CryptoTrustStoreRecord {
+            public static final BString TRUST_STORE_RECORD_PATH_FIELD = StringUtils.fromString("path");
+            public static final BString TRUST_STORE_RECORD_PASSWORD_FIELD = StringUtils.fromString("password");
         }
     }
     
@@ -77,6 +78,14 @@ public final class Constants {
         public static final BString SOCKET_TIMEOUT = StringUtils.fromString("socketTimeout");
         public static final BString LOGIN_TIMEOUT = StringUtils.fromString("loginTimeout");
 
+        //SSL properties
+        public static final BString INTEGRATED_SECURITY = StringUtils.fromString("integratedSecurity");
+        public static final BString ENCRYPT = StringUtils.fromString("encrypt");
+        public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
+        public static final BString TRUST_KEYSTORE_URL = StringUtils.fromString("trustStore");
+        public static final BString TRUST_KEYSTORE_PASSWORD = StringUtils.fromString("trustStorePassword");
+        public static final BString HOST_NAME_IN_CERTIFICATE = StringUtils.fromString("hostNameInCertificate");
+        public static final BString KEYSTORE_AUTHENTICATION = StringUtils.fromString("keyStoreAuthentication");
     }
 
     /**

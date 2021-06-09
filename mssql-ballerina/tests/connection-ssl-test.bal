@@ -14,20 +14,57 @@
 // under the License.
 
 import ballerina/test;
+import ballerina/file;
 
 string sslDb = "SSL_CONNECT_DB";
+string trustStorePath = checkpanic file:getAbsolutePath("./tests/resources/keystore/client/client-truststore.p12");
 
 @test:Config {
-    groups: ["connection","ssl"]
+    groups: ["connection", "ssl"]
+}
+function testSSLConnection() returns error? {
+    Options options = {
+        secureSocket: {
+            encrypt: true,
+            hostNameInCertificate: "ballerina-mysql-test-server",
+            cert: {
+                path: trustStorePath,
+                password: "password"
+            }
+        }
+    };
+    Client dbClient = check new(user = user, password = password, database = sslDb, port = port, options = options);
+    test:assertEquals(dbClient.close(), ());
+}
+
+@test:Config {
+    groups: ["connection", "ssl"]
+}
+function testSSLConnectionWithNoHostName() {
+    Options options = {
+        secureSocket: {
+            encrypt: true,
+            cert: {
+                path: trustStorePath,
+                password: "password"
+            }
+        }
+    };
+    Client|error? dbClient = new(user = user, password = password, database = sslDb, port = port, options = options);
+    test:assertTrue(dbClient is error, "Connection should not have been established.");
+}
+
+
+@test:Config {
+    groups: ["connection", "ssl"]
 }
 function testSSLWithSelfSignedCertificate() returns error? {
     Options options = {
         secureSocket: {
-            encrypt:true,
-            trustServerCertificate:true
+            encrypt: true,
+            trustServerCertificate: true
         }
     };
-    Client dbClient = check new (user = user, password = password, database = sslDb,
-        port = port, options = options);
+    Client dbClient = check new(user = user, password = password, database = sslDb, port = port, options = options);
     test:assertEquals(dbClient.close(), ());
 }
