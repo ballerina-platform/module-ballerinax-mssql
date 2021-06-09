@@ -173,9 +173,6 @@ public type Options record {|
     decimal loginTimeout?;
 |};
 
-public const KSA_JAYA_KEYSTORE_PASSWORD = "JavaKeyStorePassword";
-public type KeyStoreAuthentication KSA_JAYA_KEYSTORE_PASSWORD;
-
 # SSL configuration to be used when connecting to the MsSQL server
 #
 # + integratedSecurity - Set to "true" to indicate that Windows credentials are used by SQL Server on Windows operating
