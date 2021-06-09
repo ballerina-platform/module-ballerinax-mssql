@@ -18,6 +18,7 @@
 package org.ballerinalang.mssql.utils;
 
 import io.ballerina.runtime.api.creators.ValueCreator;
+import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import org.ballerinalang.mssql.Constants;
@@ -63,11 +64,11 @@ public class Utils {
         return -1;
     }
 
-    private static long getTimeout(Object secondsInt) {
-        if (secondsInt instanceof Long) {
-            long timeoutSec = (Long) secondsInt;
-            if (timeoutSec > 0) {
-                return timeoutSec * 1000;
+    private static long getTimeout(Object secondsDecimal) {
+        if (secondsDecimal instanceof BDecimal) {
+            BDecimal timeoutSec = (BDecimal) secondsDecimal;
+            if (((BDecimal) secondsDecimal).floatValue() > 0) {
+                return Double.valueOf(timeoutSec.floatValue() * 1000).longValue();
             }
         }
         return -1;

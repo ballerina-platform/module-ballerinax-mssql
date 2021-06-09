@@ -167,7 +167,7 @@ type ClientConfiguration record {|
 #                  A non-zero value is the number of seconds the driver should wait
 #                  before timing out a failed connection
 public type Options record {|
-    SecureSocket secureSocket = {};
+    SecureSocket secureSocket?;
     decimal socketTimeout?;
     decimal queryTimeout?;
     decimal loginTimeout?;
