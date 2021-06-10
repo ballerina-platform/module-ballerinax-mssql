@@ -96,9 +96,9 @@ function testLocalSharedConnectionPoolConfigMultipleDestinations() returns error
     resultArray[4] = dbClient4->query("select count(*) as val from Customers where registrationID = 1", Result);
     resultArray[5] = dbClient5->query("select count(*) as val from Customers where registrationID = 2", Result);
     resultArray[6] = dbClient6->query("select count(*) as val from Customers where registrationID = 2", Result);
-    resultArray[7] = dbClient6->query("select count(*) as val from Customers where registrationID = 1", Result);
-    resultArray[8] = dbClient6->query("select count(*) as val from Customers where registrationID = 1", Result);
-    
+    resultArray[7] = dbClient7->query("select count(*) as val from Customers where registrationID = 1", Result);
+    resultArray[8] = dbClient7->query("select count(*) as val from Customers where registrationID = 1", Result);
+
     (int|error)[] returnArray = [];
     int i = 0;
     // Connections will be released here as we fully consume the data in the following conversion function calls

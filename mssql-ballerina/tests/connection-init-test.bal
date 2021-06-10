@@ -21,7 +21,7 @@ string connectDB = "CONNECT_DB";
 @test:Config {
     groups: ["connection", "connection-init"]
 }
-function testConnectionWithNoFields() {
+isolated function testConnectionWithNoFields() {
     Client|sql:Error dbClient = new ();
     test:assertTrue(dbClient is sql:Error, "Initialising connection with no fields fails.");
 }
@@ -31,8 +31,8 @@ function testConnectionWithNoFields() {
 }
 function testWithURLParams() returns error? {
     Client dbClient = check new (host = host, port = port, user = user, password = password, database = connectDB);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection with params fails.");
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection with params fails.");
 }
 
 @test:Config {
@@ -40,8 +40,8 @@ function testWithURLParams() returns error? {
 }
 function testWithoutHost() returns error? {
     Client dbClient = check new (port = port, user = user, password = password, database = connectDB);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection without host fails.");
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection without host fails.");
 }
 
 @test:Config {
@@ -49,8 +49,8 @@ function testWithoutHost() returns error? {
 }
 function testWithoutPort() returns error? {
     Client dbClient = check new (host = host, user = user, password = password, database = connectDB);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection without port fails.");
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection without port fails.");
 }
 
 @test:Config {
@@ -58,8 +58,8 @@ function testWithoutPort() returns error? {
 }
 function testWithoutDB() returns error? {
     Client dbClient = check new (user = user, password = password, port = port, host = host);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection without database fails.");
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection without database fails.");
 }
 
 @test:Config {
@@ -71,10 +71,9 @@ function testWithOptions() returns error? {
         socketTimeout: 60,
         loginTimeout: 60
     };
-    Client dbClient = check new (user= user, password = password, database = connectDB,
-        port = port, options = options);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection with options fails.");
+    Client dbClient = check new (user= user, password = password, database = connectDB, port = port, options = options);
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection with options fails.");
 }
 
 @test:Config {
@@ -86,10 +85,10 @@ function testWithConnectionPool() returns error? {
         maxConnectionLifeTime : 15,
         minIdleConnections : 15
     };
-    Client dbClient = check new (user = user, password = password, database = connectDB,
-        port = port, connectionPool = connectionPool);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection with option max connection pool fails.");
+    Client dbClient = check new (user = user, password = password, database = connectDB, port = port,
+                                 connectionPool = connectionPool);
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection with option max connection pool fails.");
     test:assertEquals(connectionPool.maxOpenConnections, 25, "Configured max connection config is wrong.");
     test:assertEquals(connectionPool.maxConnectionLifeTime, <decimal>15, "Configured max connection life time second is wrong.");
     test:assertEquals(connectionPool.minIdleConnections, 15, "Configured min idle connection is wrong.");
@@ -109,9 +108,10 @@ function testWithConnectionParams1() returns error? {
         socketTimeout: 60,
         loginTimeout: 60
     };
-    Client dbClient = check new (host = host, user = user, password = password, database = connectDB, port = port, options = options, connectionPool = connectionPool);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection with connection params fails.");
+    Client dbClient = check new (host = host, user = user, password = password, database = connectDB, port = port,
+                                 options = options, connectionPool = connectionPool);
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
 }
 
 @test:Config {
@@ -124,10 +124,10 @@ function testWithConnectionParams2() returns error? {
         minIdleConnections : 15
     };
     Options options = {};
-    Client dbClient = check new (host = host, user = user, password = password, options = options, connectionPool = connectionPool);
-
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection with connection params fails.");
+    Client dbClient = check new (host = host, user = user, password = password, options = options,
+                                 connectionPool = connectionPool);
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
 }
 
 @test:Config {
@@ -136,10 +136,10 @@ function testWithConnectionParams2() returns error? {
 function testWithConnectionParams3() returns error? {
     sql:ConnectionPool? connectionPool = ();
     Options? options = ();
-    Client dbClient = check new (host = host, user = user, password = password, options = options, connectionPool = connectionPool);
-
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection with connection params fails.");
+    Client dbClient = check new (host = host, user = user, password = password, options = options,
+                                 connectionPool = connectionPool);
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
 }
 
 @test:Config {
@@ -147,9 +147,9 @@ function testWithConnectionParams3() returns error? {
 }
 function testWithClosedClient1() returns error? {
     Client dbClient = check new (user = user, password = password);
-    var exitCode = dbClient.close();
-    test:assertExactEquals(exitCode, (), "Initialising connection with connection params fails.");
-    sql:ExecutionResult | sql:Error result = dbClient->execute(`CREATE TABLE test (id int)`);
+    sql:Error? closeResult = dbClient.close();
+    test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
+    sql:ExecutionResult|sql:Error result = dbClient->execute(`CREATE TABLE test (id int)`);
     if (result is sql:Error) {
         string expectedErrorMessage = "MsSQL Client is already closed, hence further operations are not allowed";
         test:assertTrue(result.message().startsWith(expectedErrorMessage), 
