@@ -90,22 +90,23 @@ public class Utils {
 
             BMap trustCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_CERT);
             if (trustCertKeystore != null) {
-                options.put(Constants.DatabaseProps.TRUST_KEYSTORE_URL,
+                options.put(Constants.DatabaseProps.TRUSTSTORE_LOCATION,
                         trustCertKeystore.getStringValue(
-                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUST_STORE_RECORD_PATH_FIELD));
-                options.put(Constants.DatabaseProps.TRUST_KEYSTORE_PASSWORD,
+                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUSTSTORE_RECORD_PATH_FIELD));
+                options.put(Constants.DatabaseProps.TRUSTSTORE_PASSWORD,
                         trustCertKeystore.getStringValue(
-                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUST_STORE_RECORD_PASSWORD_FIELD));
+                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUSTSTORE_RECORD_PASSWORD_FIELD));
             }
 
-            BString hostNameInCertificate = sslConfig.getStringValue(Constants.SSLConfig.HOST_NAME_IN_CERTIFICATE);
-            if (hostNameInCertificate != null) {
-                options.put(Constants.DatabaseProps.HOST_NAME_IN_CERTIFICATE, hostNameInCertificate);
-            }
-
-            BString keyStoreAuthentication = sslConfig.getStringValue(Constants.SSLConfig.KEYSTORE_AUTHENTICATION);
-            if (keyStoreAuthentication != null) {
-                options.put(Constants.DatabaseProps.KEYSTORE_AUTHENTICATION, keyStoreAuthentication);
+            BMap clientCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_KEY);
+            if (clientCertKeystore != null) {
+                options.put(Constants.DatabaseProps.KEYSTORE_AUTHENTICATION, "JavaKeyStorePassword");
+                options.put(Constants.DatabaseProps.KEYSTORE_LOCATION,
+                        clientCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoKeyStoreRecord.KEYSTORE_RECORD_PATH_FIELD));
+                options.put(Constants.DatabaseProps.KEYSTORE_PASSWORD,
+                        clientCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoKeyStoreRecord.KEYSTORE_RECORD_PATH_FIELD));
             }
         }
     }

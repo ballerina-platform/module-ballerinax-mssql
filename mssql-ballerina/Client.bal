@@ -180,12 +180,12 @@ public type Options record {|
 # + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication
 #                            layer is encrypted using TLS
 # + cert - Keystore configuration of the trust certificates
-# + hostNameInCertificate - The host name to be used in validating the SQL Server TLS/SSL certificate.
+# + key - Keystore configuration of the client certificates
 public type SecureSocket record {|
     boolean encrypt?;
     boolean trustServerCertificate?;
     crypto:TrustStore cert?;
-    string hostNameInCertificate?;
+    crypto:KeyStore key?;
 |};
 
 isolated function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{

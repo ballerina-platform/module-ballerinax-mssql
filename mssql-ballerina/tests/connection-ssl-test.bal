@@ -17,6 +17,7 @@ import ballerina/test;
 
 string sslDb = "SSL_CONNECT_DB";
 string trustStorePath = "./tests/resources/keystore/client/client-truststore.p12";
+string keyStorePath = "./tests/resources/keystore/client/client-keystore.p12";
 
 @test:Config {
     groups: ["connection", "ssl"]
@@ -27,6 +28,27 @@ function testSSLConnection() returns error? {
             encrypt: true,
             cert: {
                 path: trustStorePath,
+                password: "password"
+            }
+        }
+    };
+    Client dbClient = check new (user = user, password = password, database = sslDb, port = port, options = options);
+    test:assertEquals(dbClient.close(), ());
+}
+
+@test:Config {
+    groups: ["connection", "ssl"]
+}
+function testSSLConnectionWithKeyStore() returns error? {
+    Options options = {
+        secureSocket: {
+            encrypt: true,
+            cert: {
+                path: trustStorePath,
+                password: "password"
+            },
+            key: {
+                path: keyStorePath,
                 password: "password"
             }
         }

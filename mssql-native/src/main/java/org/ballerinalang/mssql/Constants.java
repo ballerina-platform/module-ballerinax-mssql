@@ -56,17 +56,25 @@ public final class Constants {
     public static final class SSLConfig {
         public static final BString ENCRYPT = StringUtils.fromString("encrypt");
         public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
-        public static final BString HOST_NAME_IN_CERTIFICATE = StringUtils.fromString("hostNameInCertificate");
         public static final BString CLIENT_CERT = StringUtils.fromString("cert");
-        public static final BString KEYSTORE_AUTHENTICATION = StringUtils.fromString("keyStoreAuthentication");
+        public static final BString CLIENT_KEY = StringUtils.fromString("key");
 
         /**
          * Constants for processing ballerina crypto:TrustStore.
          */
         public static final class CryptoTrustStoreRecord {
-            public static final BString TRUST_STORE_RECORD_PATH_FIELD = StringUtils.fromString("path");
-            public static final BString TRUST_STORE_RECORD_PASSWORD_FIELD = StringUtils.fromString("password");
+            public static final BString TRUSTSTORE_RECORD_PATH_FIELD = StringUtils.fromString("path");
+            public static final BString TRUSTSTORE_RECORD_PASSWORD_FIELD = StringUtils.fromString("password");
         }
+
+        /**
+         * Constants for processing ballerina crypto:KeyStore.
+         */
+        public static final class CryptoKeyStoreRecord {
+            public static final BString KEYSTORE_RECORD_PATH_FIELD = StringUtils.fromString("path");
+            public static final BString KEYTSTORE_RECORD_PASSWORD_FIELD = StringUtils.fromString("password");
+        }
+
     }
     
     /**
@@ -80,10 +88,11 @@ public final class Constants {
         //SSL properties
         public static final BString ENCRYPT = StringUtils.fromString("encrypt");
         public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
-        public static final BString TRUST_KEYSTORE_URL = StringUtils.fromString("trustStore");
-        public static final BString TRUST_KEYSTORE_PASSWORD = StringUtils.fromString("trustStorePassword");
-        public static final BString HOST_NAME_IN_CERTIFICATE = StringUtils.fromString("hostNameInCertificate");
+        public static final BString TRUSTSTORE_LOCATION = StringUtils.fromString("trustStore");
+        public static final BString TRUSTSTORE_PASSWORD = StringUtils.fromString("trustStorePassword");
         public static final BString KEYSTORE_AUTHENTICATION = StringUtils.fromString("keyStoreAuthentication");
+        public static final BString KEYSTORE_LOCATION = StringUtils.fromString("keyStoreLocation");
+        public static final BString KEYSTORE_PASSWORD = StringUtils.fromString("keyStoreSecret");
     }
 
     /**
