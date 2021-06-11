@@ -49,6 +49,7 @@ public class Utils {
             if (loginTimeout > 0) {
                 options.put(Constants.DatabaseProps.LOGIN_TIMEOUT, loginTimeout);
             }
+
             return options;
         }
         return null;
@@ -76,10 +77,6 @@ public class Utils {
 
     private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
         if (sslConfig != null) {
-            int integratedSecurity = getBooleanValue(sslConfig.get(Constants.SSLConfig.INTEGRATED_SECURITY));
-            if (integratedSecurity == 1) {
-                options.put(Constants.DatabaseProps.INTEGRATED_SECURITY, true);
-            }
 
             int encrypt = getBooleanValue(sslConfig.get(Constants.SSLConfig.ENCRYPT));
             if (encrypt == 1) {

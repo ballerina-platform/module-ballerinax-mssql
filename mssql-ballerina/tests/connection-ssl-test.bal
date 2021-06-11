@@ -25,7 +25,6 @@ function testSSLConnection() returns error? {
     Options options = {
         secureSocket: {
             encrypt: true,
-            hostNameInCertificate: "ballerina-mysql-test-server",
             cert: {
                 path: trustStorePath,
                 password: "password"
@@ -35,24 +34,6 @@ function testSSLConnection() returns error? {
     Client dbClient = check new (user = user, password = password, database = sslDb, port = port, options = options);
     test:assertEquals(dbClient.close(), ());
 }
-
-@test:Config {
-    groups: ["connection", "ssl"]
-}
-function testSSLConnectionWithNoHostName() {
-    Options options = {
-        secureSocket: {
-            encrypt: true,
-            cert: {
-                path: trustStorePath,
-                password: "password"
-            }
-        }
-    };
-    Client|error? dbClient = new (user = user, password = password, database = sslDb, port = port, options = options);
-    test:assertTrue(dbClient is error, "Connection should not have been established.");
-}
-
 
 @test:Config {
     groups: ["connection", "ssl"]

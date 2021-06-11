@@ -1,7 +1,7 @@
 FROM microsoft/mssql-server-linux
 
-COPY keystore/server/mssql.pem /etc/ssl/certs/mssql.pem
-COPY keystore/server/mssql.key /etc/ssl/private/mssql.key
+COPY keystore/server/server-cert.pem /etc/ssl/certs/mssql.pem
+COPY keystore/server/server-key.pem /etc/ssl/private/mssql.key
 
 USER root
 RUN chmod 777 /etc/ssl/certs/mssql.pem

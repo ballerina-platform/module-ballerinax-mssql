@@ -167,7 +167,7 @@ type ClientConfiguration record {|
 #                  A non-zero value is the number of seconds the driver should wait
 #                  before timing out a failed connection
 public type Options record {|
-    SecureSocket secureSocket = {};
+    SecureSocket secureSocket?;
     decimal socketTimeout?;
     decimal queryTimeout?;
     decimal loginTimeout?;
@@ -175,9 +175,6 @@ public type Options record {|
 
 # SSL configuration to be used when connecting to the MsSQL server
 #
-# + integratedSecurity - Set to "true" to indicate that Windows credentials are used by SQL Server on Windows operating
-#                        systems. If "true", the local computer credential cache is searched for credentials that were
-#                        provided when a user signed in to the computer or network.
 # + encrypt - Encryption for all the data sent between the client and the server if the server has a certificate
 #             installed
 # + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication
@@ -185,7 +182,6 @@ public type Options record {|
 # + cert - Keystore configuration of the trust certificates
 # + hostNameInCertificate - The host name to be used in validating the SQL Server TLS/SSL certificate.
 public type SecureSocket record {|
-    boolean integratedSecurity?;
     boolean encrypt?;
     boolean trustServerCertificate?;
     crypto:TrustStore cert?;

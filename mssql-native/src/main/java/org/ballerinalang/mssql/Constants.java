@@ -54,7 +54,6 @@ public final class Constants {
      * Constants for ssl configuration.
      */
     public static final class SSLConfig {
-        public static final BString INTEGRATED_SECURITY = StringUtils.fromString("integratedSecurity");
         public static final BString ENCRYPT = StringUtils.fromString("encrypt");
         public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
         public static final BString HOST_NAME_IN_CERTIFICATE = StringUtils.fromString("hostNameInCertificate");
@@ -79,7 +78,6 @@ public final class Constants {
         public static final BString LOGIN_TIMEOUT = StringUtils.fromString("loginTimeout");
 
         //SSL properties
-        public static final BString INTEGRATED_SECURITY = StringUtils.fromString("integratedSecurity");
         public static final BString ENCRYPT = StringUtils.fromString("encrypt");
         public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
         public static final BString TRUST_KEYSTORE_URL = StringUtils.fromString("trustStore");
