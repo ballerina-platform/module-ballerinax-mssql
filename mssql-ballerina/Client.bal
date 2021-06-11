@@ -173,26 +173,19 @@ public type Options record {|
     decimal loginTimeout?;
 |};
 
-public const KSA_JAYA_KEYSTORE_PASSWORD = "JavaKeyStorePassword";
-public type KeyStoreAuthentication KSA_JAYA_KEYSTORE_PASSWORD;
-
 # SSL configuration to be used when connecting to the MsSQL server
 #
-# + integratedSecurity - Set to "true" to indicate that Windows credentials are used by SQL Server on Windows operating
-#                        systems. If "true", the local computer credential cache is searched for credentials that were
-#                        provided when a user signed in to the computer or network.
 # + encrypt - Encryption for all the data sent between the client and the server if the server has a certificate
 #             installed
 # + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication
 #                            layer is encrypted using TLS
 # + cert - Keystore configuration of the trust certificates
-# + hostNameInCertificate - The host name to be used in validating the SQL Server TLS/SSL certificate.
+# + key - Keystore configuration of the client certificates
 public type SecureSocket record {|
-    boolean integratedSecurity?;
     boolean encrypt?;
     boolean trustServerCertificate?;
     crypto:TrustStore cert?;
-    string hostNameInCertificate?;
+    crypto:KeyStore key?;
 |};
 
 isolated function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{

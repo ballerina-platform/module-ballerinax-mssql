@@ -14,10 +14,10 @@
 // under the License.
 
 import ballerina/test;
-import ballerina/file;
 
 string sslDb = "SSL_CONNECT_DB";
-string trustStorePath = checkpanic file:getAbsolutePath("./tests/resources/keystore/client/client-truststore.p12");
+string trustStorePath = "./tests/resources/keystore/client/client-truststore.p12";
+string keyStorePath = "./tests/resources/keystore/client/client-keystore.p12";
 
 @test:Config {
     groups: ["connection", "ssl"]
@@ -26,34 +26,36 @@ function testSSLConnection() returns error? {
     Options options = {
         secureSocket: {
             encrypt: true,
-            hostNameInCertificate: "ballerina-mysql-test-server",
             cert: {
                 path: trustStorePath,
                 password: "password"
             }
         }
     };
-    Client dbClient = check new(user = user, password = password, database = sslDb, port = port, options = options);
+    Client dbClient = check new (user = user, password = password, database = sslDb, port = port, options = options);
     test:assertEquals(dbClient.close(), ());
 }
 
 @test:Config {
     groups: ["connection", "ssl"]
 }
-function testSSLConnectionWithNoHostName() {
+function testSSLConnectionWithKeyStore() returns error? {
     Options options = {
         secureSocket: {
             encrypt: true,
             cert: {
                 path: trustStorePath,
                 password: "password"
+            },
+            key: {
+                path: keyStorePath,
+                password: "password"
             }
         }
     };
-    Client|error? dbClient = new(user = user, password = password, database = sslDb, port = port, options = options);
-    test:assertTrue(dbClient is error, "Connection should not have been established.");
+    Client dbClient = check new (user = user, password = password, database = sslDb, port = port, options = options);
+    test:assertEquals(dbClient.close(), ());
 }
-
 
 @test:Config {
     groups: ["connection", "ssl"]
@@ -65,6 +67,6 @@ function testSSLWithSelfSignedCertificate() returns error? {
             trustServerCertificate: true
         }
     };
-    Client dbClient = check new(user = user, password = password, database = sslDb, port = port, options = options);
+    Client dbClient = check new (user = user, password = password, database = sslDb, port = port, options = options);
     test:assertEquals(dbClient.close(), ());
 }
