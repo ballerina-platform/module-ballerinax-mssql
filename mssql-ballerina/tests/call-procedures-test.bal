@@ -35,13 +35,10 @@ function testStringProcedureCall() returns error? {
     sql:VarcharValue varcharValue = new("This is a varchar3");
     string textValue = "This is a text3";
 
-    sql:ParameterizedCallQuery sqlQuery =
-      `
-      exec StringProcedure ${rowId}, ${charValue}, ${varcharValue}, ${textValue};
-    `;
+    sql:ParameterizedCallQuery sqlQuery = `exec StringProcedure ${rowId}, ${charValue}, ${varcharValue}, ${textValue};`;
     sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb);
 
-    sql:ParameterizedQuery query = `SELECT row_id, char_type, varchar_type, text_type from StringTypes where row_id = ${rowId}`;
+    sql:ParameterizedQuery query = `SELECT row_id, char_type, varchar_type, text_type FROM StringTypes WHERE row_id = ${rowId}`;
 
     StringProcedureRecord expectedDataRow = {
         row_id: rowId,
@@ -77,15 +74,13 @@ function testExactNumericProcedureCall() returns error? {
     int tinyintType = 255;
 
     sql:ParameterizedCallQuery sqlQuery =
-      `
-      exec ExactNumericProcedure ${rowId}, ${smallintType}, ${intType}, ${bigintType}, ${decimalType}, 
-                                ${numericType}, ${tinyintType};
-    `;
+        `exec ExactNumericProcedure ${rowId}, ${smallintType}, ${intType}, ${bigintType}, ${decimalType},
+                                ${numericType}, ${tinyintType};`;
     sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb);
 
-    sql:ParameterizedQuery query = `SELECT row_id, smallint_type, int_type, bigint_type, decimal_type,
-        numeric_type, tinyint_type
-        from ExactNumeric where row_id = ${rowId}`;
+    sql:ParameterizedQuery query =
+        `SELECT row_id, smallint_type, int_type, bigint_type, decimal_type, numeric_type, tinyint_type
+         FROM ExactNumeric WHERE row_id = ${rowId}`;
 
     ExactNumericProcedureRecord expectedDataRow = {
         row_id: rowId,
@@ -96,7 +91,8 @@ function testExactNumericProcedureCall() returns error? {
         numeric_type: 12.12000,
         tinyint_type: 255
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, ExactNumericProcedureRecord), expectedDataRow, "Numeric Call procedure insert and query did not match.");
+    test:assertEquals(check queryProcedureClient(query, proceduresDb, ExactNumericProcedureRecord), expectedDataRow,
+                      "Numeric Call procedure insert and query did not match.");
 }
 
 public type ApproximateNumericProcedureRecord record {
@@ -113,22 +109,18 @@ function testApproximateNumericProcedureCall() returns error? {
     int rowId = 35;
     float floatType = 1.79E+308;
     float realType = -1.179999945774631E-38;
-    sql:ParameterizedCallQuery sqlQuery =
-      `
-      exec ApproximateNumericProcedure ${rowId}, ${floatType}, ${realType};
-    `;
+    sql:ParameterizedCallQuery sqlQuery = `exec ApproximateNumericProcedure ${rowId}, ${floatType}, ${realType};`;
     sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb);
 
-    sql:ParameterizedQuery query = `SELECT *
-        from ApproximateNumeric where row_id = ${rowId}`;
+    sql:ParameterizedQuery query = `SELECT * FROM ApproximateNumeric WHERE row_id = ${rowId}`;
 
     ApproximateNumericProcedureRecord expectedDataRow = {
         row_id: rowId,
         float_type: 1.79E+308,
         real_type:-1.179999945774631E-38
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, ApproximateNumericProcedureRecord), expectedDataRow, "ApproximateNumeric Call procedure insert and query did not match.");
-
+    test:assertEquals(check queryProcedureClient(query, proceduresDb, ApproximateNumericProcedureRecord), expectedDataRow,
+                      "ApproximateNumeric Call procedure insert and query did not match.");
 }
 
 public type DatetimeProcedureRecord record {
@@ -154,12 +146,10 @@ function testDatetimeProcedureCall() returns error? {
     sql:DateTimeValue date_time = new ("2017-06-26 09:54:21.325");
     sql:TimeValue time = new ("09:46:22");
     sql:ParameterizedCallQuery sqlQuery =
-    `
-    exec DatetimeProcedure ${rowId}, ${date}, ${date_time_offset}, ${date_time2}, ${small_date_time}, ${date_time}, ${time};
-    `;
+        `exec DatetimeProcedure ${rowId}, ${date}, ${date_time_offset}, ${date_time2}, ${small_date_time}, ${date_time}, ${time};`;
     sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb);
 
-    sql:ParameterizedQuery query = `SELECT * from DateandTime where row_id = ${rowId}`;
+    sql:ParameterizedQuery query = `SELECT * FROM DateandTime WHERE row_id = ${rowId}`;
 
     DatetimeProcedureRecord expectedDataRow = {
         row_id: rowId,
@@ -170,7 +160,8 @@ function testDatetimeProcedureCall() returns error? {
         smallDateTime_type: "2007-05-10 10:00:00.0",
         dateTimeOffset_type: "2020-01-01 19:14:51.0021425 +05:30"
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, DatetimeProcedureRecord), expectedDataRow, "Datetime Call procedure insert and query did not match.");
+    test:assertEquals(check queryProcedureClient(query, proceduresDb, DatetimeProcedureRecord), expectedDataRow,
+                      "Datetime Call procedure insert and query did not match.");
 }
 
 public type MoneyProcedureRecord record {
@@ -187,10 +178,7 @@ function testMoneyProcedureCall() returns error? {
     int rowId = 35;
     MoneyValue moneyType = new(2356.12);
     SmallMoneyValue smallMoneyType = new(123.45);
-    sql:ParameterizedCallQuery sqlQuery =
-      `
-      exec MoneyProcedure ${rowId}, ${moneyType}, ${smallMoneyType};
-    `;
+    sql:ParameterizedCallQuery sqlQuery = `exec MoneyProcedure ${rowId}, ${moneyType}, ${smallMoneyType};`;
     sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb);
 
     sql:ParameterizedQuery query = `SELECT *
@@ -201,7 +189,8 @@ function testMoneyProcedureCall() returns error? {
         money_type: "2356.1200",
         smallMoney_type: "123.4500"
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, MoneyProcedureRecord), expectedDataRow, "Money Call procedure insert and query did not match.");
+    test:assertEquals(check queryProcedureClient(query, proceduresDb, MoneyProcedureRecord), expectedDataRow,
+                      "Money Call procedure insert and query did not match.");
 
 }
 
