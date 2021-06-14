@@ -18,6 +18,7 @@
 package org.ballerinalang.mssql.utils;
 
 import io.ballerina.runtime.api.creators.ValueCreator;
+import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
 import org.ballerinalang.mssql.Constants;
@@ -32,7 +33,7 @@ public class Utils {
     public static BMap generateOptionsMap(BMap mssqlOptions) {
         if (mssqlOptions != null) {
             BMap<BString, Object> options = ValueCreator.createMapValue();    
-            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SECURESOCKET), options);
+            addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SECURE_SOCKET), options);
 
             long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT_SECONDS));
             if (queryTimeout > 0) {
@@ -48,6 +49,7 @@ public class Utils {
             if (loginTimeout > 0) {
                 options.put(Constants.DatabaseProps.LOGIN_TIMEOUT, loginTimeout);
             }
+
             return options;
         }
         return null;
@@ -55,7 +57,7 @@ public class Utils {
 
     private static int getBooleanValue(Object value) {
         if (value instanceof Boolean) {
-            if (((Boolean) value) == true) {
+            if (((Boolean) value)) {
                 return 1;
             }
             return 0;
@@ -63,11 +65,11 @@ public class Utils {
         return -1;
     }
 
-    private static long getTimeout(Object secondsInt) {
-        if (secondsInt instanceof Long) {
-            Long timeoutSec = (Long) secondsInt;
-            if (timeoutSec.longValue() > 0) {
-                return Long.valueOf(timeoutSec.longValue() * 1000).longValue();
+    private static long getTimeout(Object secondsDecimal) {
+        if (secondsDecimal instanceof BDecimal) {
+            BDecimal timeoutSec = (BDecimal) secondsDecimal;
+            if (((BDecimal) secondsDecimal).floatValue() > 0) {
+                return Double.valueOf(timeoutSec.floatValue() * 1000).longValue();
             }
         }
         return -1;
@@ -75,14 +77,36 @@ public class Utils {
 
     private static void addSSLOptions(BMap sslConfig, BMap<BString, Object> options) {
         if (sslConfig != null) {
+
             int encrypt = getBooleanValue(sslConfig.get(Constants.SSLConfig.ENCRYPT));
             if (encrypt == 1) {
-                options.put(Constants.SSLConfig.ENCRYPT, true);
+                options.put(Constants.DatabaseProps.ENCRYPT, true);
             }
             
             int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
             if (trustServerCertificate == 1) {
-                options.put(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE, true);
+                options.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, true);
+            }
+
+            BMap trustCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_CERT);
+            if (trustCertKeystore != null) {
+                options.put(Constants.DatabaseProps.TRUSTSTORE_LOCATION,
+                        trustCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUSTSTORE_RECORD_PATH_FIELD));
+                options.put(Constants.DatabaseProps.TRUSTSTORE_PASSWORD,
+                        trustCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoTrustStoreRecord.TRUSTSTORE_RECORD_PASSWORD_FIELD));
+            }
+
+            BMap clientCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_KEY);
+            if (clientCertKeystore != null) {
+                options.put(Constants.DatabaseProps.KEYSTORE_AUTHENTICATION, "JavaKeyStorePassword");
+                options.put(Constants.DatabaseProps.KEYSTORE_LOCATION,
+                        clientCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoKeyStoreRecord.KEYSTORE_RECORD_PATH_FIELD));
+                options.put(Constants.DatabaseProps.KEYSTORE_PASSWORD,
+                        clientCertKeystore.getStringValue(
+                                Constants.SSLConfig.CryptoKeyStoreRecord.KEYSTORE_RECORD_PATH_FIELD));
             }
         }
     }

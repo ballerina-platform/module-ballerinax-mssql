@@ -16,6 +16,7 @@
 
 import ballerina/jballerina.java;
 import ballerina/sql;
+import ballerina/crypto;
 
 # Represents a MsSQL database client.
 public client class Client {
@@ -161,13 +162,12 @@ type ClientConfiguration record {|
 #                  query. The default value is -1, which means infinite timeout.
 #                  Setting this to 0 also implies to wait indefinitely
 # + loginTimeout - The number of seconds the driver should wait before timing out a 
-#                 failed connection. A zero value indicates that the timeout is the 
-#                 default system timeout, which is specified as 15 seconds by default. 
-#                 A non-zero value is the number of seconds the driver should wait 
-#                 before timing out a failed connection
-
+#                  failed connection. A zero value indicates that the timeout is the
+#                  default system timeout, which is specified as 15 seconds by default.
+#                  A non-zero value is the number of seconds the driver should wait
+#                  before timing out a failed connection
 public type Options record {|
-    SecureSocket secureSocket = {};
+    SecureSocket secureSocket?;
     decimal socketTimeout?;
     decimal queryTimeout?;
     decimal loginTimeout?;
@@ -175,12 +175,17 @@ public type Options record {|
 
 # SSL configuration to be used when connecting to the MsSQL server
 #
-# + encrypt - encryption for all the data sent between the client and the server if the server has a certificate installed
-# + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication layer is encrypted using TLS
-
+# + encrypt - Encryption for all the data sent between the client and the server if the server has a certificate
+#             installed
+# + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication
+#                            layer is encrypted using TLS
+# + cert - Keystore configuration of the trust certificates
+# + key - Keystore configuration of the client certificates
 public type SecureSocket record {|
     boolean encrypt?;
     boolean trustServerCertificate?;
+    crypto:TrustStore cert?;
+    crypto:KeyStore key?;
 |};
 
 isolated function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{
