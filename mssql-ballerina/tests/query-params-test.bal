@@ -235,8 +235,8 @@ function queryTimeValueParam() returns error? {
     validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
 
-function simpleQueryMssqlClient(@untainted string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string database = simpleParamsDb)
-returns @tainted record {}? | error? {
+function simpleQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string database = simpleParamsDb)
+returns record {}? | error? {
     Client dbClient = check new(host, user, password, database, port);
     stream<record {}, error> streamData = dbClient->query(sqlQuery, resultType);
     record {|record {} value;|}? data = check streamData.next();
