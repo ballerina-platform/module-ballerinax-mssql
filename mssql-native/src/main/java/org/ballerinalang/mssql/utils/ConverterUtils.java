@@ -40,7 +40,7 @@ import java.util.Map;
 import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 
 /**
-* This class implements the utils methods for the MsSQL Datatypes.
+* This class implements the utils methods for the MSSQL Datatypes.
 *
 * @since 0.1.0
 */

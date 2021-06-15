@@ -151,7 +151,7 @@ function testWithClosedClient1() returns error? {
     test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
     sql:ExecutionResult|sql:Error result = dbClient->execute(`CREATE TABLE test (id int)`);
     if (result is sql:Error) {
-        string expectedErrorMessage = "MsSQL Client is already closed, hence further operations are not allowed";
+        string expectedErrorMessage = "MSSQL Client is already closed, hence further operations are not allowed";
         test:assertTrue(result.message().startsWith(expectedErrorMessage), 
             "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
     } else {

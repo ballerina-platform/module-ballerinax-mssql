@@ -16,9 +16,9 @@
 
 import ballerina/sql;
 
-# MsSQL Geometric Data types.
+# MSSQL Geometric Data types.
 
-## Represents Point MsSQL Field
+## Represents Point MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class PointValue {
@@ -30,7 +30,7 @@ public distinct class PointValue {
     }
 }
 
-## Represents LineString MsSQL Field
+## Represents LineString MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class LineStringValue {
@@ -42,7 +42,7 @@ public distinct class LineStringValue {
     }
 }
 
-## Represents CircularString MsSQL Field
+## Represents CircularString MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class CircularStringValue {
@@ -54,7 +54,7 @@ public distinct class CircularStringValue {
     }
 }
 
-## Represents CompoundCurve MsSQL Field
+## Represents CompoundCurve MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class CompoundCurveValue {
@@ -66,7 +66,7 @@ public distinct class CompoundCurveValue {
     }
 }
 
-## Represents Polygon MsSQL Field
+## Represents Polygon MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class PolygonValue {
@@ -78,7 +78,7 @@ public distinct class PolygonValue {
     }
 }
 
-## Represents MultiPolygon MsSQL Field
+## Represents MultiPolygon MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class MultiPolygonValue {
@@ -90,7 +90,7 @@ public distinct class MultiPolygonValue {
     }
 }
 
-## Represents CurvePolygon MsSQL Field
+## Represents CurvePolygon MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class CurvePolygonValue {
@@ -102,7 +102,7 @@ public distinct class CurvePolygonValue {
     }
 }
 
-## Represents MultiLineString MsSQL Field
+## Represents MultiLineString MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class MultiLineStringValue {
@@ -114,7 +114,7 @@ public distinct class MultiLineStringValue {
     }
 }
 
-## Represents MultiPoint MsSQL Field
+## Represents MultiPoint MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class MultiPointValue {
@@ -126,7 +126,7 @@ public distinct class MultiPointValue {
     }
 }
 
-## Represents GeometryCollection MsSQL Field
+## Represents GeometryCollection MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class GeometryCollectionValue {
@@ -138,9 +138,9 @@ public distinct class GeometryCollectionValue {
     }
 }
 
-# MsSQL Money Data types.
+# MSSQL Money Data types.
 
-# Represents Money MsSQL Field
+# Represents Money MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class MoneyValue {
@@ -152,7 +152,7 @@ public distinct class MoneyValue {
     }  
 }
 
-# Represents Smallmoney MsSQL Field
+# Represents Smallmoney MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class SmallMoneyValue {
@@ -164,7 +164,7 @@ public distinct class SmallMoneyValue {
     }  
 }
 
-# Represents Point Datatype in MsSQL.
+# Represents Point Datatype in MSSQL.
 #
 # + x - The x Cordinate of the Point
 # + y - The y Cordinate of the Point
@@ -173,7 +173,7 @@ public type Point record {
     decimal y;
 };
 
-# Represents LineString Datatype in MsSQL.
+# Represents LineString Datatype in MSSQL.
 #
 # + x1 - The x cordinate of the first point of the line segment
 # + y1 - The y cordinate of the first point of the line segment

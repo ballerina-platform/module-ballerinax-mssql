@@ -17,7 +17,7 @@
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
-description = 'Ballerina - MsSQL Ballerina Generator'
+description = 'Ballerina - MSSQL Ballerina Generator'
 
 def packageName = "mssql"
 def packageOrg = "ballerinax"

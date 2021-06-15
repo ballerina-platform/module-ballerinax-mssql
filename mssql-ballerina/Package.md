@@ -1,8 +1,8 @@
 ## Package overview
 
-This Package provides the functionality required to access and manipulate data stored in a MsSQL database.  
+This Package provides the functionality required to access and manipulate data stored in a MSSQL database.  
 
-**Prerequisite:** Add the MsSQL driver JAR as a native library dependency in your Ballerina project. 
+**Prerequisite:** Add the MSSQL driver JAR as a native library dependency in your Ballerina project. 
 Once you build the project by executing the `ballerina build`
 command, you should be able to run the resultant by executing the `ballerina run` command.
 

@@ -18,22 +18,22 @@ import ballerina/jballerina.java;
 import ballerina/sql;
 import ballerina/crypto;
 
-# Represents a MsSQL database client.
+# Represents a MSSQL database client.
 public client class Client {
     *sql:Client;
     private boolean clientActive = true;
 
     # Initialize the Mssql client.
     #
-    # + host - Hostname of the MsSQL server to be connected
-    # + user - If the MsSQL server is secured, the username to be used to connect to the SQL server
+    # + host - Hostname of the MSSQL server to be connected
+    # + user - If the MSSQL server is secured, the username to be used to connect to the SQL server
     # + password - The password associated with the username of the database
     # + database - The name of the database to be connected
-    # + port - Port of the MsSQL server to be connected
-    # + instance - Instance name of the MsSQL server to be connected as MsSQL can have installations of multiple versions 
+    # + port - Port of the MSSQL server to be connected
+    # + instance - Instance name of the MSSQL server to be connected as MSSQL can have installations of multiple versions 
     #              under a single server.
     # + options - The database-specific JDBC client properties
-    # + connectionPool - The `sql:ConnectionPool` object to be used within the MsSQL client.
+    # + connectionPool - The `sql:ConnectionPool` object to be used within the MSSQL client.
     #                   If there is no `connectionPool` provided, the global connection pool will be used and it will
     #                   be shared by other clients which have the same properties.
     public isolated function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
@@ -63,7 +63,7 @@ public client class Client {
         if (self.clientActive) {
             return nativeQuery(self, sqlQuery, rowType);
         } else {
-            return sql:generateApplicationErrorStream("MsSQL Client is already closed,"
+            return sql:generateApplicationErrorStream("MSSQL Client is already closed,"
                 + "hence further operations are not allowed");
         }
     }
@@ -78,7 +78,7 @@ public client class Client {
         if (self.clientActive) {
             return nativeExecute(self, sqlQuery);
         } else {
-            return error sql:ApplicationError("MsSQL Client is already closed, hence further operations are not allowed");
+            return error sql:ApplicationError("MSSQL Client is already closed, hence further operations are not allowed");
         }
     }
 
@@ -99,7 +99,7 @@ public client class Client {
         if (self.clientActive) {
             return nativeBatchExecute(self, sqlQueries);
         } else {
-            return error sql:ApplicationError("MsSQL Client is already closed, hence further operations are not allowed");
+            return error sql:ApplicationError("MSSQL Client is already closed, hence further operations are not allowed");
         }
     }
 
@@ -114,7 +114,7 @@ public client class Client {
         if (self.clientActive) {
             return nativeCall(self, sqlQuery, rowTypes);
         } else {
-            return error sql:ApplicationError("MsSQL Client is already closed, hence further operations are not allowed");
+            return error sql:ApplicationError("MSSQL Client is already closed, hence further operations are not allowed");
         }
     }
 
@@ -137,7 +137,7 @@ public client class Client {
 # + database - Name of the database
 # + user - Username for the database connection
 # + password - Password for the database connection
-# + options - MsSQL database specific options
+# + options - MSSQL database specific options
 # + connectionPool - The `sql:ConnectionPool` object to be used within 
 #         the jdbc client. If there is no connectionPool provided, 
 #         the global connection pool will be used
@@ -152,7 +152,7 @@ type ClientConfiguration record {|
     sql:ConnectionPool?  connectionPool;
 |};
 
-# MsSQL database options.
+# MSSQL database options.
 #
 # + secureSocket - SSL Configuration to be used
 # + socketTimeout - The number of milliseconds to wait before a timeout occurs
@@ -173,7 +173,7 @@ public type Options record {|
     decimal loginTimeout?;
 |};
 
-# SSL configuration to be used when connecting to the MsSQL server
+# SSL configuration to be used when connecting to the MSSQL server
 #
 # + encrypt - Encryption for all the data sent between the client and the server if the server has a certificate
 #             installed

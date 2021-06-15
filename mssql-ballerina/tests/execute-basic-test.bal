@@ -287,7 +287,7 @@ function testPointTypeError() returns error? {
     int id =11;
     PointValue pointValue = new ("Invalid Value");
     sql:ParameterizedQuery sqlQuery = `INSERT INTO GeometricTypes (row_id, point_type) VALUES (${id}, ${pointValue});`;
-    sql:ExecutionResult|sql:Error result = executeMsSQLClient(sqlQuery);
+    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
     test:assertTrue(result is error);
     string expectedErrorMessage = "Error while executing SQL query: INSERT INTO GeometricTypes (row_id, point_type) "+
         "VALUES ( ? ,  ? );. Unsupported Value: Invalid Value for type: point.";
@@ -306,7 +306,7 @@ function testGeometryCollectionTypeError() returns error? {
     int id =11;
     GeometryCollectionValue GeometryValue = new ("Invalid Value");
     sql:ParameterizedQuery sqlQuery = `INSERT INTO GeometricTypes (row_id, geometry_type) VALUES (${id}, ${GeometryValue});`;
-    sql:ExecutionResult|sql:Error result = executeMsSQLClient(sqlQuery);
+    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
     test:assertTrue(result is error);
     string expectedErrorMessage = "Error while executing SQL query: INSERT INTO GeometricTypes (row_id, geometry_type) "+
         "VALUES ( ? ,  ? );. Unsupported Value: Invalid Value for type: geometry";
@@ -325,7 +325,7 @@ function testMoneyTypeError() returns error? {
     int id =11;
     MoneyValue moneyValue = new ("Invalid Value");
     sql:ParameterizedQuery sqlQuery = `INSERT INTO MoneyTypes (row_id, money_type) VALUES (${id}, ${moneyValue});`;
-    sql:ExecutionResult|sql:Error result = executeMsSQLClient(sqlQuery);
+    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
     test:assertTrue(result is error);
     string expectedErrorMessage = "Error while executing SQL query: INSERT INTO MoneyTypes (row_id, money_type) " +
         "VALUES ( ? ,  ? );. Cannot convert a char value to money.";
@@ -337,7 +337,7 @@ function testMoneyTypeError() returns error? {
     }
 }
 
-function executeMsSQLClient (sql:ParameterizedQuery|string sqlQuery) returns sql:ExecutionResult|sql:Error {
+function executeMSSQLClient (sql:ParameterizedQuery|string sqlQuery) returns sql:ExecutionResult|sql:Error {
     Client dbClient = check new (host, user, password, executeDb, port);
     sql:ExecutionResult|sql:Error result = dbClient->execute(sqlQuery);
     check dbClient.close();

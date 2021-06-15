@@ -96,7 +96,7 @@ public final class Constants {
     }
 
     /**
-    * Constants for MsSQLGeometric datatypes.
+    * Constants for MSSQLGeometric datatypes.
     */
     public static final class Geometric {
         public static final String X = "x";
