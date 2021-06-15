@@ -20,7 +20,7 @@ package org.ballerinalang.mssql.nativeimpl;
 
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BTypedesc;
-import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
+import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
 
 /**
  * This class provides the implementation of processing InOut/Out parameters of procedure calls.
@@ -30,6 +30,6 @@ import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
 public class OutParameterProcessorUtils {
     public static Object get(BObject result, BTypedesc typeDesc) {
         return org.ballerinalang.sql.nativeimpl.OutParameterProcessor
-            .get(result, typeDesc, MssqlResultParameterProcessor.getInstance());
+            .get(result, typeDesc, DefaultResultParameterProcessor.getInstance());
     }
 }

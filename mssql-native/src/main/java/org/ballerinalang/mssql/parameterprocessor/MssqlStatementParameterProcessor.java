@@ -26,7 +26,6 @@ import org.ballerinalang.mssql.utils.ConverterUtils;
 import org.ballerinalang.sql.exception.ApplicationError;
 import org.ballerinalang.sql.parameterprocessor.DefaultStatementParameterProcessor;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -52,7 +51,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     @Override
     protected void setCustomSqlTypedParam(Connection connection, PreparedStatement preparedStatement,
                                           int index, BObject typedValue)
-            throws SQLException, ApplicationError, IOException {
+            throws SQLException, ApplicationError {
         String sqlType = typedValue.getType().getName();
         Object value = typedValue.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
         switch (sqlType) {
@@ -63,34 +62,18 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
                 setLineString(preparedStatement, index, value);
                 break;
             case Constants.CustomTypeNames.CIRCULARSTRING:
-                setCircularString(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.COMPOUNDCURVE:
-                setCompoundCurve(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.POLYGON:
-                setPolygon(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.CURVEPOLYGON:
-                setCurvePolygon(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.MULTIPOLYGON:
-                setMultiPolygon(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.MULTIPOINT:
-                setMultiPoint(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.MULTILINESTRING:
-                setMultiLineString(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.GEOMETRYCOLLECTION:
-                setGeometryCollection(preparedStatement, index, value);
+                setGeometryString(preparedStatement, index, value);
                 break;
             case Constants.CustomTypeNames.MONEY:
-                setMoney(preparedStatement, index, value);
-                break;
             case Constants.CustomTypeNames.SMALLMONEY:
-                setSmallMoney(preparedStatement, index, value);
+                setMoney(preparedStatement, index, value);
                 break;
             default:
                 throw new ApplicationError("Unsupported SQL type: " + sqlType);
@@ -98,7 +81,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setPoint(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
+        throws SQLException, ApplicationError {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -109,7 +92,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setLineString(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
+        throws SQLException, ApplicationError {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -119,85 +102,8 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
         }
     }
 
-    private void setCircularString(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Geometry object = ConverterUtils.convertGeometryString(value);
-            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
-            sqlServerStatement.setGeometry(index, object);
-        }
-    }
-
-    private void setCompoundCurve(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Geometry object = ConverterUtils.convertGeometryString(value);
-            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
-            sqlServerStatement.setGeometry(index, object);
-        }
-    }
-
-    private void setPolygon(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Geometry object = ConverterUtils.convertGeometryString(value);
-            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
-            sqlServerStatement.setGeometry(index, object);
-        }
-    }
-
-    private void setCurvePolygon(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Geometry object = ConverterUtils.convertGeometryString(value);
-            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
-            sqlServerStatement.setGeometry(index, object);
-        }
-    }
-
-    private void setMultiPolygon(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Geometry object = ConverterUtils.convertGeometryString(value);
-            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
-            sqlServerStatement.setGeometry(index, object);
-        }
-    }
-
-    private void setMultiPoint(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Geometry object = ConverterUtils.convertGeometryString(value);
-            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
-            sqlServerStatement.setGeometry(index, object);
-        }
-    }
-
-    private void setMultiLineString(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Geometry object = ConverterUtils.convertGeometryString(value);
-            SQLServerPreparedStatement sqlServerStatement = preparedStatement.unwrap(SQLServerPreparedStatement.class);
-            sqlServerStatement.setGeometry(index, object);
-        }
-    }
-
-    private void setGeometryCollection(PreparedStatement preparedStatement, int index, Object value)
-            throws SQLException, ApplicationError {
+    private void setGeometryString(PreparedStatement preparedStatement, int index, Object value)
+        throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -216,14 +122,4 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
             preparedStatement.setObject(index, object);
         }
     }  
-
-    private void setSmallMoney(PreparedStatement preparedStatement, int index, Object value)
-        throws SQLException {
-        if (value == null) {
-            preparedStatement.setObject(index, null);
-        } else {
-            Object object = ConverterUtils.convertMoney(value);
-            preparedStatement.setObject(index, object);
-        }
-    } 
 }

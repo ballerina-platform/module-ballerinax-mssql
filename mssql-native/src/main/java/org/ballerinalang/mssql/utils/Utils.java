@@ -106,7 +106,7 @@ public class Utils {
                                 Constants.SSLConfig.CryptoKeyStoreRecord.KEYSTORE_RECORD_PATH_FIELD));
                 options.put(Constants.DatabaseProps.KEYSTORE_PASSWORD,
                         clientCertKeystore.getStringValue(
-                                Constants.SSLConfig.CryptoKeyStoreRecord.KEYSTORE_RECORD_PATH_FIELD));
+                                Constants.SSLConfig.CryptoKeyStoreRecord.KEYTSTORE_RECORD_PASSWORD_FIELD));
             }
         }
     }
