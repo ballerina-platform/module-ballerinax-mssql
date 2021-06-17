@@ -47,18 +47,14 @@ import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 public class ConverterUtils {
     public static Geometry convertPoint(Object value) throws ApplicationError, SQLException {
         Geometry point;
-        if (value instanceof BString) {
-            try {
-                point = Geometry.STGeomFromText(value.toString(), 0);
-            } catch (SQLException ex) {
-                throw new SQLException("Unsupported Value: " + value + " for type: " + "point");
-            }
-        } else {
-            Map<String, Object> pointValue = getRecordData(value);
-            double x = ((BDecimal) pointValue.get(Constants.Geometric.X)).decimalValue().doubleValue();
-            double y = ((BDecimal) pointValue.get(Constants.Geometric.Y)).decimalValue().doubleValue();
-            point = Geometry.point(x, y, 0);
+        Map<String, Object> pointValue = getRecordData(value);
+        double x = ((BDecimal) pointValue.get(Constants.Geometric.X)).decimalValue().doubleValue();
+        double y = ((BDecimal) pointValue.get(Constants.Geometric.Y)).decimalValue().doubleValue();
+        int srid = 0;
+        if (pointValue.get(Constants.Geometric.SRID) != null) {
+            srid = ((Long) pointValue.get(Constants.Geometric.SRID)).intValue();
         }
+        point = Geometry.point(x, y, srid);
         return point;
     }
 

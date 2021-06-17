@@ -18,14 +18,38 @@ import ballerina/sql;
 
 # MSSQL Geometric Data types.
 
+# Represents Point Datatype in MSSQL.
+#
+# + x - The x cordinate of the point
+# + y - The y coordinate of the point
+# + srid - The spatial reference ID of the instance
+public type Point record {
+    decimal x;
+    decimal y;
+    int srid?;
+};
+
+# Represents LineString Datatype in MSSQL.
+#
+# + x1 - The x coordinate of the first point of the line segment
+# + y1 - The y coordinate of the first point of the line segment
+# + x2 - The x coordinate of the second point of the line segment
+# + y2 - The y coordinate of the second point of the line segment
+public type LineString record {
+    decimal x1;
+    decimal y1;
+    decimal x2;
+    decimal y2;
+};
+
 ## Represents Point MSSQL Field
 #
 # + value - Value of parameter passed into the SQL statement
 public distinct class PointValue {
     *sql:TypedValue;
-    public Point | string? value;
+    public Point value;
     
-    public isolated function init(Point | string? value = ()) {
+    public isolated function init(Point value) {
         self.value = value;
     }
 }
@@ -163,25 +187,3 @@ public distinct class SmallMoneyValue {
         self.value = value;
     }  
 }
-
-# Represents Point Datatype in MSSQL.
-#
-# + x - The x Cordinate of the Point
-# + y - The y Cordinate of the Point
-public type Point record {
-    decimal x;
-    decimal y;
-};
-
-# Represents LineString Datatype in MSSQL.
-#
-# + x1 - The x cordinate of the first point of the line segment
-# + y1 - The y cordinate of the first point of the line segment
-# + x2 - The x cordinate of the second point of the line segment
-# + y2 - The y cordinate of the second point of the line segment
-public type LineString record {
-    decimal x1;
-    decimal y1;
-    decimal x2;
-    decimal y2;
-};
