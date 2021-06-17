@@ -231,7 +231,7 @@ isolated function executeParamsInitDB() {
     _ = executeQuery("execute_params_db", query);
 }  
 
-isolated function createBatchExecuteDB(){
+isolated function createBatchExecuteDB() {
     _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
     _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
 

@@ -108,7 +108,7 @@ public class ConverterUtils {
         }
         return geometryString;
     }
-    
+
     private static Map<String, Object> getRecordData(Object value) throws ApplicationError {
         Type type = TypeUtils.getType(value);
         Map<String, Field> structFields = ((StructureType) type).getFields();
