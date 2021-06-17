@@ -121,5 +121,5 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
             Object object = ConverterUtils.convertMoney(value);
             preparedStatement.setObject(index, object);
         }
-    }  
+    }
 }

@@ -26,7 +26,7 @@ public distinct class PointValue {
     public Point | string? value;
     
     public isolated function init(Point | string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
@@ -38,7 +38,7 @@ public distinct class LineStringValue {
     public LineString | string? value;
 
     public isolated function init(LineString | string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
@@ -50,7 +50,7 @@ public distinct class CircularStringValue {
     public string? value;
 
     public isolated function init(string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
@@ -62,7 +62,7 @@ public distinct class CompoundCurveValue {
     public string? value;
 
     public isolated function init(string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
@@ -74,7 +74,7 @@ public distinct class PolygonValue {
     public string? value;
 
     public isolated function init(string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
@@ -110,7 +110,7 @@ public distinct class MultiLineStringValue {
     public string? value;
 
     public isolated function init(string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
@@ -122,7 +122,7 @@ public distinct class MultiPointValue {
     public string? value;
 
     public isolated function init(string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
@@ -134,7 +134,7 @@ public distinct class GeometryCollectionValue {
     public string? value;
 
     public isolated function init(string? value = ()) {
-        self.value =value;
+        self.value = value;
     }
 }
 
