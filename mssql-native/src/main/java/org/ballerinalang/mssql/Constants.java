@@ -101,6 +101,8 @@ public final class Constants {
     public static final class Geometric {
         public static final String X = "x";
         public static final String Y = "y";
+        public static final String Z = "z";
+        public static final String M = "m";
         public static final String SRID = "srid";
         public static final String X1 = "x1";
         public static final String Y1 = "y1";

@@ -50,11 +50,23 @@ public class ConverterUtils {
         Map<String, Object> pointValue = getRecordData(value);
         double x = ((BDecimal) pointValue.get(Constants.Geometric.X)).decimalValue().doubleValue();
         double y = ((BDecimal) pointValue.get(Constants.Geometric.Y)).decimalValue().doubleValue();
+
+        String z = "NULL";
+        if (pointValue.get(Constants.Geometric.Z) != null) {
+            z = ((BDecimal) pointValue.get(Constants.Geometric.Z)).decimalValue().toString();
+        }
+        String m = "NULL";
+        if (pointValue.get(Constants.Geometric.M) != null) {
+            m = ((BDecimal) pointValue.get(Constants.Geometric.M)).decimalValue().toString();
+        }
+
+        String wkt = String.format("POINT (%f %f %s %s)", x, y, z, m);
+
         int srid = 0;
         if (pointValue.get(Constants.Geometric.SRID) != null) {
             srid = ((Long) pointValue.get(Constants.Geometric.SRID)).intValue();
         }
-        point = Geometry.point(x, y, srid);
+        point = Geometry.STGeomFromText(wkt, srid);
         return point;
     }
 
