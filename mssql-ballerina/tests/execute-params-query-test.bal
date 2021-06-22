@@ -254,12 +254,54 @@ function insertIntoDateTimeTable4() returns error? {
 }
 function testInsertIntoGeometricDataTable1() returns error? {
     int rowId = 43;
-    PointValue pointType = new ({x: 4.34, y:6, srid: 2});
-    LineStringValue lineStringType = new ({x1:2, y1:4, x2:3, y2:6});
+    PointValue point = new({x: 4.34, y: 6});
+    LineStringValue lineString = new([
+        {x: 0, y: 0},
+        {x: 2, y: 0}
+    ]);
+    CircularStringValue circularString = new([
+        {p1: {x: 2, y: 0}, p2: {x: 1, y: 1}, control: {x: 0, y: 0} }
+    ]);
+
+    CompoundCurveValue compoundCurve = new([circularString, lineString]);
+
+    PolygonValue polygon = new([
+        // Outer
+        new([ {x: 0, y: 0}, {x: 10, y: 0}, {x: 10, y: 10}, {x: 0, y: 10}, {x: 0, y: 0} ]),
+
+        // Inner
+        new([ {x: 2, y: 2}, {x: 7, y: 2}, {x: 7, y: 7}, {x: 2, y: 7}, {x: 2, y: 2} ])
+    ]);
+
+    LineStringValue lineString2 = new([ {x: 0, y: 0}, {x: 10, y: 0}, {x: 10, y: 10}, {x: 0, y: 10}, {x: 0, y: 0} ]);
+    CircularStringValue circularString2 = new([
+        { p1: {x: 2, y: 5}, p2: {x: 8, y: 5}, control: {x: 5, y: 8} },
+        { p1: {x: 8, y: 5}, p2: {x: 2, y: 5}, control: {x: 5, y: 2} }
+    ]);
+    CurvePolygonValue curvePolygon = new([lineString2, circularString2, compoundCurve]);
+
+    MultiPointValue multiPoint = new([{x: 0, y: 0}, {x: 10, y: 0}]);
+
+    MultiLineStringValue multiLineString = new([lineString, lineString2]);
+
+    PolygonValue polygon2 = new([
+        // Outer
+        new([ {x: 0, y: 0}, {x: 10, y: 0}, {x: 10, y: 10}, {x: 0, y: 10}, {x: 0, y: 0} ]),
+
+        // Inner
+        new([ {x: 2, y: 2}, {x: 7, y: 2}, {x: 7, y: 7}, {x: 2, y: 7}, {x: 2, y: 2} ])
+    ]);
+    MultiPolygonValue multiPolygon = new([polygon, polygon2]);
+
+    GeometryCollectionValue geometryCollection = new([point, lineString, circularString, compoundCurve, curvePolygon,
+                                                      multiPoint, multiLineString, multiPolygon]);
 
     sql:ParameterizedQuery sqlQuery =
-        `INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
-         VALUES(${rowId}, ${pointType}, ${lineStringType})`;
+        `INSERT INTO GeometricTypes (row_id, point_type, lineString_type, circularString_type, compoundCurve_type,
+                                     polygon_type, curvePolygon_type, multiPoint_type, multiLineString_type,
+                                     multiPolygon_type, geometry_type)
+         VALUES (${rowId}, ${point}, ${lineString}, ${circularString}, ${compoundCurve}, ${polygon}, ${curvePolygon},
+                 ${multiPoint}, ${multiLineString}, ${multiPolygon}, ${geometryCollection})`;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
@@ -269,73 +311,30 @@ function testInsertIntoGeometricDataTable1() returns error? {
 }
 function testInsertIntoGeometricDataTable2() returns error? {
     int rowId = 21;
-    Point point = {x: 2, y:2};
-    PointValue pointType = new(point);
-    LineStringValue lineStringType = new("LINESTRING(1 1,2 3,4 8, -6 3)");
-    GeometryCollectionValue geometryType = new("GEOMETRYCOLLECTION (POINT (4 0), LINESTRING (4 2, 5 3), POLYGON ((0 0, 3 0, 3 3, 0 3, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1)))");
-    CircularStringValue circularStringType = new("CIRCULARSTRING(2 0, 1 1, 0 0)");
-    CompoundCurveValue compoundCurveType = new("COMPOUNDCURVE(CIRCULARSTRING(1 0, 0 1, -1 0), (-1 0, 1.25 0))");
-    PolygonValue polygonType = new("POLYGON((1 1, 3 1, 3 7, 1 7, 1 1))");
-    MultiPolygonValue multiPolygonType = new("MultiPolygon(((2 0, 3 1, 2 2, 1.5 1.5, 2 1, 1.5 0.5, 2 0)), ((1 0, 1.5 0.5, 1 1, 1.5 1.5, 1 2, 0 1, 1 0)))");
-    CurvePolygonValue curvePolygonType = new("CURVEPOLYGON ((4 2, 8 2, 8 6, 4 6, 4 2))");
-    MultiLineStringValue multiLineStringType = new("MultiLineString ((0 2, 1 1), (2 1, 1 2))");
-    MultiPointValue multiPointType = new("MULTIPOINT((21 2), (12 2), (30 40))");
+    PointValue point = new("POINT(2 2)");
+    LineStringValue lineString = new("LINESTRING(1 1, 2 3, 4 8, -6 3)");
+    CircularStringValue circularString = new("CIRCULARSTRING(1 1, 2 0, -1 1)");
+    CompoundCurveValue compoundCurve = new("COMPOUNDCURVE(CIRCULARSTRING(1 0, 0 1, -1 0), (-1 0, 1.25 0))");
+    PolygonValue polygon = new("POLYGON((1 1, 3 1, 3 7, 1 7, 1 1))");
+    CurvePolygonValue curvePolygon = new("CURVEPOLYGON ((4 2, 8 2, 8 6, 4 6, 4 2))");
+    MultiPointValue multiPoint = new("MULTIPOINT((21 2), (12 2), (30 40))");
+    MultiLineStringValue multiLineString = new("MULTILINESTRING ((0 2, 1 1), (2 1, 1 2))");
+    MultiPolygonValue multiPolygon = new("MULTIPOLYGON(((2 0, 3 1, 2 2, 1.5 1.5, 2 1, 1.5 0.5, 2 0)), ((1 0, 1.5 0.5, 1 1, 1.5 1.5, 1 2, 0 1, 1 0)))");
+    GeometryCollectionValue geometryCollection = new("GEOMETRYCOLLECTION(POINT (4 0), LINESTRING (4 2, 5 3), POLYGON ((0 0, 3 0, 3 3, 0 3, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1)))");
 
     sql:ParameterizedQuery sqlQuery =
-        `INSERT INTO GeometricTypes (row_id, point_type, lineString_type, geometry_type, circularstring_type,
-            compoundcurve_type, polygon_type, curvepolygon_type, multipolygon_type, multilinestring_type, multipoint_type)
-         VALUES(${rowId}, ${pointType}, ${lineStringType}, ${geometryType}, ${circularStringType}, ${compoundCurveType},
-            ${polygonType}, ${multiPolygonType}, ${curvePolygonType}, ${multiLineStringType}, ${multiPointType})
-    `;
+        `INSERT INTO GeometricTypes (row_id, point_type, lineString_type, circularString_type, compoundCurve_type,
+                                     polygon_type, curvePolygon_type, multiPoint_type, multiLineString_type,
+                                     multiPolygon_type, geometry_type)
+         VALUES (${rowId}, ${point}, ${lineString}, ${circularString}, ${compoundCurve}, ${polygon}, ${curvePolygon},
+                 ${multiPoint}, ${multiLineString}, ${multiPolygon}, ${geometryCollection})
+        `;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
 @test:Config {
     groups: ["execute-params", "execute"],
     dependsOn: [testInsertIntoGeometricDataTable2]
-}
-function testInsertIntoGeometricDataTable3() returns error? {
-    //int rowId = 22;
-    //PointValue pointType = new ();
-    //LineStringValue lineStringType = new ();
-    //GeometryCollectionValue geometryType = new ();
-    //CircularStringValue circularStringType = new ();
-    //CompoundCurveValue compoundCurveType = new ();
-    //PolygonValue polygonType = new ();
-    //MultiPolygonValue multiPolygonType = new ();
-    //CurvePolygonValue curvePolygonType = new ();
-    //MultiLineStringValue multiLineStringType = new ();
-    //MultiPointValue multiPointType = new ();
-//
-    //sql:ParameterizedQuery sqlQuery =
-    //  `INSERT INTO GeometricTypes (row_id, point_type, lineString_type, geometry_type, circularstring_type, compoundcurve_type,
-    //        polygon_type, curvepolygon_type, multipolygon_type, multilinestring_type, multipoint_type)
-    //   VALUES(${rowId}, ${pointType}, ${lineStringType}, ${geometryType}, ${circularStringType}, ${compoundCurveType},
-    //        ${polygonType}, ${multiPolygonType}, ${curvePolygonType}, ${multiLineStringType}, ${multiPointType})`;
-    //validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
-}
-
-@test:Config {
-    groups: ["execute-params", "execute"],
-    dependsOn: [testInsertIntoGeometricDataTable3]
-}
-function testInsertIntoGeometricDataTable4() returns error? {
-    int rowId = 24;
-    Point point = {x: 2, y:2};
-    LineString lineString = {x1:2, y1:4, x2:3, y2:6};
-
-    PointValue pointType = new (point);
-    LineStringValue lineStringType = new (lineString);
-
-    sql:ParameterizedQuery sqlQuery =
-        `INSERT INTO GeometricTypes (row_id, point_type, lineString_type)
-         VALUES(${rowId}, ${pointType}, ${lineStringType})`;
-    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
-}
-
-@test:Config {
-    groups: ["execute-params", "execute"],
-    dependsOn: [testInsertIntoGeometricDataTable4]
 }
 function testInsertIntoMoneyDataTable1() returns error? {
     int rowId = 2;

@@ -103,15 +103,13 @@ public final class Constants {
         public static final String Y = "y";
         public static final String Z = "z";
         public static final String M = "m";
-        public static final String SRID = "srid";
-        public static final String X1 = "x1";
-        public static final String Y1 = "y1";
-        public static final String X2 = "x2";
-        public static final String Y2 = "y2";
+        public static final String START = "p1";
+        public static final String END = "p2";
+        public static final String CONTROL = "control";
     }
 
     /**
-    * Constants for Mssql Ballerina datatypes names.
+    * Constants for MSSQL Ballerina datatypes names.
     */
     public static final class CustomTypeNames {
         public static final String POINT = "PointValue";
@@ -126,6 +124,16 @@ public final class Constants {
         public static final String GEOMETRYCOLLECTION = "GeometryCollectionValue";
         public static final String MONEY = "MoneyValue";
         public static final String SMALLMONEY = "SmallMoneyValue";
+    }
+
+    /**
+     * Constants for MSSQL TypedValueFields.
+     */
+    public static final class TypedValueFields {
+        public static final BString SRID = StringUtils.fromString("srid");
+
+        public TypedValueFields() {
+        }
     }
 
     public static final String MSSQL_DATASOURCE_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDataSource";
