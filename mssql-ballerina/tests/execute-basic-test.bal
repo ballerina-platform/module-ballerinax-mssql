@@ -280,24 +280,24 @@ function testDeleteStringData() returns error? {
     check dbClient.close();
 }
 
-//@test:Config {
-//    groups: ["execute", "execute-basic"]
-//}
-//function testPointTypeError() returns error? {
-//    int id =11;
-//    PointValue pointValue = new ("Invalid Value");
-//    sql:ParameterizedQuery sqlQuery = `INSERT INTO GeometricTypes (row_id, point_type) VALUES (${id}, ${pointValue});`;
-//    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
-//    test:assertTrue(result is error);
-//    string expectedErrorMessage = "Error while executing SQL query: INSERT INTO GeometricTypes (row_id, point_type) "+
-//        "VALUES ( ? ,  ? );. Unsupported Value: Invalid Value for type: point.";
-//    if (result is sql:Error) {
-//        test:assertTrue(result.message().startsWith(expectedErrorMessage),
-//           "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
-//    } else {
-//        test:assertFail("Error expected");
-//    }
-//}
+@test:Config {
+    groups: ["execute", "execute-basic"]
+}
+function testPointTypeError() returns error? {
+    int id =11;
+    PointValue pointValue = new ("Invalid Value");
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO GeometricTypes (row_id, point_type) VALUES (${id}, ${pointValue});`;
+    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
+    test:assertTrue(result is error);
+    string expectedErrorMessage = "Error while executing SQL query: INSERT INTO GeometricTypes (row_id, point_type) "+
+        "VALUES ( ? ,  ? );. Illegal character in Well-Known text";
+    if (result is sql:Error) {
+        test:assertTrue(result.message().startsWith(expectedErrorMessage),
+           "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
+    } else {
+        test:assertFail("Error expected");
+    }
+}
 
 @test:Config {
     groups: ["execute", "execute-basic"]
@@ -309,7 +309,7 @@ function testGeometryCollectionTypeError() returns error? {
     sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
     test:assertTrue(result is error);
     string expectedErrorMessage = "Error while executing SQL query: INSERT INTO GeometricTypes (row_id, geometry_type) "+
-        "VALUES ( ? ,  ? );. Unsupported Value: Invalid Value for type: geometry";
+        "VALUES ( ? ,  ? );. Illegal character in Well-Known text";
     if (result is sql:Error) {
         test:assertTrue(result.message().startsWith(expectedErrorMessage), 
            "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
