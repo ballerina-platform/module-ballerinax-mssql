@@ -44,9 +44,7 @@ public type ExactNumericRecord2 record {
 }
 function testSelectFromExactNumericDataTable() returns error? {
     int rowId = 1;
-    
-    sql:ParameterizedQuery sqlQuery = `select * from ExactNumeric where row_id = ${rowId}`;
-
+    sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId}`;
     _ = validateComplexExactNumericTableResult(check complexQueryMssqlClient(sqlQuery, ExactNumericRecord, database = complexQueryDb));
 }
 
@@ -70,9 +68,7 @@ isolated function validateComplexExactNumericTableResult(record{}? returnData) {
 }
 function testSelectFromExactNumericDataTable2() returns error? {
     int rowId = 2;
-    
-    sql:ParameterizedQuery sqlQuery = `select * from ExactNumeric where row_id = ${rowId}`;
-
+    sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId}`;
     _ = validateExactNumericTableResult2(check complexQueryMssqlClient(sqlQuery, ExactNumericRecord2, database = complexQueryDb));
 }
 
@@ -102,9 +98,7 @@ public type CharacterRecord record {
 }
 function testSelectFromStringDataTable() returns error? {
     int rowId = 1;
-    
-    sql:ParameterizedQuery sqlQuery = `select * from StringTypes where row_id = ${rowId}`;
-
+    sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE row_id = ${rowId}`;
     _ = validateComplexStringTableResult(check complexQueryMssqlClient(sqlQuery, CharacterRecord, database = complexQueryDb));
 }
 
@@ -126,7 +120,7 @@ isolated function validateComplexStringTableResult(record{}? returnData) {
 function testSelectFromStringDataTable2() returns error? {
     int rowId = 3;
     
-    sql:ParameterizedQuery sqlQuery = `select * from StringTypes where row_id = ${rowId}`;
+    sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE row_id = ${rowId}`;
 
     _ = validateComplexStringTableResult2(check complexQueryMssqlClient(sqlQuery, CharacterRecord, database = complexQueryDb));
 }
@@ -142,8 +136,8 @@ isolated function validateComplexStringTableResult2(record{}? returnData) {
     } 
 }
 
-function complexQueryMssqlClient(@untainted string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string database = complexQueryDb)
-returns @tainted record {}? | error {
+function complexQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string database = complexQueryDb)
+returns record {}? | error {
     Client dbClient = check new (host, user, password, database, port);
     stream<record {}, error> streamData = dbClient->query(sqlQuery, resultType);
     record {|record {} value;|}? data = check streamData.next();

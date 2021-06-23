@@ -17,8 +17,7 @@
 import ballerina/io;
 import ballerina/sql;
 
-public function initTestScripts() {
-    _ = createDatabases();
+isolated function initTestScripts() {
     _ = initPool();
     _ = connectionInitDb();
     _ = basicExcuteInitDB();
@@ -26,52 +25,21 @@ public function initTestScripts() {
     _ = createBatchExecuteDB();
     _ = simpleQueryInitDB();
     _ = complexQueryInitDB();
-    _ = proceduresInit(); 
+    _ = proceduresInit();
+    _ = sslConnectionInitDb();
 }
 
-public function createDatabases() {
-    _ = createQuery(`DROP DATABASE IF EXISTS CONNECT_DB`);
-    _ = createQuery(`CREATE DATABASE CONNECT_DB`);
+isolated function connectionInitDb() {
+        _ = createQuery(`DROP DATABASE IF EXISTS CONNECT_DB`);
+        _ = createQuery(`CREATE DATABASE CONNECT_DB`);
+}
+
+isolated function initPool() {
     _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_1`);
     _ = createQuery(`CREATE DATABASE POOL_DB_1`);
-    _ = createQuery(`DROP DATABASE IF EXISTS SSL_CONNECT_DB`);
-    _ = createQuery(`CREATE DATABASE SSL_CONNECT_DB`);
     _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_2`);
     _ = createQuery(`CREATE DATABASE POOL_DB_2`);
-    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_DB`);
-    _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
-    _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
-    _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
-    _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
-    _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
-    _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
-    _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
-}
 
-public function connectionInitDb() {
-        sql:ParameterizedQuery q1 = `
-            DROP TABLE IF EXISTS Customers;
-
-            CREATE TABLE Customers(
-                    customerId INT NOT NULL IDENTITY PRIMARY KEY,
-                    firstName  VARCHAR(300),
-                    lastName  VARCHAR(300),
-                    registrationID INT,
-                    creditLimit FLOAT,
-                    country  VARCHAR(300)
-            );
-
-            INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
-                            VALUES ('Peter', 'Stuart', 1, 5000.75, 'USA');
-        `;
-        _ = executeQuery("connect_db", q1);
-}
-
-function initPool() {
     sql:ParameterizedQuery q2 = `
             DROP TABLE IF EXISTS Customers;
 
@@ -116,7 +84,9 @@ function initPool() {
     _ = executeQuery("pool_db_2", q3);
 }
 
-public function basicExcuteInitDB() {
+isolated function basicExcuteInitDB() {
+    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_DB`);
+    _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
 
     sql:ParameterizedQuery q4 = `
             DROP TABLE IF EXISTS ExactNumericTypes;
@@ -174,7 +144,10 @@ public function basicExcuteInitDB() {
 
 }
 
-public function executeParamsInitDB() {
+isolated function executeParamsInitDB() {
+    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
+    _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
+
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -258,7 +231,10 @@ public function executeParamsInitDB() {
     _ = executeQuery("execute_params_db", query);
 }  
 
-public function createBatchExecuteDB(){
+isolated function createBatchExecuteDB() {
+    _ = createQuery(`DROP DATABASE IF EXISTS BATCH_EXECUTE_DB`);
+    _ = createQuery(`CREATE DATABASE BATCH_EXECUTE_DB`);
+
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -317,7 +293,10 @@ public function createBatchExecuteDB(){
     _ = executeQuery("batch_execute_db", query);
 }
 
-public function simpleQueryInitDB() {
+isolated function simpleQueryInitDB() {
+    _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
+    _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
+
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -393,7 +372,10 @@ public function simpleQueryInitDB() {
     _ = executeQuery("simple_params_query_db", query);
 }  
 
-public function complexQueryInitDB() {
+isolated function complexQueryInitDB() {
+    _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
+    _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
+
     sql:ParameterizedQuery query = `
     
     DROP TABLE IF EXISTS ExactNumeric;
@@ -464,7 +446,10 @@ public function complexQueryInitDB() {
     _ = executeQuery("complex_query_db", query);
 }  
 
-public function proceduresInit(){
+isolated function proceduresInit(){
+    _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
+    _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
+
     sql:ParameterizedQuery query1 = `
 
     CREATE PROCEDURE StringProcedure   
@@ -588,8 +573,13 @@ public function proceduresInit(){
     _ = executeQuery("complex_query_db", query6);
 }
 
+isolated function sslConnectionInitDb() {
+        _ = createQuery(`DROP DATABASE IF EXISTS SSL_CONNECT_DB`);
+        _ = createQuery(`CREATE DATABASE SSL_CONNECT_DB`);
+}
 
-public function createQuery(sql:ParameterizedQuery query) {
+
+isolated function createQuery(sql:ParameterizedQuery query) {
 
     Client|sql:Error mssqlClient = new(user="sa",password="Test123#");
 
@@ -619,7 +609,7 @@ public function createQuery(sql:ParameterizedQuery query) {
 
 }
 
-public function executeQuery(string database, sql:ParameterizedQuery query) {
+isolated function executeQuery(string database, sql:ParameterizedQuery query) {
 
     Client|sql:Error mssqlClient = new(user="sa",password="Test123#", database = database);
 
@@ -646,5 +636,4 @@ public function executeQuery(string database, sql:ParameterizedQuery query) {
             io:println("Client closed");
         }
     }
-
 }

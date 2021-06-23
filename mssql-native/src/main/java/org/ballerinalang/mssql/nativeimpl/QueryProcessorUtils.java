@@ -20,8 +20,8 @@ package org.ballerinalang.mssql.nativeimpl;
 
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BStream;
-import org.ballerinalang.mssql.parameterprocessor.MssqlResultParameterProcessor;
 import org.ballerinalang.mssql.parameterprocessor.MssqlStatementParameterProcessor;
+import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
 
 /**
  * This class provides the methods for query processing which executes sql queries.
@@ -34,10 +34,8 @@ public class QueryProcessorUtils {
 
     public static BStream nativeQuery(BObject client, Object paramSQLString,
                                       Object recordType) {
-        MssqlStatementParameterProcessor statementParametersProcessor = MssqlStatementParameterProcessor
-                .getInstance();
-        MssqlResultParameterProcessor resultParametersProcessor = MssqlResultParameterProcessor
-                .getInstance();
+        MssqlStatementParameterProcessor statementParametersProcessor = MssqlStatementParameterProcessor.getInstance();
+        DefaultResultParameterProcessor resultParametersProcessor = DefaultResultParameterProcessor.getInstance();
         return org.ballerinalang.sql.nativeimpl.QueryProcessor.nativeQuery(client, paramSQLString, recordType,
                 statementParametersProcessor, resultParametersProcessor);
     }

@@ -40,7 +40,7 @@ import java.util.Map;
 import static io.ballerina.runtime.api.utils.StringUtils.fromString;
 
 /**
-* This class implements the utils methods for the MsSQL Datatypes.
+* This class implements the utils methods for the MSSQL Datatypes.
 *
 * @since 0.1.0
 */
@@ -84,21 +84,18 @@ public class ConverterUtils {
     public static Object convertMoney(Object value) throws SQLException {
         Object money;
         if (value instanceof BString) {
-            String stringValue = value.toString();
-            money = stringValue;
+            money = value.toString();
         } else if (value instanceof BDecimal) {
-            double doubleValue = ((BDecimal) value).decimalValue().doubleValue();
-            money = doubleValue;
+            money = ((BDecimal) value).decimalValue().doubleValue();
         } else if (value instanceof Double) {
-            double doubleValue = ((Double) value).doubleValue();
-            money = doubleValue;
+            money = value;
         } else {
             throw new SQLException("Unsupported Value: " + value + " for type: " + "money");
         }
         return money;
     }
 
-    public static Geometry convertGeometryString(Object value) throws ApplicationError, SQLException {
+    public static Geometry convertGeometryString(Object value) throws SQLException {
         Geometry geometryString;
         if (value instanceof BString) {
             try {
@@ -111,8 +108,8 @@ public class ConverterUtils {
         }
         return geometryString;
     }
-    
-    private static Map<String, Object> getRecordData(Object value) throws SQLException, ApplicationError {
+
+    private static Map<String, Object> getRecordData(Object value) throws ApplicationError {
         Type type = TypeUtils.getType(value);
         Map<String, Field> structFields = ((StructureType) type).getFields();
         int fieldCount = structFields.size();

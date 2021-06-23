@@ -36,10 +36,10 @@ function testCreateTable() returns error? {
 }
 function testInsertTable() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("Insert into ExactNumericTypes (int_type) values (20)");
+    sql:ExecutionResult result = check dbClient->execute("INSERT INTO ExactNumericTypes (int_type) VALUES (20)");
     check dbClient.close();
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
-    var insertId = result.lastInsertId;
+    string|int? insertId = result.lastInsertId;
     if (insertId is string) {
         int|error id = int:fromString(insertId);
         if (id is int) {
@@ -47,6 +47,8 @@ function testInsertTable() returns error? {
         } else {
             test:assertFail("Insert Id should be an integer.");
         }
+    } else {
+        test:assertFail("Insert Id is not string");
     }
 }
 
@@ -56,8 +58,8 @@ function testInsertTable() returns error? {
 }
 function testInsertTableWithoutGeneratedKeys() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("Insert into StringTypes (id, varchar_type)"
-        + " values (5, 'test data')");
+    sql:ExecutionResult result = check dbClient->execute(
+        "INSERT INTO StringTypes (id, varchar_type) VALUES (5, 'test data')");
     check dbClient.close();
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     test:assertEquals(result.lastInsertId, (), "Last Insert Id is nil.");
@@ -69,10 +71,11 @@ function testInsertTableWithoutGeneratedKeys() returns error? {
 }
 function testInsertTableWithGeneratedKeys() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("insert into ExactNumericTypes (int_type) values (21)");
+    sql:ExecutionResult result = check dbClient->execute("INSERT INTO ExactNumericTypes (int_type) VALUES (21)");
     check dbClient.close();
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
-    var insertId = result.lastInsertId;
+
+    string|int? insertId = result.lastInsertId;
     if (insertId is string) {
         int|error id = int:fromString(insertId);
         if (id is int) {
@@ -80,6 +83,8 @@ function testInsertTableWithGeneratedKeys() returns error? {
         } else {
             test:assertFail("Insert Id should be an integer.");
         }
+    } else {
+        test:assertFail("Insert Id is not string");
     }
 }
 
@@ -99,10 +104,10 @@ type ExactNumericType record {
 }
 function testInsertAndSelectTableWithGeneratedKeys() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("insert into ExactNumericTypes (int_type) values (31)");
-
+    sql:ExecutionResult result = check dbClient->execute("INSERT INTO ExactNumericTypes (int_type) VALUES (31)");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
-    var insertId = result.lastInsertId;
+
+    string|int? insertId = result.lastInsertId;
     if (insertId is string) {
         int|error id = int:fromString(insertId);
         if (id is int) {
@@ -115,7 +120,9 @@ function testInsertAndSelectTableWithGeneratedKeys() returns error? {
         } else {
         test:assertFail("Insert Id should be an integer.");
         }
-    }    
+    } else {
+        test:assertFail("Insert Id is not string");
+    }
     check dbClient.close();
 }
 
@@ -125,17 +132,16 @@ function testInsertAndSelectTableWithGeneratedKeys() returns error? {
 }
 function testInsertWithAllNilAndSelectTableWithGeneratedKeys() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("Insert into ExactNumericTypes (smallint_type, int_type, "
-        + "bigint_type, decimal_type, numeric_type) "
-        + "values (null, null, null, null, null)");
-
+    sql:ExecutionResult result = check dbClient->execute(
+        "INSERT INTO ExactNumericTypes (smallint_type, int_type, bigint_type, decimal_type, numeric_type) "
+        + "VALUES (null, null, null, null, null)");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     string|int? insertedId = result.lastInsertId;
     if (insertedId is string) {
         int|error id = int:fromString(insertedId);
         if (id is int) {
-            string query = string `SELECT * from ExactNumericTypes where id = ${id}`;
+            string query = string `SELECT * FROM ExactNumericTypes WHERE id = ${id}`;
             stream<record{}, error> queryResult = dbClient->query(query, ExactNumericType);
             stream<ExactNumericType, sql:Error> streamData = <stream<ExactNumericType, sql:Error>>queryResult;
             record {|ExactNumericType value;|}? data = check streamData.next();
@@ -144,6 +150,8 @@ function testInsertWithAllNilAndSelectTableWithGeneratedKeys() returns error? {
         } else {
             test:assertFail("Insert Id should be an integer.");
         }
+    } else {
+        test:assertFail("Insert Id is not string");
     }
 }
 
@@ -163,14 +171,12 @@ type StringData record {
 function testInsertWithStringAndSelectTable() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
     string intIDVal = "25";
-    string insertQuery = "Insert into StringTypes (id, varchar_type, char_type, text_type"
-        + ", nchar_type, nvarchar_type) values ("
-        + intIDVal + ",'str1','str2','str3','str4','str5')";
+    string insertQuery = "INSERT INTO StringTypes (id, varchar_type, char_type, text_type"
+        + ", nchar_type, nvarchar_type) VALUES (" + intIDVal + ",'str1','str2','str3','str4','str5')";
     sql:ExecutionResult result = check dbClient->execute(insertQuery);
-    
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
-    string query = string `SELECT * from StringTypes where id = ${intIDVal}`;
+    string query = string `SELECT * FROM StringTypes WHERE id = ${intIDVal}`;
     stream<record{}, error> queryResult = dbClient->query(query, StringData);
     stream<StringData, sql:Error> streamData = <stream<StringData, sql:Error>>queryResult;
     record {|StringData value;|}? data = check streamData.next();
@@ -199,11 +205,11 @@ type ResultCount record {
 }
 function testUpdateNumericData() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("Update ExactNumericTypes set int_type = 11 where int_type = 20");
+    sql:ExecutionResult result = check dbClient->execute("UPDATE ExactNumericTypes SET int_type = 11 WHERE int_type = 20");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query("SELECT count(*) as countval from ExactNumericTypes"
-        + " where int_type = 11", ResultCount);
+    stream<record{}, error> queryResult = dbClient->query(
+        "SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 11", ResultCount);
     stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
@@ -218,11 +224,12 @@ function testUpdateNumericData() returns error? {
 }
 function testUpdateStringData() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("Update StringTypes set varchar_type = 'updatedstring' where varchar_type = 'str1'");
+    sql:ExecutionResult result = check dbClient->execute(
+        "UPDATE StringTypes SET varchar_type = 'updatedstring' WHERE varchar_type = 'str1'");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query("SELECT count(*) as countval from StringTypes"
-        + " where varchar_type = 'updatedstring'", ResultCount);
+    stream<record{}, error> queryResult = dbClient->query(
+        "SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'updatedstring'", ResultCount);
     stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
@@ -237,12 +244,12 @@ function testUpdateStringData() returns error? {
 }
 function testDeleteNumericData() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
-    sql:ExecutionResult result = check dbClient->execute("insert into ExactNumericTypes (int_type) values (1451)");
-    result = check dbClient->execute("Delete from ExactNumericTypes where int_type = 1451");
+    sql:ExecutionResult result = check dbClient->execute("INSERT INTO ExactNumericTypes (int_type) VALUES (1451)");
+    result = check dbClient->execute("DELETE FROM ExactNumericTypes WHERE int_type = 1451");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query("SELECT count(*) as countval from ExactNumericTypes"
-        + " where int_type = 1451", ResultCount);
+    stream<record{}, error> queryResult = dbClient->query(
+        "SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 1451", ResultCount);
     stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
@@ -258,13 +265,13 @@ function testDeleteNumericData() returns error? {
 function testDeleteStringData() returns error? {
     Client dbClient = check new (host, user, password, executeDb, port);
     string intId = "28";
-    sql:ExecutionResult result = check dbClient->execute("insert into StringTypes (id, varchar_type) values ("+
-                    intId+", 'deletestr')");
-    result = check dbClient->execute("Delete from StringTypes where varchar_type = 'deletestr'");
+    sql:ExecutionResult result = check dbClient->execute(
+        "INSERT INTO StringTypes (id, varchar_type) VALUES (" + intId +", 'deletestr')");
+    result = check dbClient->execute("DELETE FROM StringTypes WHERE varchar_type = 'deletestr'");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query("SELECT count(*) as countval from StringTypes"
-        + " where varchar_type = 'deletestr'", ResultCount);
+    stream<record{}, error> queryResult = dbClient->query(
+        "SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'deletestr'", ResultCount);
     stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
@@ -279,11 +286,11 @@ function testDeleteStringData() returns error? {
 function testPointTypeError() returns error? {
     int id =11;
     PointValue pointValue = new ("Invalid Value");
-    sql:ParameterizedQuery sqlQuery = `Insert Into GeometricTypes (row_id, point_type) values (${id}, ${pointValue});`;
-    sql:ExecutionResult|sql:Error result = executeMsSQLClient(sqlQuery);
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO GeometricTypes (row_id, point_type) VALUES (${id}, ${pointValue});`;
+    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
     test:assertTrue(result is error);
-    string expectedErrorMessage = "Error while executing SQL query: Insert Into GeometricTypes (row_id, point_type) "+
-        "values ( ? ,  ? );. Unsupported Value: Invalid Value for type: point.";
+    string expectedErrorMessage = "Error while executing SQL query: INSERT INTO GeometricTypes (row_id, point_type) "+
+        "VALUES ( ? ,  ? );. Unsupported Value: Invalid Value for type: point.";
     if (result is sql:Error) {
         test:assertTrue(result.message().startsWith(expectedErrorMessage), 
            "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
@@ -298,11 +305,11 @@ function testPointTypeError() returns error? {
 function testGeometryCollectionTypeError() returns error? {
     int id =11;
     GeometryCollectionValue GeometryValue = new ("Invalid Value");
-    sql:ParameterizedQuery sqlQuery = `Insert Into GeometricTypes (row_id, geometry_type) values (${id}, ${GeometryValue});`;
-    sql:ExecutionResult|sql:Error result = executeMsSQLClient(sqlQuery);
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO GeometricTypes (row_id, geometry_type) VALUES (${id}, ${GeometryValue});`;
+    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
     test:assertTrue(result is error);
-    string expectedErrorMessage = "Error while executing SQL query: Insert Into GeometricTypes (row_id, geometry_type) "+
-        "values ( ? ,  ? );. Unsupported Value: Invalid Value for type: geometry";
+    string expectedErrorMessage = "Error while executing SQL query: INSERT INTO GeometricTypes (row_id, geometry_type) "+
+        "VALUES ( ? ,  ? );. Unsupported Value: Invalid Value for type: geometry";
     if (result is sql:Error) {
         test:assertTrue(result.message().startsWith(expectedErrorMessage), 
            "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
@@ -317,11 +324,11 @@ function testGeometryCollectionTypeError() returns error? {
 function testMoneyTypeError() returns error? {
     int id =11;
     MoneyValue moneyValue = new ("Invalid Value");
-    sql:ParameterizedQuery sqlQuery = `Insert Into MoneyTypes (row_id, money_type) values (${id}, ${moneyValue});`;
-    sql:ExecutionResult|sql:Error result = executeMsSQLClient(sqlQuery);
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO MoneyTypes (row_id, money_type) VALUES (${id}, ${moneyValue});`;
+    sql:ExecutionResult|sql:Error result = executeMSSQLClient(sqlQuery);
     test:assertTrue(result is error);
-    string expectedErrorMessage = "Error while executing SQL query: Insert Into MoneyTypes (row_id, money_type) values ( ? ,  ? );."+ 
-                " Cannot convert a char value to money.";
+    string expectedErrorMessage = "Error while executing SQL query: INSERT INTO MoneyTypes (row_id, money_type) " +
+        "VALUES ( ? ,  ? );. Cannot convert a char value to money.";
     if (result is sql:Error) {
         test:assertTrue(result.message().startsWith(expectedErrorMessage), 
            "Error message does not match, actual :\n'" + result.message() + "'\nExpected : \n" + expectedErrorMessage);
@@ -330,7 +337,7 @@ function testMoneyTypeError() returns error? {
     }
 }
 
-function executeMsSQLClient (sql:ParameterizedQuery|string sqlQuery) returns sql:ExecutionResult|sql:Error {
+function executeMSSQLClient (sql:ParameterizedQuery|string sqlQuery) returns sql:ExecutionResult|sql:Error {
     Client dbClient = check new (host, user, password, executeDb, port);
     sql:ExecutionResult|sql:Error result = dbClient->execute(sqlQuery);
     check dbClient.close();

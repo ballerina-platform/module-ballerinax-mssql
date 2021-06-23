@@ -22,7 +22,7 @@ plugins {
     id "net.researchgate.release" version "${researchgateReleaseVersion}"
 }
 
-description = 'Ballerina - MsSQL'
+description = 'Ballerina - MSSQL'
 
 def packageName = "mssql"
 
@@ -201,7 +201,6 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
 
     configurations {
         externalJars
@@ -209,10 +208,6 @@ subprojects {
     }
 
     dependencies {
-        compile group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
-        compile group: 'org.ballerinalang', name: 'sql-native', version: "${stdlibSqlVersion}"
-        compile group: 'org.ballerinalang', name: 'ballerina-lang', version: "${ballerinaLangVersion}"
-
 
         ballerinaStdLibs "org.ballerinalang:sql-ballerina:${stdlibSqlVersion}"
         ballerinaStdLibs "org.ballerinalang:io-ballerina:${stdlibIoVersion}"

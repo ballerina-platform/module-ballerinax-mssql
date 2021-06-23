@@ -70,7 +70,6 @@ public class ClientProcessorUtils {
         }
        
         BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
-
         String datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()

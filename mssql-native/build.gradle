@@ -22,7 +22,7 @@ plugins {
     id 'jacoco'
 }
 
-description = 'Ballerina - MsSQL Java Native'
+description = 'Ballerina - MSSQL Java Native'
 
 configurations {
     jacocoRuntime
@@ -30,9 +30,13 @@ configurations {
 
 dependencies {
     jacocoRuntime "org.jacoco:org.jacoco.agent:${jacoco.toolVersion}:runtime"
-    compile "com.microsoft.sqlserver:mssql-jdbc:${msSQLDriverVersion}"
     checkstyle project(":build-config:checkstyle")
     checkstyle "com.puppycrawl.tools:checkstyle:${puppycrawlCheckstyleVersion}"
+
+    compile group: 'org.ballerinalang', name: 'ballerina-runtime', version: "${ballerinaLangVersion}"
+    compile group: 'org.ballerinalang', name: 'sql-native', version: "${stdlibSqlVersion}"
+    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: "${msSQLDriverVersion}"
+    compile group: 'org.ballerinalang', name: 'ballerina-lang', version: "${ballerinaLangVersion}"
 }
 
 tasks.withType(JavaCompile) {

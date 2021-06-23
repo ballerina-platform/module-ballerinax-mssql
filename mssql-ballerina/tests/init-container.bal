@@ -18,7 +18,7 @@ import ballerina/io;
 import ballerina/test;
 
 @test:BeforeSuite
-function beforeSuite() {
+isolated function beforeSuite() {
     _ = initTestScripts();
     io:println("Test suite initiated");
 }
