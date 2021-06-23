@@ -95,7 +95,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setPoint(PreparedStatement preparedStatement, int index, Object value, Object srid)
-        throws SQLException, ApplicationError {
+            throws SQLException, ApplicationError {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -106,7 +106,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setLineString(PreparedStatement preparedStatement, int index, Object value, Object srid)
-        throws SQLException, ApplicationError {
+            throws SQLException, ApplicationError {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {

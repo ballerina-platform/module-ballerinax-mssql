@@ -22,24 +22,9 @@ import ballerina/sql;
 #
 # + x - The x cordinate of the point
 # + y - The y coordinate of the point
-# + z - The elevation of the point
-# + m - The measure of the point
 public type Point record {
     decimal x;
     decimal y;
-    decimal z?;
-    decimal m?;
-};
-
-# Represents Point Datatype in MSSQL.
-#
-# + p1 - The start point of the arc segment
-# + p2 - The end point of the arc segment
-# + control - The control point of the arc segment
-public type ArcSegment record {
-    Point p1;
-    Point p2;
-    Point control;
 };
 
 # Represents an element (LineString or Circular String) of a Compound Curve in MSSQL.
@@ -62,10 +47,10 @@ public type GeometryCollectionElement PointValue | LineStringValue | CircularStr
 # + srid - The spatial reference ID of the instance
 public distinct class PointValue {
     *sql:TypedValue;
-    public Point|string value;
+    public Point|string? value;
     public int? srid = ();
     
-    public isolated function init(Point|string value, int? srid = ()) {
+    public isolated function init(Point|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -77,10 +62,10 @@ public distinct class PointValue {
 # + srid - The spatial reference ID of the instance
 public distinct class MultiPointValue {
     *sql:TypedValue;
-    public Point[]|string value;
+    public Point[]|string? value;
     public int? srid = ();
 
-    public isolated function init(Point[]|string value, int? srid = ()) {
+    public isolated function init(Point[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -92,10 +77,10 @@ public distinct class MultiPointValue {
 # + srid - The spatial reference ID of the instance
 public distinct class LineStringValue {
     *sql:TypedValue;
-    public Point[]|string value;
+    public Point[]|string? value;
     public int? srid = ();
 
-    public isolated function init(Point[]|string value, int? srid = ()) {
+    public isolated function init(Point[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -107,10 +92,10 @@ public distinct class LineStringValue {
 # + srid - The spatial reference ID of the instance
 public distinct class MultiLineStringValue {
     *sql:TypedValue;
-    public LineStringValue[]|string value;
+    public LineStringValue[]|string? value;
     public int? srid = ();
 
-    public isolated function init(LineStringValue[]|string value, int? srid = ()) {
+    public isolated function init(LineStringValue[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -122,10 +107,10 @@ public distinct class MultiLineStringValue {
 # + srid - The spatial reference ID of the instance
 public distinct class CircularStringValue {
     *sql:TypedValue;
-    public ArcSegment[]|Point[]|string value;
+    public Point[]|string? value;
     public int? srid = ();
 
-    public isolated function init(ArcSegment[]|Point[]|string value, int? srid = ()) {
+    public isolated function init(Point[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -137,10 +122,10 @@ public distinct class CircularStringValue {
 # + srid - The spatial reference ID of the instance
 public distinct class CompoundCurveValue {
     *sql:TypedValue;
-    public CompoundCurveElement[]|string value;
+    public CompoundCurveElement[]|string? value;
     public int? srid = ();
 
-    public isolated function init(CompoundCurveElement[]|string value, int? srid = ()) {
+    public isolated function init(CompoundCurveElement[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -152,10 +137,10 @@ public distinct class CompoundCurveValue {
 # + srid - The spatial reference ID of the instance
 public distinct class PolygonValue {
     *sql:TypedValue;
-    public LineStringValue[]|string value;
+    public LineStringValue[]|string? value;
     public int? srid = ();
 
-    public isolated function init(LineStringValue[]|string value, int? srid = ()) {
+    public isolated function init(LineStringValue[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -167,10 +152,10 @@ public distinct class PolygonValue {
 # + srid - The spatial reference ID of the instance
 public distinct class MultiPolygonValue {
     *sql:TypedValue;
-    public PolygonValue[]|string value;
+    public PolygonValue[]|string? value;
     public int? srid = ();
 
-    public isolated function init(PolygonValue[]|string value, int? srid = ()) {
+    public isolated function init(PolygonValue[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -182,10 +167,10 @@ public distinct class MultiPolygonValue {
 # + srid - The spatial reference ID of the instance
 public distinct class CurvePolygonValue {
     *sql:TypedValue;
-    public CircularArcRing[]|string value;
+    public CircularArcRing[]|string? value;
     public int? srid = ();
 
-    public isolated function init(CircularArcRing[]|string value, int? srid = ()) {
+    public isolated function init(CircularArcRing[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -197,10 +182,10 @@ public distinct class CurvePolygonValue {
 # + srid - The spatial reference ID of the instance
 public distinct class GeometryCollectionValue {
     *sql:TypedValue;
-    public GeometryCollectionElement[]|string value;
+    public GeometryCollectionElement[]|string? value;
     public int? srid = ();
 
-    public isolated function init(GeometryCollectionElement[]|string value, int? srid = ()) {
+    public isolated function init(GeometryCollectionElement[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }

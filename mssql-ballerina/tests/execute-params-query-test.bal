@@ -254,16 +254,16 @@ function insertIntoDateTimeTable4() returns error? {
 }
 function testInsertIntoGeometricDataTable1() returns error? {
     int rowId = 43;
-    PointValue point = new({x: 4.34, y: 6});
+    PointValue point = new({x: 4.34, y: 6}, 1);
     LineStringValue lineString = new([
         {x: 0, y: 0},
         {x: 2, y: 0}
-    ]);
+    ], 2);
     CircularStringValue circularString = new([
-        {p1: {x: 2, y: 0}, p2: {x: 1, y: 1}, control: {x: 0, y: 0} }
-    ]);
+        {x: 2, y: 0}, {x: 1, y: 1}, {x: 0, y: 0}, {x: 3, y: 4}, {x: 5, y: 5}
+    ], 3);
 
-    CompoundCurveValue compoundCurve = new([circularString, lineString]);
+    CompoundCurveValue compoundCurve = new([circularString, lineString], 4);
 
     PolygonValue polygon = new([
         // Outer
@@ -271,18 +271,14 @@ function testInsertIntoGeometricDataTable1() returns error? {
 
         // Inner
         new([ {x: 2, y: 2}, {x: 7, y: 2}, {x: 7, y: 7}, {x: 2, y: 7}, {x: 2, y: 2} ])
-    ]);
+    ], 5);
 
-    LineStringValue lineString2 = new([ {x: 0, y: 0}, {x: 10, y: 0}, {x: 10, y: 10}, {x: 0, y: 10}, {x: 0, y: 0} ]);
-    CircularStringValue circularString2 = new([
-        { p1: {x: 2, y: 5}, p2: {x: 8, y: 5}, control: {x: 5, y: 8} },
-        { p1: {x: 8, y: 5}, p2: {x: 2, y: 5}, control: {x: 5, y: 2} }
-    ]);
-    CurvePolygonValue curvePolygon = new([lineString2, circularString2, compoundCurve]);
+    LineStringValue lineString2 = new([ {x: 0, y: 0}, {x: 10, y: 0}, {x: 10, y: 10}, {x: 0, y: 10}, {x: 0, y: 0} ], 6);
+    CurvePolygonValue curvePolygon = new([lineString2, compoundCurve], 8);
 
-    MultiPointValue multiPoint = new([{x: 0, y: 0}, {x: 10, y: 0}]);
+    MultiPointValue multiPoint = new([{x: 0, y: 0}, {x: 10, y: 0}], 9);
 
-    MultiLineStringValue multiLineString = new([lineString, lineString2]);
+    MultiLineStringValue multiLineString = new([lineString, lineString2], 10);
 
     PolygonValue polygon2 = new([
         // Outer
@@ -290,18 +286,18 @@ function testInsertIntoGeometricDataTable1() returns error? {
 
         // Inner
         new([ {x: 2, y: 2}, {x: 7, y: 2}, {x: 7, y: 7}, {x: 2, y: 7}, {x: 2, y: 2} ])
-    ]);
-    MultiPolygonValue multiPolygon = new([polygon, polygon2]);
+    ], 11);
+    MultiPolygonValue multiPolygon = new([polygon, polygon2], 12);
 
-    GeometryCollectionValue geometryCollection = new([point, lineString, circularString, compoundCurve, curvePolygon,
-                                                      multiPoint, multiLineString, multiPolygon]);
+    PointValue point2 = new("POINT(2 2)");
+    GeometryCollectionValue geometryCollection = new([point2, lineString, circularString, compoundCurve, curvePolygon,
+                                                      polygon, multiPoint, multiLineString, multiPolygon], 13);
 
     sql:ParameterizedQuery sqlQuery =
         `INSERT INTO GeometricTypes (row_id, point_type, lineString_type, circularString_type, compoundCurve_type,
-                                     polygon_type, curvePolygon_type, multiPoint_type, multiLineString_type,
-                                     multiPolygon_type, geometry_type)
+        polygon_type, curvePolygon_type, multiPoint_type, multiLineString_type, multiPolygon_type, geometry_type)
          VALUES (${rowId}, ${point}, ${lineString}, ${circularString}, ${compoundCurve}, ${polygon}, ${curvePolygon},
-                 ${multiPoint}, ${multiLineString}, ${multiPolygon}, ${geometryCollection})`;
+         ${multiPoint}, ${multiLineString}, ${multiPolygon}, ${geometryCollection})`;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
@@ -329,6 +325,31 @@ function testInsertIntoGeometricDataTable2() returns error? {
          VALUES (${rowId}, ${point}, ${lineString}, ${circularString}, ${compoundCurve}, ${polygon}, ${curvePolygon},
                  ${multiPoint}, ${multiLineString}, ${multiPolygon}, ${geometryCollection})
         `;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoGeometricDataTable2]
+}
+function testInsertIntoGeometricDataTable3() returns error? {
+    int rowId = 22;
+    PointValue pointType = new ();
+    LineStringValue lineStringType = new ();
+    GeometryCollectionValue geometryType = new ();
+    CircularStringValue circularStringType = new ();
+    CompoundCurveValue compoundCurveType = new ();
+    PolygonValue polygonType = new ();
+    MultiPolygonValue multiPolygonType = new ();
+    CurvePolygonValue curvePolygonType = new ();
+    MultiLineStringValue multiLineStringType = new ();
+    MultiPointValue multiPointType = new ();
+
+    sql:ParameterizedQuery sqlQuery =
+      `INSERT INTO GeometricTypes (row_id, point_type, lineString_type, geometry_type, circularstring_type, compoundcurve_type,
+            polygon_type, curvepolygon_type, multipolygon_type, multilinestring_type, multipoint_type)
+       VALUES(${rowId}, ${pointType}, ${lineStringType}, ${geometryType}, ${circularStringType}, ${compoundCurveType},
+            ${polygonType}, ${multiPolygonType}, ${curvePolygonType}, ${multiLineStringType}, ${multiPointType})`;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
 
@@ -376,6 +397,22 @@ function testInsertIntoMoneyDataTable3() returns error? {
          VALUES(${rowId}, ${moneyType}, ${smallMoneyType})`;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
 }
+
+@test:Config {
+    groups: ["execute-params", "execute"],
+    dependsOn: [testInsertIntoMoneyDataTable3]
+}
+function testInsertIntoMoneyDataTable4() returns error? {
+    int rowId = 5;
+    MoneyValue moneyType = new (200d);
+    SmallMoneyValue smallMoneyType = new (233d);
+
+    sql:ParameterizedQuery sqlQuery =
+        `INSERT INTO MoneyTypes (row_id, money_type, smallmoney_type)
+         VALUES(${rowId}, ${moneyType}, ${smallMoneyType})`;
+    validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
+}
+
 
 function executeQueryMssqlClient(sql:ParameterizedQuery sqlQuery, string database) returns sql:ExecutionResult | error {
     Client dbClient = check new (host, user, password, database, port);

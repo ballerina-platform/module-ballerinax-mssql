@@ -20,7 +20,6 @@ package org.ballerinalang.mssql.utils;
 
 import com.microsoft.sqlserver.jdbc.Geometry;
 import io.ballerina.runtime.api.TypeTags;
-import io.ballerina.runtime.api.types.ArrayType;
 import io.ballerina.runtime.api.types.Field;
 import io.ballerina.runtime.api.types.StructureType;
 import io.ballerina.runtime.api.types.Type;
@@ -230,9 +229,10 @@ public class ConverterUtils {
             // Convert array of geometry instances into an array of strings
             for (int i = 0; i < numPoints; i++) {
                 BObject element = (BObject) elements[i];
+                Object elementValue = element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
 
-                if (element instanceof BString) {
-                    stringElements[i] = element.toString();
+                if (elementValue instanceof BString) {
+                    stringElements[i] = elementValue.toString();
                     continue;
                 }
 
@@ -298,7 +298,6 @@ public class ConverterUtils {
 
                 throw new SQLException("Unsupported Value: " + value + " for type: GeometryCollection");
             }
-
             // Combine all elements into a geometry collection
             wkt = String.format("GEOMETRYCOLLECTION (%s)", String.join(", ", stringElements));
         } else {
@@ -322,7 +321,7 @@ public class ConverterUtils {
         } else if (value instanceof Double) {
             money = value;
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: " + "money");
+            throw new SQLException("Unsupported Value: " + value + " for type: money");
         }
         return money;
     }
@@ -345,9 +344,6 @@ public class ConverterUtils {
                 case TypeTags.DECIMAL_TAG:
                     structData.put(field.getFieldName(), bValue);
                     break;
-                case TypeTags.ARRAY_TAG:
-                    structData.put(field.getFieldName(), getArrayData(field, bValue));
-                    break;
                 case TypeTags.RECORD_TYPE_TAG:
                     structData.put(field.getFieldName(), getRecordData(bValue));
                     break;
@@ -358,26 +354,10 @@ public class ConverterUtils {
         return structData;
     }
 
-    protected static Object getArrayData(Field field, Object bValue) throws ApplicationError {
-        Type elementType = ((ArrayType) field.getFieldType()).getElementType();
-        if (elementType.getTag() == TypeTags.BYTE_TAG) {
-            return ((BArray) bValue).getBytes();
-        } else {
-            throw new ApplicationError("unsupported data type for array specified for struct parameter");
-        }
-    }
-
     protected static String getPointText(Map<String, Object> pointValue) {
         double x = ((BDecimal) pointValue.get(Constants.Geometric.X)).decimalValue().doubleValue();
         double y = ((BDecimal) pointValue.get(Constants.Geometric.Y)).decimalValue().doubleValue();
-
-        if (pointValue.get(Constants.Geometric.Z) != null && pointValue.get(Constants.Geometric.M) != null) {
-            double z = ((BDecimal) pointValue.get(Constants.Geometric.Z)).decimalValue().doubleValue();
-            double m = ((BDecimal) pointValue.get(Constants.Geometric.M)).decimalValue().doubleValue();
-            return String.format("%f %f %f %f", x, y, z, m);
-        } else {
-            return String.format("%f %f", x, y);
-        }
+        return String.format("%f %f", x, y);
     }
 
     protected static String getLineStringText(Object[] points, int numPoints) throws ApplicationError {
@@ -393,61 +373,15 @@ public class ConverterUtils {
     }
 
     protected static String getCircularStringText(Object[] elements, int numElements)
-            throws ApplicationError, SQLException {
-        //Determine whether the value is an array of points, or an array of arc segments
-        boolean isPointArray;
-        Object element = elements[0];
-        Map<String, Object> arrayElementValue = getRecordData(element);
-        if (arrayElementValue.containsKey(Constants.Geometric.X) &&
-                arrayElementValue.containsKey(Constants.Geometric.Y)) {
-            isPointArray = true;
-        } else if (arrayElementValue.containsKey(Constants.Geometric.START) &&
-                arrayElementValue.containsKey(Constants.Geometric.END) &&
-                arrayElementValue.containsKey(Constants.Geometric.CONTROL)) {
-            isPointArray = false;
-        } else {
-            throw new SQLException("Unsupported value: " + element + " for type: CompoundCurve");
+            throws ApplicationError {
+        String[] pointStrings = new String[numElements];
+        //Convert array of points into an array of strings
+        for (int i = 0; i < numElements; i++) {
+            Map<String, Object> pointValue = getRecordData(elements[i]);
+            pointStrings[i] = getPointText(pointValue);
         }
-
-        if (isPointArray) {
-            String[] pointStrings = new String[numElements];
-            //Convert array of points into an array of strings
-            for (int i = 0; i < numElements; i++) {
-                Map<String, Object> pointValue = getRecordData(elements[i]);
-                pointStrings[i] = getPointText(pointValue);
-            }
-            // Combine all points into a line string
-            return String.join(", ", pointStrings);
-        } else {
-            // Number of points = number of arc segments * 2 + 1
-            String[] pointStrings = new String[(numElements * 2) + 1];
-            Map<String, Object> prevEndPointValue = null;
-            for (int i = 0; i < numElements; i++) {
-                Map<String, Object> arcSegmentValue = getRecordData(elements[i]);
-                Map<String, Object> startPointValue =
-                        (Map<String, Object>) arcSegmentValue.get(Constants.Geometric.START);
-                Map<String, Object> endPointValue =
-                        (Map<String, Object>) arcSegmentValue.get(Constants.Geometric.END);
-                Map<String, Object> controlPointValue =
-                        (Map<String, Object>) arcSegmentValue.get(Constants.Geometric.CONTROL);
-
-                // Check whether the start point value of the current arc segment is the same as the end point of
-                // the previous arc segment.
-                if (prevEndPointValue != null && !(startPointValue.equals(prevEndPointValue))) {
-                    throw new ApplicationError(
-                            "Start and end points of arc segments should be the same for a Circular String.");
-                }
-
-                pointStrings[i * 2] = getPointText(startPointValue);
-                pointStrings[(i * 2) + 1] = getPointText(controlPointValue);
-
-                prevEndPointValue = endPointValue;
-            }
-
-            // Add the end point of the final arc segment.
-            pointStrings[numElements * 2] = getPointText(prevEndPointValue);
-            return String.join(", ", pointStrings);
-        }
+        // Combine all points into a line string
+        return String.join(", ", pointStrings);
     }
 
     protected static String getCompoundCurveText(Object[] elements, int numElements) 
@@ -602,8 +536,5 @@ public class ConverterUtils {
         }
         // Combine all polygons into a multi-polygon
         return String.join(", ", stringElements);
-
     }
-
-
 }

@@ -101,11 +101,9 @@ public final class Constants {
     public static final class Geometric {
         public static final String X = "x";
         public static final String Y = "y";
-        public static final String Z = "z";
-        public static final String M = "m";
-        public static final String START = "p1";
-        public static final String END = "p2";
-        public static final String CONTROL = "control";
+        public static final String P1 = "p1";
+        public static final String P2 = "p2";
+        public static final String P3 = "control";
     }
 
     /**
@@ -131,9 +129,6 @@ public final class Constants {
      */
     public static final class TypedValueFields {
         public static final BString SRID = StringUtils.fromString("srid");
-
-        public TypedValueFields() {
-        }
     }
 
     public static final String MSSQL_DATASOURCE_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDataSource";
