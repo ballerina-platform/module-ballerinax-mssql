@@ -38,6 +38,6 @@ public class ExecuteProcessorUtils {
 
     public static Object nativeBatchExecute(BObject client, BArray paramSQLStrings) {
         return org.ballerinalang.sql.nativeimpl.ExecuteProcessor.nativeBatchExecute(client, paramSQLStrings,
-                MssqlStatementParameterProcessor.getInstance());    
+                MssqlStatementParameterProcessor.getInstance(), false);
     }
 }

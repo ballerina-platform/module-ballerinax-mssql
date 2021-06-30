@@ -57,10 +57,11 @@ public isolated client class Client {
     # + rowType - The `typedesc` of the record that should be returned as a result. If this is not provided, the default
     #             column names of the query result set will be used for the record attributes.
     # + return - Stream of records in the type of `rowType`
-    remote isolated function query(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? rowType = ())
-    returns @tainted stream <record {}, sql:Error> {
-        return nativeQuery(self, sqlQuery, rowType);
-    }
+    remote isolated function query(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}> rowType = <>)
+    returns stream <rowType, sql:Error> = @java:Method {
+        'class: "org.ballerinalang.mssql.nativeimpl.QueryProcessorUtils",
+        name: "nativeQuery"
+    } external;
 
     # Executes the DDL or DML SQL queries provided by the user, and returns a summary of the execution.
     #
@@ -171,11 +172,6 @@ public type SecureSocket record {|
 
 isolated function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{
     'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessorUtils"
-} external;
-
-isolated function nativeQuery(Client sqlClient, string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? rowType)
-returns stream <record {}, sql:Error> = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.QueryProcessorUtils"
 } external;
 
 isolated function nativeExecute(Client sqlClient, string|sql:ParameterizedQuery sqlQuery)

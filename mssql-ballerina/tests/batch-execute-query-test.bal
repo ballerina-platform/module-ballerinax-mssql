@@ -22,7 +22,7 @@ string batchExecuteDB = "batch_execute_db";
 @test:Config {
     groups: ["batch-execute"]
 }
-function batchInsertIntoExactNumericTable1() {
+function batchInsertIntoExactNumericTable1() returns error? {
     var data = [
         {row_id: 10, bigintValue: 9223372036854775807, numericValue: 123.34},
         {row_id: 11, bigintValue: 9223372036854775807, numericValue: 123.34},
@@ -31,33 +31,34 @@ function batchInsertIntoExactNumericTable1() {
     sql:ParameterizedQuery[] sqlQueries =
         from var row in data
         select `INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type) VALUES (${row.row_id}, ${row.bigintValue}, ${row.numericValue})`;
+    validateBatchExecutionResult(check batchExecuteQueryMsSQLClient(sqlQueries), [1, 1, 1]);
 }
 
 @test:Config {
-    groups: ["batch-execute"],
-    dependsOn: [batchInsertIntoExactNumericTable1]
+    groups: ["batch-execute"]
 }
-function batchInsertIntoExactNumericTable2() {
+function batchInsertIntoExactNumericTable2() returns error? {
     int rowId = 15;
     int intValue = 5;
-    sql:ParameterizedQuery sqlQuery = `INSERT INTO NumericTypes (row_id, int_type) VALUES(${rowId}, ${intValue})`;
+    sql:ParameterizedQuery sqlQuery = `INSERT INTO ExactNumeric (row_id, int_type) VALUES (${rowId}, ${intValue})`;
     sql:ParameterizedQuery[] sqlQueries = [sqlQuery];
+    validateBatchExecutionResult(check batchExecuteQueryMsSQLClient(sqlQueries), [1]);
 }
 
 @test:Config {
-    groups: ["batch-execute"],
-    dependsOn: [batchInsertIntoExactNumericTable2]
+    groups: ["batch-execute"]
 }
 function batchInsertIntoExactNumericTableFailure() {
     var data = [
-        {row_id: 10, bigintValue: 9223372036854775807, numericValue: 123.34},
-        {row_id: 11, bigintValue: 9223372036854775807, numericValue: 123.34},
-        {row_id: 12, bigintValue: 9223372036854775807, numericValue: 123.34},
-        {row_id: 12, bigintValue: 9223372036854775807, numericValue: 123.34}
+        {row_id: 20, bigintValue: 9223372036854775807, numericValue: 123.34},
+        {row_id: 21, bigintValue: 9223372036854775807, numericValue: 123.34},
+        {row_id: 22, bigintValue: 9223372036854775807, numericValue: 123.34},
+        {row_id: 22, bigintValue: 9223372036854775807, numericValue: 123.34}
     ];
     sql:ParameterizedQuery[] sqlQueries =
         from var row in data
         select `INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type) VALUES (${row.row_id}, ${row.bigintValue}, ${row.numericValue})`;
+
     sql:ExecutionResult[]|error result = trap batchExecuteQueryMsSQLClient(sqlQueries);
     test:assertTrue(result is error);
     if (result is sql:BatchExecuteError) {
@@ -73,25 +74,24 @@ function batchInsertIntoExactNumericTableFailure() {
 }
 
 @test:Config {
-    groups: ["batch-execute"],
-    dependsOn: [batchInsertIntoExactNumericTableFailure]
+    groups: ["batch-execute"]
 }
-function batchInsertIntoStringTypesTable() {
+function batchInsertIntoStringTypesTable() returns error? {
     var data = [
-        {row_id: 14, charValue: "This is char2", varcharValue: "This is varchar2"},
-        {row_id: 15, charValue: "This is char3", varcharValue: "This is varchar3"},
-        {row_id: 16, charValue: "This is char4", varcharValue: "This is varchar4"}
+        {row_id: 14, charValue: "char2", varcharValue: "This is varchar2"},
+        {row_id: 15, charValue: "char3", varcharValue: "This is varchar3"},
+        {row_id: 16, charValue: "char4", varcharValue: "This is varchar4"}
     ];
     sql:ParameterizedQuery[] sqlQueries =
         from var row in data
         select `INSERT INTO StringTypes (row_id, char_type, varchar_type) VALUES (${row.row_id}, ${row.charValue}, ${row.varcharValue})`;
+    validateBatchExecutionResult(check batchExecuteQueryMsSQLClient(sqlQueries), [1, 1, 1]);
 }
 
 @test:Config {
-    groups: ["batch-execute"],
-    dependsOn: [batchInsertIntoStringTypesTable]
+    groups: ["batch-execute"]
 }
-function batchUpdateStringTypesTable() {
+function batchUpdateStringTypesTable() returns error? {
     var data = [
         {row_id: 14, varcharValue: "Updated varchar2"},
         {row_id: 15, varcharValue: "Updated varchar3"},
@@ -101,6 +101,22 @@ function batchUpdateStringTypesTable() {
         from var row in data
         select `UPDATE StringTypes SET varchar_type = ${row.varcharValue}
                WHERE row_id = ${row.row_id}`;
+       validateBatchExecutionResult(check batchExecuteQueryMsSQLClient(sqlQueries), [1, 1, 1]);
+}
+
+@test:Config {
+    groups: ["batch-execute"]
+}
+function testBatchExecuteWithEmptyQueryList() returns error? {
+    Client dbClient = check new (host, user, password, batchExecuteDB, port);
+    sql:ExecutionResult[] | sql:Error result = dbClient->batchExecute([]);
+    if (result is sql:Error) {
+        string expectedErrorMessage = " Parameter 'sqlQueries' cannot be empty array";
+        test:assertTrue(result.message().startsWith(expectedErrorMessage),
+            "Error message does not match. \nActual: " + result.message() + "\nExpected: " + expectedErrorMessage);
+    } else {
+        test:assertFail("Error expected");
+    }
 }
 
 function batchExecuteQueryMsSQLClient(sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[] | error {
@@ -109,3 +125,14 @@ function batchExecuteQueryMsSQLClient(sql:ParameterizedQuery[] sqlQueries) retur
     check dbClient.close();
     return result;
 }
+
+isolated function validateBatchExecutionResult(sql:ExecutionResult[] results, int[] rowCount) {
+    test:assertEquals(results.length(), rowCount.length());
+
+    int i = 0;
+    while (i < results.length()) {
+        test:assertEquals(results[i].affectedRowCount, rowCount[i]);
+        i = i + 1;
+    }
+}
+
