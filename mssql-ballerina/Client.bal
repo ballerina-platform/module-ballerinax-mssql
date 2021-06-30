@@ -97,9 +97,10 @@ public isolated client class Client {
     #               the default column names of the query result set will be used for the record attributes.
     # + return - Summary of the execution is returned in a `ProcedureCallResult` or an `sql:Error`
     remote isolated function call(string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
-    returns sql:ProcedureCallResult|sql:Error {
-        return nativeCall(self, sqlQuery, rowTypes);
-    }
+    returns sql:ProcedureCallResult|sql:Error = @java:Method {
+        'class: "org.ballerinalang.mssql.nativeimpl.CallProcessorUtils",
+        name: "nativeCall"
+    } external;
 
     # Close the SQL client.
     #
@@ -164,7 +165,7 @@ public type Options record {|
 # + cert - Keystore configuration of the trust certificates
 # + key - Keystore configuration of the client certificates
 public type SecureSocket record {|
-    boolean encrypt?
+    boolean encrypt?;
     boolean trustServerCertificate?;
     crypto:TrustStore cert?;
     crypto:KeyStore key?;
@@ -182,11 +183,6 @@ returns sql:ExecutionResult|sql:Error = @java:Method {
 isolated function nativeBatchExecute(Client sqlClient, sql:ParameterizedQuery[] sqlQueries)
 returns sql:ExecutionResult[]|sql:Error = @java:Method {
     'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessorUtils"
-} external;
-
-isolated function nativeCall(Client sqlClient, string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes)
-returns sql:ProcedureCallResult|sql:Error = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.CallProcessorUtils"
 } external;
 
 isolated function close(Client mssqlClient) returns sql:Error? = @java:Method {
