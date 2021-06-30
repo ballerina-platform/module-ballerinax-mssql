@@ -164,7 +164,7 @@ public type Options record {|
 # + cert - Keystore configuration of the trust certificates
 # + key - Keystore configuration of the client certificates
 public type SecureSocket record {|
-    boolean encrypt?;
+    boolean encrypt?
     boolean trustServerCertificate?;
     crypto:TrustStore cert?;
     crypto:KeyStore key?;

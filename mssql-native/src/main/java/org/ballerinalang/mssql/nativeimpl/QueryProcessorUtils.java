@@ -20,6 +20,7 @@ package org.ballerinalang.mssql.nativeimpl;
 
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BStream;
+import io.ballerina.runtime.api.values.BTypedesc;
 import org.ballerinalang.mssql.parameterprocessor.MssqlStatementParameterProcessor;
 import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
 
@@ -33,7 +34,7 @@ public class QueryProcessorUtils {
     }
 
     public static BStream nativeQuery(BObject client, Object paramSQLString,
-                                      Object recordType) {
+                                      BTypedesc recordType) {
         MssqlStatementParameterProcessor statementParametersProcessor = MssqlStatementParameterProcessor.getInstance();
         DefaultResultParameterProcessor resultParametersProcessor = DefaultResultParameterProcessor.getInstance();
         return org.ballerinalang.sql.nativeimpl.QueryProcessor.nativeQuery(client, paramSQLString, recordType,

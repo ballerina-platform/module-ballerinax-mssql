@@ -136,7 +136,7 @@ isolated function validateComplexStringTableResult2(record{}? returnData) {
     } 
 }
 
-function complexQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string database = complexQueryDb)
+function complexQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}> resultType, string database = complexQueryDb)
 returns record {}? | error {
     Client dbClient = check new (host, user, password, database, port);
     stream<record {}, error> streamData = dbClient->query(sqlQuery, resultType);
