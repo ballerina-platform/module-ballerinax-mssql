@@ -57,10 +57,11 @@ public isolated client class Client {
     # + rowType - The `typedesc` of the record that should be returned as a result. If this is not provided, the default
     #             column names of the query result set will be used for the record attributes.
     # + return - Stream of records in the type of `rowType`
-    remote isolated function query(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? rowType = ())
-    returns @tainted stream <record {}, sql:Error> {
-        return nativeQuery(self, sqlQuery, rowType);
-    }
+    remote isolated function query(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}> rowType = <>)
+    returns stream <rowType, sql:Error> = @java:Method {
+        'class: "org.ballerinalang.mssql.nativeimpl.QueryProcessorUtils",
+        name: "nativeQuery"
+    } external;
 
     # Executes the DDL or DML SQL queries provided by the user, and returns a summary of the execution.
     #
@@ -96,9 +97,10 @@ public isolated client class Client {
     #               the default column names of the query result set will be used for the record attributes.
     # + return - Summary of the execution is returned in a `ProcedureCallResult` or an `sql:Error`
     remote isolated function call(string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
-    returns sql:ProcedureCallResult|sql:Error {
-        return nativeCall(self, sqlQuery, rowTypes);
-    }
+    returns sql:ProcedureCallResult|sql:Error = @java:Method {
+        'class: "org.ballerinalang.mssql.nativeimpl.CallProcessorUtils",
+        name: "nativeCall"
+    } external;
 
     # Close the SQL client.
     #
@@ -173,11 +175,6 @@ isolated function createClient(Client mssqlclient, ClientConfiguration clientCon
     'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessorUtils"
 } external;
 
-isolated function nativeQuery(Client sqlClient, string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? rowType)
-returns stream <record {}, sql:Error> = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.QueryProcessorUtils"
-} external;
-
 isolated function nativeExecute(Client sqlClient, string|sql:ParameterizedQuery sqlQuery)
 returns sql:ExecutionResult|sql:Error = @java:Method {
     'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessorUtils"
@@ -186,11 +183,6 @@ returns sql:ExecutionResult|sql:Error = @java:Method {
 isolated function nativeBatchExecute(Client sqlClient, sql:ParameterizedQuery[] sqlQueries)
 returns sql:ExecutionResult[]|sql:Error = @java:Method {
     'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessorUtils"
-} external;
-
-isolated function nativeCall(Client sqlClient, string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes)
-returns sql:ProcedureCallResult|sql:Error = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.CallProcessorUtils"
 } external;
 
 isolated function close(Client mssqlClient) returns sql:Error? = @java:Method {

@@ -260,7 +260,7 @@ isolated function createBatchExecuteDB() {
     CREATE TABLE StringTypes (
         row_id INT PRIMARY KEY,
         varchar_type VARCHAR(255),
-        char_type CHAR(4),
+        char_type CHAR(5),
         text_type TEXT,
         nchar_type NCHAR(4),
         nvarchar_type NVARCHAR(10)
