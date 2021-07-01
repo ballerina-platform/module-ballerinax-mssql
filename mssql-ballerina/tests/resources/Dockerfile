@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM microsoft/mssql-server-linux
+FROM mcr.microsoft.com/mssql/server:2019-latest
 
 COPY keystore/server/server-cert.pem /etc/ssl/certs/mssql.pem
 COPY keystore/server/server-key.pem /etc/ssl/private/mssql.key
