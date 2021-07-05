@@ -15,6 +15,8 @@ rootProject.name = 'ballerina-mssql'
 include ':build-config:checkstyle'
 include ':mssql-native'
 include ':mssql-ballerina'
+include ':mssql-examples'
+
 
 gradleEnterprise {
     buildScan {
