@@ -1,6 +1,6 @@
 [package]
 org = "mssql"
-name = "query_operation"
+name = "complex_queries_operation"
 version = "0.1.0"
 
 [[platform.java11.dependency]]
