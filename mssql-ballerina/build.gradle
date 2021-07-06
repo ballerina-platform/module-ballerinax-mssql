@@ -178,28 +178,11 @@ task startTestDockerContainer(type: Exec) {
     }
 }
 
-task stopTestDockerContainer() {
-    doLast {
-        if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-            try {
-                def stdOut = new ByteArrayOutputStream()
-                exec {
-                    commandLine 'sh', '-c', "docker stop ${testContainerName}"
-                    standardOutput = stdOut
-                }
-            } catch (all) {
-                println("Process can safely ignore stopTestDockerContainer task")
-            }
-        }
-    }
-}
-
 updateTomlFiles.dependsOn copyStdlibs
 startTestDockerContainer.dependsOn createTestDockerImage
 
 build.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-native:build"
-build.finalizedBy stopTestDockerContainer
 test.dependsOn startTestDockerContainer
 
 publishToMavenLocal.dependsOn build
