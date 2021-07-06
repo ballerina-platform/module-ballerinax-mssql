@@ -106,6 +106,7 @@ def stripBallerinaExtensionVersion(String extVersion) {
         return extVersion.replace("${project.ext.snapshotVersion}", '')
     }
 }
+
 def testContainerName = "ballerina-mssql-testcontainer"
 
 task stopExampleDockerContainer() {
@@ -128,5 +129,4 @@ copyDistribution.dependsOn ":mssql-ballerina:build"
 copyPackageBala.dependsOn copyDistribution
 buildExamples.dependsOn copyPackageBala
 build.dependsOn buildExamples
-build.dependsOn ":mssql-ballerina:startTestDockerContainer"
 build.finalizedBy stopExampleDockerContainer
