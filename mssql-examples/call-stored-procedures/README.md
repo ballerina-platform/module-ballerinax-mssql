@@ -18,7 +18,6 @@ The `call-stored-procedures` project demonstrates how to use the MSSQL client to
     * Replace the above path with a maven dependency param
         ```
             [platform.java11.dependency]]
-            url = "https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc"
             groupId = "com.microsoft.sqlserver"
             artifactId = "mssql-jdbc"
             version = "9.2.0.jre11"
