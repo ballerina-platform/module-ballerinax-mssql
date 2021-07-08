@@ -199,7 +199,6 @@ startTestDockerContainer.dependsOn createTestDockerImage
 
 build.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-native:build"
-build.finalizedBy stopTestDockerContainer
 test.dependsOn startTestDockerContainer
 
 publishToMavenLocal.dependsOn build
