@@ -16,7 +16,6 @@ name = "mssql"
 version= "0.1.0"
 
 [[platform.java11.dependency]]
-path = "/path/to/mssql-jdbc-9.2.0.jre11.jar"
 artifactId = "mssql-jdbc"
 groupId = "mssql"
 version = "9.2.0.jre11"
