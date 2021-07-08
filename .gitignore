@@ -12,6 +12,7 @@
 .mtj.tmp/
 
 # Package Files #
+!gradle/wrapper/gradle-wrapper.jar
 *.jar
 *.war
 *.nar
@@ -40,7 +41,6 @@ target
 .gradle
 build/
 gradle-app.setting
-!gradle-wrapper.jar
 .gradletasknamecache
 
 # mac
