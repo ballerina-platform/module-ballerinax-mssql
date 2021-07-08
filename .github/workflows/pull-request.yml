@@ -2,11 +2,6 @@ name: PR build
 
 on:
   pull_request:
-  push:
-    branches-ignore:
-      - main
-      - "automated/dependency_version_update"
-      - "automated/dependency_version_update_tmp"
 
 jobs:
   ubuntu-build:
