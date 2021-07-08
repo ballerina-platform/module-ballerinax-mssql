@@ -15,16 +15,16 @@ The `complex-queries-operation` project demonstrates how to use the MSSQL client
             path = "PATH"
         ```
 
-    * Replace the above path with a maven dependency param
+    * Replace the above path with a maven dependency parameter
         ```
-            [platform.java11.dependency]]
+            [[platform.java11.dependency]]
             groupId = "com.microsoft.sqlserver"
             artifactId = "mssql-jdbc"
             version = "9.2.0.jre11"
         ```
 # Run the example
 
-To run the example, move into the `complex-queries-operation` project and execute the below command.
+To run the example, move into the `complex-queries-operation` project and execute the command below.
 
 ```
 $bal run
