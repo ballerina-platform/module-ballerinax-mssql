@@ -21,7 +21,7 @@ package io.ballerina.stdlib.mssql.nativeimpl;
 import io.ballerina.runtime.api.values.BArray;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.stdlib.mssql.parameterprocessor.MssqlStatementParameterProcessor;
-import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
+import io.ballerina.stdlib.sql.parameterprocessor.DefaultResultParameterProcessor;
 
 /**
  * This class holds the utility methods involved with executing the call statements.
@@ -33,7 +33,7 @@ public class CallProcessorUtils {
     }
     
     public static Object nativeCall(BObject client, Object paramSQLString, BArray recordTypes) {
-        return org.ballerinalang.sql.nativeimpl.CallProcessor.nativeCall(client, paramSQLString,
+        return io.ballerina.stdlib.sql.nativeimpl.CallProcessor.nativeCall(client, paramSQLString,
             recordTypes, MssqlStatementParameterProcessor.getInstance(),
             DefaultResultParameterProcessor.getInstance());
     }

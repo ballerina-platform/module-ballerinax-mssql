@@ -30,7 +30,7 @@ import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.stdlib.mssql.Constants;
-import org.ballerinalang.sql.exception.ApplicationError;
+import io.ballerina.stdlib.sql.exception.ApplicationError;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -229,7 +229,7 @@ public class ConverterUtils {
             // Convert array of geometry instances into an array of strings
             for (int i = 0; i < numPoints; i++) {
                 BObject element = (BObject) elements[i];
-                Object elementValue = element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+                Object elementValue = element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
 
                 if (elementValue instanceof BString) {
                     stringElements[i] = elementValue.toString();
@@ -238,13 +238,13 @@ public class ConverterUtils {
 
                 if (element.getClass().getName().contains("$" + Constants.CustomTypeNames.POINT)) {
                     Map<String, Object> pointValue = getRecordData(
-                            element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE));
+                            element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE));
                     String pointText = getPointText(pointValue);
                     stringElements[i] = String.format("POINT (%s)", pointText);
                     continue;
                 }
 
-                BArray elementArray = (BArray) element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+                BArray elementArray = (BArray) element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
                 Object[] arrayValues = elementArray.getValues();
                 int arraySize = elementArray.size();
 
@@ -395,7 +395,7 @@ public class ConverterUtils {
                 continue;
             }
 
-            BArray elementArray = (BArray) element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+            BArray elementArray = (BArray) element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
 
             if (element.getClass().getName().contains("$" + Constants.CustomTypeNames.LINESTRING)) {
                 String lineStringText = getLineStringText(elementArray.getValues(), elementArray.size());
@@ -426,7 +426,7 @@ public class ConverterUtils {
                 continue;
             }
 
-            BArray elementArray = (BArray) element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+            BArray elementArray = (BArray) element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
 
             if (element.getClass().getName().contains("$" + Constants.CustomTypeNames.LINESTRING)) {
                 String lineStringText = getLineStringText(elementArray.getValues(), elementArray.size());
@@ -464,7 +464,7 @@ public class ConverterUtils {
             }
 
             if (element.getClass().getName().contains("$" + Constants.CustomTypeNames.LINESTRING)) {
-                BArray elementArray = (BArray) element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+                BArray elementArray = (BArray) element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
                 String lineStringText = getLineStringText(elementArray.getValues(), elementArray.size());
                 stringElements[i] = String.format("(%s)", lineStringText);
                 continue;
@@ -501,7 +501,7 @@ public class ConverterUtils {
                 continue;
             }
 
-            BArray elementArray = (BArray) element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+            BArray elementArray = (BArray) element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
             if (element.getClass().getName().contains("$" + Constants.CustomTypeNames.LINESTRING)) {
                 String lineStringText = getLineStringText(elementArray.getValues(), elementArray.size());
                 stringElements[i] = String.format("(%s)", lineStringText);
@@ -526,7 +526,7 @@ public class ConverterUtils {
                 continue;
             }
 
-            BArray elementArray = (BArray) element.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+            BArray elementArray = (BArray) element.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
             if (element.getClass().getName().contains("$" + Constants.CustomTypeNames.POLYGON)) {
                 String polygonText = getPolygonText(elementArray.getValues(), elementArray.size());
                 stringElements[i] = String.format("(%s)", polygonText);

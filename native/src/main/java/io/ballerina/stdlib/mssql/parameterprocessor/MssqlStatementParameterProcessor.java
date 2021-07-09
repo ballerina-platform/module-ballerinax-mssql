@@ -23,8 +23,8 @@ import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.stdlib.mssql.Constants;
 import io.ballerina.stdlib.mssql.utils.ConverterUtils;
-import org.ballerinalang.sql.exception.ApplicationError;
-import org.ballerinalang.sql.parameterprocessor.DefaultStatementParameterProcessor;
+import io.ballerina.stdlib.sql.exception.ApplicationError;
+import io.ballerina.stdlib.sql.parameterprocessor.DefaultStatementParameterProcessor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,7 +53,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
                                           int index, BObject typedValue)
             throws SQLException, ApplicationError {
         String sqlType = typedValue.getType().getName();
-        Object value = typedValue.get(org.ballerinalang.sql.Constants.TypedValueFields.VALUE);
+        Object value = typedValue.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
         switch (sqlType) {
             case Constants.CustomTypeNames.POINT:
                 setPoint(preparedStatement, index, value, typedValue.get(Constants.TypedValueFields.SRID));

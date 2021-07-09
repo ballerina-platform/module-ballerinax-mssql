@@ -22,7 +22,7 @@ import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BStream;
 import io.ballerina.runtime.api.values.BTypedesc;
 import io.ballerina.stdlib.mssql.parameterprocessor.MssqlStatementParameterProcessor;
-import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
+import io.ballerina.stdlib.sql.parameterprocessor.DefaultResultParameterProcessor;
 
 /**
  * This class provides the methods for query processing which executes sql queries.
@@ -37,7 +37,7 @@ public class QueryProcessorUtils {
                                       BTypedesc recordType) {
         MssqlStatementParameterProcessor statementParametersProcessor = MssqlStatementParameterProcessor.getInstance();
         DefaultResultParameterProcessor resultParametersProcessor = DefaultResultParameterProcessor.getInstance();
-        return org.ballerinalang.sql.nativeimpl.QueryProcessor.nativeQuery(client, paramSQLString, recordType,
+        return io.ballerina.stdlib.sql.nativeimpl.QueryProcessor.nativeQuery(client, paramSQLString, recordType,
                 statementParametersProcessor, resultParametersProcessor);
     }
 }
