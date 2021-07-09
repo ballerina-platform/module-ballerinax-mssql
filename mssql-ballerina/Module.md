@@ -46,7 +46,7 @@ mssql:Client|sql:Error dbClient = new ("localhost", "rootUser", "rootPass", "inf
 
 The `dbClient` uses the named params to pass the attributes since it is skipping some params in the constructor.
 Further, the [`mssql:Options`](https://docs.central.ballerina.io/ballerinax/mssql/latest/records/Options)
-property is passed to configure the SSL and login timeout in the MySQL client.
+property is passed to configure the SSL and login timeout in the MSSQL client.
 
 ```ballerina
 mssql:Options mssqlOptions = {
