@@ -4,7 +4,7 @@ name = "mssql"
 version = "@toml.version@"
 
 [[platform.java11.dependency]]
-path = "../mssql-native/build/libs/mssql-native-@project.version@.jar"
+path = "../native/build/libs/mssql-native-@project.version@.jar"
 groupId = "org.ballerinalang"
 artifactId = "mssql-native"
 version = "@project.version@"
