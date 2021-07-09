@@ -16,13 +16,13 @@
  *  under the License.
  */
 
-package org.ballerinalang.mssql.nativeimpl;
+package io.ballerina.stdlib.mssql.nativeimpl;
 
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
-import org.ballerinalang.mssql.Constants;
-import org.ballerinalang.mssql.utils.Utils;
+import io.ballerina.stdlib.mssql.Constants;
+import io.ballerina.stdlib.mssql.utils.Utils;
 import org.ballerinalang.sql.datasource.SQLDatasource;
 
 import java.util.Properties;

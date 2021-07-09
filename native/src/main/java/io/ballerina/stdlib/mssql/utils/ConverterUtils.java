@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.ballerinalang.mssql.utils;
+package io.ballerina.stdlib.mssql.utils;
 
 import com.microsoft.sqlserver.jdbc.Geometry;
 import io.ballerina.runtime.api.TypeTags;
@@ -29,7 +29,7 @@ import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
-import org.ballerinalang.mssql.Constants;
+import io.ballerina.stdlib.mssql.Constants;
 import org.ballerinalang.sql.exception.ApplicationError;
 
 import java.sql.SQLException;

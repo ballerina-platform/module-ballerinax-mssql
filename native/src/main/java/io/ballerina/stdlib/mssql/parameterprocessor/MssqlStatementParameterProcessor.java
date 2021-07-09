@@ -16,13 +16,13 @@
  *  under the License.
  */
 
-package org.ballerinalang.mssql.parameterprocessor;
+package io.ballerina.stdlib.mssql.parameterprocessor;
 
 import com.microsoft.sqlserver.jdbc.Geometry;
 import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import io.ballerina.runtime.api.values.BObject;
-import org.ballerinalang.mssql.Constants;
-import org.ballerinalang.mssql.utils.ConverterUtils;
+import io.ballerina.stdlib.mssql.Constants;
+import io.ballerina.stdlib.mssql.utils.ConverterUtils;
 import org.ballerinalang.sql.exception.ApplicationError;
 import org.ballerinalang.sql.parameterprocessor.DefaultStatementParameterProcessor;
 

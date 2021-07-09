@@ -59,7 +59,7 @@ public isolated client class Client {
     # + return - Stream of records in the type of `rowType`
     remote isolated function query(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}> rowType = <>)
     returns stream <rowType, sql:Error> = @java:Method {
-        'class: "org.ballerinalang.mssql.nativeimpl.QueryProcessorUtils",
+        'class: "io.ballerina.stdlib.mssql.nativeimpl.QueryProcessorUtils",
         name: "nativeQuery"
     } external;
 
@@ -98,7 +98,7 @@ public isolated client class Client {
     # + return - Summary of the execution is returned in a `ProcedureCallResult` or an `sql:Error`
     remote isolated function call(string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
     returns sql:ProcedureCallResult|sql:Error = @java:Method {
-        'class: "org.ballerinalang.mssql.nativeimpl.CallProcessorUtils",
+        'class: "io.ballerina.stdlib.mssql.nativeimpl.CallProcessorUtils",
         name: "nativeCall"
     } external;
 
@@ -172,19 +172,19 @@ public type SecureSocket record {|
 |};
 
 isolated function createClient(Client mssqlclient, ClientConfiguration clientConfig, sql:ConnectionPool globalConnPool) returns sql:Error? = @java:Method{
-    'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessorUtils"
+    'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils"
 } external;
 
 isolated function nativeExecute(Client sqlClient, string|sql:ParameterizedQuery sqlQuery)
 returns sql:ExecutionResult|sql:Error = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessorUtils"
+    'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils"
 } external;
 
 isolated function nativeBatchExecute(Client sqlClient, sql:ParameterizedQuery[] sqlQueries)
 returns sql:ExecutionResult[]|sql:Error = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.ExecuteProcessorUtils"
+    'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils"
 } external;
 
 isolated function close(Client mssqlClient) returns sql:Error? = @java:Method {
-    'class: "org.ballerinalang.mssql.nativeimpl.ClientProcessorUtils"
+    'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils"
 } external;

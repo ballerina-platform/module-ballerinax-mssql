@@ -15,13 +15,13 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.ballerinalang.mssql.utils;
+package io.ballerina.stdlib.mssql.utils;
 
 import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
-import org.ballerinalang.mssql.Constants;
+import io.ballerina.stdlib.mssql.Constants;
 
 /**
  * This class includes utility functions.

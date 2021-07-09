@@ -16,12 +16,12 @@
  * under the License.
  */
 
-package org.ballerinalang.mssql.nativeimpl;
+package io.ballerina.stdlib.mssql.nativeimpl;
 
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BStream;
 import io.ballerina.runtime.api.values.BTypedesc;
-import org.ballerinalang.mssql.parameterprocessor.MssqlStatementParameterProcessor;
+import io.ballerina.stdlib.mssql.parameterprocessor.MssqlStatementParameterProcessor;
 import org.ballerinalang.sql.parameterprocessor.DefaultResultParameterProcessor;
 
 /**
