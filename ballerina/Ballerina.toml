@@ -5,19 +5,10 @@ version = "@toml.version@"
 
 [[platform.java11.dependency]]
 path = "../native/build/libs/mssql-native-@project.version@.jar"
-groupId = "org.ballerinalang"
-artifactId = "mssql-native"
-version = "@project.version@"
 
 [[platform.java11.dependency]]
 path = "./lib/sql-native-@sql.native.version@.jar"
-groupId = "org.ballerinalang"
-artifactId = "sql-native"
-version = "@sql.native.version@"
 
 [[platform.java11.dependency]]
 path = "./lib/mssql-jdbc-@mssqlDriverVersion@.jar"
-artifactId = "mssql-jdbc"
-groupId = "mssql"
 scope = "testOnly"
-version = "@mssqlDriverVersion@"
