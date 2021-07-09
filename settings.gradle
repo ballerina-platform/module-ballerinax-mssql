@@ -17,6 +17,9 @@ include ':mssql-native'
 include ':mssql-ballerina'
 include ':mssql-examples'
 
+project(':mssql-native').projectDir = file('native')
+project(':mssql-ballerina').projectDir = file('ballerina')
+project(':mssql-examples').projectDir = file('examples')
 
 gradleEnterprise {
     buildScan {
