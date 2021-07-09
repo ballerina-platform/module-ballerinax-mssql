@@ -12,11 +12,13 @@ plugins {
 }
 
 rootProject.name = 'ballerina-mssql'
-include ':build-config:checkstyle'
+
+include ':checkstyle'
 include ':mssql-native'
 include ':mssql-ballerina'
 include ':mssql-examples'
 
+project(':checkstyle').projectDir = file("build-config${File.separator}checkstyle")
 project(':mssql-native').projectDir = file('native')
 project(':mssql-ballerina').projectDir = file('ballerina')
 project(':mssql-examples').projectDir = file('examples')
