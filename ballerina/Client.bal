@@ -69,9 +69,11 @@ public isolated client class Client {
     #              when the query has params to be passed in
     # + return - Summary of the SQL update query as an `ExecutionResult` or returns an `Error`
     #           if any error occurred when executing the query
-    remote isolated function execute(string|sql:ParameterizedQuery sqlQuery) returns sql:ExecutionResult|sql:Error {
-        return nativeExecute(self, sqlQuery);
-    }
+    remote isolated function execute(string|sql:ParameterizedQuery sqlQuery)
+    returns sql:ExecutionResult|sql:Error = @java:Method {
+        'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils",
+        name: "nativeExecute"
+    } external;
 
     # Executes a batch of parameterized DDL or DML SQL query provided by the user
     # and returns the summary of the execution.
@@ -105,9 +107,10 @@ public isolated client class Client {
     # Close the SQL client.
     #
     # + return - Possible error during closing the client
-    public isolated function close() returns sql:Error? {
-        return close(self);
-    }
+    public isolated function close() returns sql:Error?  = @java:Method {
+        'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils",
+        name: "close"
+    } external;
 
 }
 
@@ -175,16 +178,7 @@ isolated function createClient(Client mssqlclient, ClientConfiguration clientCon
     'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils"
 } external;
 
-isolated function nativeExecute(Client sqlClient, string|sql:ParameterizedQuery sqlQuery)
-returns sql:ExecutionResult|sql:Error = @java:Method {
-    'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils"
-} external;
-
 isolated function nativeBatchExecute(Client sqlClient, sql:ParameterizedQuery[] sqlQueries)
 returns sql:ExecutionResult[]|sql:Error = @java:Method {
     'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils"
-} external;
-
-isolated function close(Client mssqlClient) returns sql:Error? = @java:Method {
-    'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils"
 } external;
