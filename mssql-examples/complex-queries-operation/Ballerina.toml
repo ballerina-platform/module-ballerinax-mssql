@@ -1,7 +1,0 @@
-[package]
-org = "mssql"
-name = "complex_queries_operation"
-version = "0.1.0"
-
-[[platform.java11.dependency]]
-path = "../../mssql-ballerina/lib/mssql-jdbc-@driver.version@.jar"
