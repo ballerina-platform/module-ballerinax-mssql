@@ -118,7 +118,8 @@ connection pool handling.  For its properties and possible values, see the [`sql
    an unsharable connection pool will be created.
 
     ```ballerina
-    mssql:Client|sql:Error dbClient = new ("localhost", "rootUser", "rootPass", connectionPool = { maxOpenConnections: 5 });
+    mssql:Client|sql:Error dbClient = new ("localhost", "rootUser", "rootPass", 
+                                           connectionPool = { maxOpenConnections: 5 });
     ```
 
 3. Local, shareable connection pool
@@ -130,21 +131,15 @@ connection pool handling.  For its properties and possible values, see the [`sql
     ```ballerina
     sql:ConnectionPool connPool = {maxOpenConnections: 5};
     
-    mssql:Client|sql:Error dbClient1 =       
-                               new ("localhost", "rootUser", "rootPass",
-                               connectionPool = connPool);
-    mssql:Client|sql:Error dbClient2 = 
-                               new (url = "localhost", "rootUser", "rootPass"",
-                               connectionPool = connPool);
-    mssql:Client|sql:Error dbClient3 = 
-                               new (url = "localhost", "rootUser", "rootPass",
-                               connectionPool = connPool);
+    mssql:Client|sql:Error dbClient1 = new ("localhost", "rootUser", "rootPass", connectionPool = connPool);
+    mssql:Client|sql:Error dbClient2 = new ("localhost", "rootUser", "rootPass", connectionPool = connPool);
+    mssql:Client|sql:Error dbClient3 = new ("localhost", "rootUser", "rootPass", connectionPool = connPool);
     ```
 
 For more details about each property, see the [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) constructor.
 
-The [mssql:Client](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) references
-[sql:Client](https://docs.central.ballerina.io/ballerina/sql/latest/clients/Client) and all the operations
+The [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) references
+[`sql:Client`](https://docs.central.ballerina.io/ballerina/sql/latest/clients/Client) and all the operations
 defined by the `sql:Client` will be supported by the `mssql:Client` as well.
 
 #### Closing the Client
@@ -187,8 +182,7 @@ In this sample, the query parameter values are passed directly into the query st
 remote function.
 
 ```ballerina
-sql:ExecutionResult result = check dbClient->execute("INSERT INTO student(age, name) " +
-                         "values (23, 'john')");
+sql:ExecutionResult result = check dbClient->execute("INSERT INTO student(age, name) VALUES (23, 'john')");
 ```
 
 In this sample, the parameter values, which are in local variables are used to parameterize the SQL query in
@@ -201,7 +195,7 @@ string name = "Anne";
 int age = 8;
 
 sql:ParameterizedQuery query = `INSERT INTO student(age, name)
-                                values (${age}, ${name})`;
+                                VALUES (${age}, ${name})`;
 sql:ExecutionResult result = check dbClient->execute(query);
 ```
 
@@ -214,7 +208,7 @@ sql:VarcharValue name = new ("James");
 sql:IntegerValue age = new (10);
 
 sql:ParameterizedQuery query = `INSERT INTO student(age, name)
-                                values (${age}, ${name})`;
+                                VALUES (${age}, ${name})`;
 sql:ExecutionResult result = check dbClient->execute(query);
 ```
 
@@ -228,7 +222,7 @@ int age = 31;
 string name = "Kate";
 
 sql:ParameterizedQuery query = `INSERT INTO student(age, name)
-                                values (${age}, ${name})`;
+                                VALUES (${age}, ${name})`;
 sql:ExecutionResult result = check dbClient->execute(query);
 //Number of rows affected by the execution of the query.
 int? count = result.affectedRowCount;
