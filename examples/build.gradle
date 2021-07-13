@@ -106,7 +106,7 @@ def stripBallerinaExtensionVersion(String extVersion) {
     }
 }
 
-def testContainerName = "ballerina-mssql-testcontainer"
+def testContainerName = "ballerina-mssql-testContainer"
 
 task stopExampleDockerContainer() {
     doLast {
