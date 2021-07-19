@@ -18,7 +18,6 @@
 package io.ballerina.stdlib.mssql.utils;
 
 import io.ballerina.runtime.api.creators.ValueCreator;
-import io.ballerina.runtime.api.utils.StringUtils;
 import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
@@ -97,12 +96,12 @@ public class Utils {
                 options.put(Constants.DatabaseProps.TRUSTSTORE_PASSWORD,
                         trustCertKeystore.getStringValue(
                                 Constants.SSLConfig.CryptoTrustStoreRecord.TRUSTSTORE_RECORD_PASSWORD_FIELD));
-            }
+                }
 
             BMap clientCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_KEY);
             if (clientCertKeystore != null) {
                 options.put(Constants.DatabaseProps.KEYSTORE_AUTHENTICATION,
-                        StringUtils.fromString("JavaKeyStorePassword"));
+                        Constants.SSLConfig.JAVA_KEYSTORE_PASSWORD);
                 options.put(Constants.DatabaseProps.KEYSTORE_LOCATION,
                         clientCertKeystore.getStringValue(
                                 Constants.SSLConfig.CryptoKeyStoreRecord.KEYSTORE_RECORD_PATH_FIELD));
