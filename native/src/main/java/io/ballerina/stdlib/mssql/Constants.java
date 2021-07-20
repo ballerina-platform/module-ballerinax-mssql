@@ -58,6 +58,7 @@ public final class Constants {
         public static final BString TRUST_SERVER_CERTIFICATE = StringUtils.fromString("trustServerCertificate");
         public static final BString CLIENT_CERT = StringUtils.fromString("cert");
         public static final BString CLIENT_KEY = StringUtils.fromString("key");
+        public static final BString JAVA_KEYSTORE_PASSWORD = StringUtils.fromString("JavaKeyStorePassword");
 
         /**
          * Constants for processing ballerina crypto:TrustStore.
