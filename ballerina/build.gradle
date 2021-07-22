@@ -196,6 +196,7 @@ task stopTestDockerContainer() {
 updateTomlFiles.dependsOn copyStdlibs
 startTestDockerContainer.dependsOn createTestDockerImage
 
+build.dependsOn "generatePomFileForMavenPublication"
 build.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-native:build"
 test.dependsOn startTestDockerContainer
