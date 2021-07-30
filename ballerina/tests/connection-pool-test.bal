@@ -40,7 +40,7 @@ function testLocalSharedConnectionPoolConfigSingleDestination() returns error? {
     Client dbClient4 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
     Client dbClient5 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
     
-    (stream<record{}, error>)[] resultArray = [];
+    (stream<record{}, error?>)[] resultArray = [];
     resultArray[0] = dbClient1->query("select count(*) as val from Customers where registrationID = 1", Result);
     resultArray[1] = dbClient2->query("select count(*) as val from Customers where registrationID = 1", Result);
     resultArray[2] = dbClient3->query("select count(*) as val from Customers where registrationID = 2", Result);
@@ -87,7 +87,7 @@ function testLocalSharedConnectionPoolConfigMultipleDestinations() returns error
     Client dbClient6 = check new (host, user, password, poolDB_2, poolPort, options=options, connectionPool=pool2);
     Client dbClient7 = check new (host, user, password, poolDB_2, poolPort, options=options, connectionPool=pool2);
 
-    stream<record {} , error>[] resultArray = [];
+    stream<record {} , error?>[] resultArray = [];
     resultArray[0] = dbClient1->query("select count(*) as val from Customers where registrationID = 1", Result);
     resultArray[1] = dbClient2->query("select count(*) as val from Customers where registrationID = 1", Result);
     resultArray[2] = dbClient3->query("select count(*) as val from Customers where registrationID = 2", Result);
@@ -311,7 +311,7 @@ function testStopClientUsingGlobalPool() returns error? {
     validateApplicationError(retVal2);
 }
 
-isolated function getReturnValue(stream<record{}, error> queryResult) returns int|error {
+isolated function getReturnValue(stream<record{}, error?> queryResult) returns int|error {
     int count = -1;
     record {|record {} value;|}? data = check queryResult.next();
     if (data is record {|record {} value;|}) {

@@ -112,8 +112,8 @@ function testInsertAndSelectTableWithGeneratedKeys() returns error? {
         int|error id = int:fromString(insertId);
         if (id is int) {
             string query = string `SELECT * from ExactNumericTypes where id = ${id}`;
-            stream<record{}, error> queryResult = dbClient->query(query, ExactNumericType);
-            stream<ExactNumericType, sql:Error> streamData = <stream<ExactNumericType, sql:Error>>queryResult;
+            stream<record{}, error?> queryResult = dbClient->query(query, ExactNumericType);
+            stream<ExactNumericType, sql:Error?> streamData = <stream<ExactNumericType, sql:Error?>>queryResult;
             record {|ExactNumericType value;|}? data = check streamData.next();
             check streamData.close();
             test:assertNotExactEquals(data?.value, (), "Incorrect InsetId returned.");
@@ -142,8 +142,8 @@ function testInsertWithAllNilAndSelectTableWithGeneratedKeys() returns error? {
         int|error id = int:fromString(insertedId);
         if (id is int) {
             string query = string `SELECT * FROM ExactNumericTypes WHERE id = ${id}`;
-            stream<record{}, error> queryResult = dbClient->query(query, ExactNumericType);
-            stream<ExactNumericType, sql:Error> streamData = <stream<ExactNumericType, sql:Error>>queryResult;
+            stream<record{}, error?> queryResult = dbClient->query(query, ExactNumericType);
+            stream<ExactNumericType, sql:Error?> streamData = <stream<ExactNumericType, sql:Error?>>queryResult;
             record {|ExactNumericType value;|}? data = check streamData.next();
             check streamData.close();
             test:assertNotExactEquals(data?.value, (), "Incorrect InsetId returned.");
@@ -177,8 +177,8 @@ function testInsertWithStringAndSelectTable() returns error? {
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     string query = string `SELECT * FROM StringTypes WHERE id = ${intIDVal}`;
-    stream<record{}, error> queryResult = dbClient->query(query, StringData);
-    stream<StringData, sql:Error> streamData = <stream<StringData, sql:Error>>queryResult;
+    stream<record{}, error?> queryResult = dbClient->query(query, StringData);
+    stream<StringData, sql:Error?> streamData = <stream<StringData, sql:Error?>>queryResult;
     record {|StringData value;|}? data = check streamData.next();
     check streamData.close();
 
@@ -208,9 +208,9 @@ function testUpdateNumericData() returns error? {
     sql:ExecutionResult result = check dbClient->execute("UPDATE ExactNumericTypes SET int_type = 11 WHERE int_type = 20");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query(
+    stream<record{}, error?> queryResult = dbClient->query(
         "SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 11", ResultCount);
-    stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
+    stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
     test:assertEquals(data?.value?.countVal, 1, "Update command was not successful.");
@@ -228,9 +228,9 @@ function testUpdateStringData() returns error? {
         "UPDATE StringTypes SET varchar_type = 'updatedstring' WHERE varchar_type = 'str1'");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query(
+    stream<record{}, error?> queryResult = dbClient->query(
         "SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'updatedstring'", ResultCount);
-    stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
+    stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
     test:assertEquals(data?.value?.countVal, 1, "String table Update command was not successful.");
@@ -248,9 +248,9 @@ function testDeleteNumericData() returns error? {
     result = check dbClient->execute("DELETE FROM ExactNumericTypes WHERE int_type = 1451");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query(
+    stream<record{}, error?> queryResult = dbClient->query(
         "SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 1451", ResultCount);
-    stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
+    stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
     test:assertEquals(data?.value?.countVal, 0, "Numeric table Delete command was not successful.");
@@ -270,9 +270,9 @@ function testDeleteStringData() returns error? {
     result = check dbClient->execute("DELETE FROM StringTypes WHERE varchar_type = 'deletestr'");
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     
-    stream<record{}, error> queryResult = dbClient->query(
+    stream<record{}, error?> queryResult = dbClient->query(
         "SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'deletestr'", ResultCount);
-    stream<ResultCount, sql:Error> streamData = <stream<ResultCount, sql:Error>>queryResult;
+    stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
     test:assertEquals(data?.value?.countVal, 0, "String table Delete command was not successful.");

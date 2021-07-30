@@ -49,7 +49,7 @@ public function main() returns error? {
 
     // Since the `rowType` is provided as a `Customer`, the `resultStream`
     // will have `Customer` records.
-    stream<Customer, error> streamData =
+    stream<Customer, error?> streamData =
         dbClient->query(`SELECT * FROM Customers WHERE firstName = ${firstName} AND lastName = ${lastName}`);
 
     io:println("Query Result :");
