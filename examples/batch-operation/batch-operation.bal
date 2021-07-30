@@ -67,7 +67,7 @@ public function main() returns error? {
                             check dbClient->batchExecute(insertQueries);
 
     // Checks the data after the batch execution.
-    stream<record{}, error> resultStream =
+    stream<record{}, error?> resultStream =
         dbClient->query("SELECT * FROM Customers");
 
     io:println("Data in Customers table:");

@@ -49,7 +49,7 @@ public function main() returns error? {
     // be either a record or an error. The name and type of the attributes
     // within the record from the `resultStream` will be automatically
     // identified based on the column name and type of the query result.
-    stream<Customer, error> resultStream =
+    stream<Customer, error?> resultStream =
              dbClient->query(`SELECT * FROM Customers`);
 
     // If there is any error during the execution of the SQL query or
@@ -60,14 +60,16 @@ public function main() returns error? {
     });
 
     // The result of the count operation is provided as a record stream.
-    stream<Customer, error> resultStream2 =
+    stream<Customer, error?> resultStream2 =
             dbClient->query(`SELECT COUNT(*) AS total FROM Customers`);
 
     // Since the above count query will return only a single row,
     // the `next()` operation is sufficient to retrieve the data.
-    record {Customer value;} result = check resultStream2.next();
+    record {Customer value;}? result = check resultStream2.next();
     // Retrieves the value for the total.
-    io:println("Total rows in customer table : ", result.value["total"]);
+    if result is record {Customer value;} {
+        io:println("Total rows in customer table : ", result.value["total"]);
+    }
 
     // In general cases, the stream will be closed automatically
     // when the stream is fully consumed or any error is encountered.
@@ -79,7 +81,7 @@ public function main() returns error? {
     // If a `Customer` stream type is defined when calling the query method,
     // The result is returned as a `Customer` record stream and the elements
     // of the stream can be either a `Customer` record or an error.
-    stream<Customer, error> resultStream3 =
+    stream<Customer, error?> resultStream3 =
         dbClient->query(`SELECT * FROM Customers`);
 
     // Iterates the customer stream.

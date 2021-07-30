@@ -215,7 +215,7 @@ function testTimestamptzRetrieval() returns error? {
 function queryProcedureClient(string|sql:ParameterizedQuery sqlQuery, string database, typedesc<record {}> resultType)
 returns record {} | error {
     Client dbClient = check new (host, user, password, database, port);
-    stream<record{}, error> streamData = dbClient->query(sqlQuery, resultType);
+    stream<record{}, error?> streamData = dbClient->query(sqlQuery, resultType);
     record {|record {} value;|}? data = check streamData.next();
     check streamData.close();
     record {}? value = data?.value;
