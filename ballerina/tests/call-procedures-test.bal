@@ -200,13 +200,10 @@ function testMoneyProcedureCall() returns error? {
 }
 function testTimestamptzRetrieval() returns error? {
     string datetimetz = "2021-07-21T19:14:51.00+01:30";
-    time:Civil civil = check time:civilFromString(datetimetz);
-
-    int rowId = 2;
     sql:TimestampWithTimezoneOutParameter datetimetzOutValue = new;
 
-    sql:ParameterizedCallQuery sqlQuery = `{call DateTimeOutProcedure (${rowId}, ${datetimetzOutValue})}`;
-    sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb);
+    sql:ParameterizedCallQuery sqlQuery = `{call DateTimeOutProcedure (2, ${datetimetzOutValue})}`;
+    _ = check callProcedure(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
 
     test:assertEquals(check datetimetzOutValue.get(time:Utc), check time:utcFromString(datetimetz),
                       "Retrieved date time with timestamp does not match.");
