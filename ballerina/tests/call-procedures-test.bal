@@ -15,6 +15,7 @@
 // under the License.
 
 import ballerina/sql;
+import ballerina/time;
 import ballerina/test;
 
 string proceduresDb = "complex_query_db";
@@ -191,7 +192,21 @@ function testMoneyProcedureCall() returns error? {
     };
     test:assertEquals(check queryProcedureClient(query, proceduresDb, MoneyProcedureRecord), expectedDataRow,
                       "Money Call procedure insert and query did not match.");
+}
 
+@test:Config {
+    groups: ["procedures"],
+    dependsOn: [testMoneyProcedureCall]
+}
+function testTimestamptzRetrieval() returns error? {
+    string datetimetz = "2021-07-21T19:14:51.00+01:30";
+    sql:TimestampWithTimezoneOutParameter datetimetzOutValue = new;
+
+    sql:ParameterizedCallQuery sqlQuery = `{call DateTimeOutProcedure (2, ${datetimetzOutValue})}`;
+    _ = check callProcedure(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
+
+    test:assertEquals(check datetimetzOutValue.get(time:Utc), check time:utcFromString(datetimetz),
+                      "Retrieved date time with timestamp does not match.");
 }
 
 function queryProcedureClient(string|sql:ParameterizedQuery sqlQuery, string database, typedesc<record {}> resultType)
