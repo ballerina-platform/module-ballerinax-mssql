@@ -51,6 +51,50 @@ function testStringProcedureCall() returns error? {
         "Character Call procedure insert and query did not match.");
 }
 
+@test:Config {
+    groups: ["proceduresMultiple"]
+}
+function testStringMultipleProcedureCall() returns error? {
+    sql:ParameterizedCallQuery sqlQuery = `{call SelectStringTypesMultiple}`;
+    Client dbClient = check new (host, user, password, proceduresDb, port);
+    sql:ProcedureCallResult result = check dbClient->call(sqlQuery, [StringProcedureRecord, StringProcedureRecord]);
+
+    stream<record {}, sql:Error?>? qResult = result.queryResult;
+    if qResult is () {
+        test:assertFail("First result set is empty.");
+    } else {
+        record {|record {} value;|}? data = check qResult.next();
+        record {}? result1 = data?.value;
+        StringProcedureRecord expectedDataRow = {
+            row_id: 1,
+            char_type: "This is a char",
+            varchar_type: "This is a varchar",
+            text_type: "This is a long text"
+        };
+        test:assertEquals(result1, expectedDataRow, "Call procedure first select did not match.");
+    }
+
+    boolean nextResult = check result.getNextQueryResult();
+    if !nextResult {
+        test:assertFail("Only one result set returned.");
+    }
+
+    qResult = result.queryResult;
+    if qResult is () {
+        test:assertFail("Second result set is empty.");
+    } else {
+        record {|record {} value;|}? data = check qResult.next();
+        record {}? result1 = data?.value;
+        record {} expectedDataRow = {
+            "varchar_type": "This is a varchar"
+        };
+        test:assertEquals(result1, expectedDataRow, "Call procedure second select did not match.");
+    }
+
+    check result.close();
+    check dbClient.close();
+}
+
 public type ExactNumericProcedureRecord record {
     int row_id;
     int smallint_type;

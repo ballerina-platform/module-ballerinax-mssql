@@ -433,7 +433,7 @@ isolated function complexQueryInitDB() {
 
     INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type) VALUES (1,'This is a varchar','This is a char','This is a long text');
 
-     INSERT INTO StringTypes (row_id) VALUES (3);
+    INSERT INTO StringTypes (row_id) VALUES (3);
 
     DROP TABLE IF EXISTS MoneyTypes;
         
@@ -580,6 +580,15 @@ isolated function proceduresInit(){
     // Data for timestamp retrieval test
     sql:ParameterizedQuery query8 = `INSERT INTO DateandTime (row_id, dateTimeOffset_type) VALUES (2,  '2021-07-21 19:14:51.00 +01:30')`;
 
+    sql:ParameterizedQuery query9 = `
+
+    CREATE PROCEDURE SelectStringTypesMultiple AS
+    BEGIN
+        SELECT row_id, varchar_type, char_type, text_type FROM StringTypes WHERE row_id = 1;
+        SELECT varchar_type FROM StringTypes WHERE row_id = 1;
+    END
+    `;
+
     _ = executeQuery("complex_query_db", query1);
     _ = executeQuery("complex_query_db", query2);
     _ = executeQuery("complex_query_db", query3);
@@ -588,6 +597,7 @@ isolated function proceduresInit(){
     _ = executeQuery("complex_query_db", query6);
     _ = executeQuery("complex_query_db", query7);
     _ = executeQuery("complex_query_db", query8);
+    _ = executeQuery("complex_query_db", query9);
 }
 
 isolated function sslConnectionInitDb() {
