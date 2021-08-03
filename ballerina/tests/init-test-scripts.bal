@@ -544,20 +544,20 @@ isolated function proceduresInit(){
 
     CREATE PROCEDURE ExactNumericOutProcedure
     (@row_id_in int,
-    @smallint_out smallint OUTPUT, 
-    @int_out int OUTPUT, 
-    @bigint_out bigint OUTPUT, 
+    @smallint_out smallint OUTPUT,
+    @int_out int OUTPUT,
+    @bigint_out bigint OUTPUT,
     @tinyint_out tinyint OUTPUT,
-    @decimal_out decimal(5,2) OUTPUT, 
+    @decimal_out decimal(5,2) OUTPUT,
     @numeric_out numeric(10,5) OUTPUT)
     AS
     SET NOCOUNT ON
     SELECT
-    @smallint_out, 
-    @int_out, 
-    @bigint_out, 
+    @smallint_out,
+    @int_out,
+    @bigint_out,
     @tinyint_out,
-    @decimal_out, 
+    @decimal_out,
     @numeric_out
     FROM
       ExactNumeric
@@ -565,12 +565,29 @@ isolated function proceduresInit(){
       ExactNumeric.row_id = @row_id_in
     `;
 
+    sql:ParameterizedQuery query7 = `
+
+    CREATE PROCEDURE DateTimeOutProcedure
+        @row_id_in int,
+        @dateTimeOffset_type_out  datetimeoffset OUTPUT
+    AS
+        SET NOCOUNT OFF
+        SELECT @dateTimeOffset_type_out = dateTimeOffset_type
+        FROM DateandTime
+        WHERE row_id = @row_id_in;
+    `;
+
+    // Data for timestamp retrieval test
+    sql:ParameterizedQuery query8 = `INSERT INTO DateandTime (row_id, dateTimeOffset_type) VALUES (2,  '2021-07-21 19:14:51.00 +01:30')`;
+
     _ = executeQuery("complex_query_db", query1);
     _ = executeQuery("complex_query_db", query2);
     _ = executeQuery("complex_query_db", query3);
     _ = executeQuery("complex_query_db", query4);
     _ = executeQuery("complex_query_db", query5);
     _ = executeQuery("complex_query_db", query6);
+    _ = executeQuery("complex_query_db", query7);
+    _ = executeQuery("complex_query_db", query8);
 }
 
 isolated function sslConnectionInitDb() {
