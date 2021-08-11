@@ -62,8 +62,7 @@ public type ExactNumericProcedureRecord record {
 };
 
 @test:Config {
-    groups: ["procedures"],
-    dependsOn: [testStringProcedureCall]
+    groups: ["procedures"]
 }
 function testExactNumericProcedureCall() returns error? {
     int rowId = 35;
@@ -103,8 +102,7 @@ public type ApproximateNumericProcedureRecord record {
 };
 
 @test:Config {
-    groups: ["procedures"],
-    dependsOn: [testExactNumericProcedureCall]
+    groups: ["procedures"]
 }
 function testApproximateNumericProcedureCall() returns error? {
     int rowId = 35;
@@ -135,8 +133,7 @@ public type DatetimeProcedureRecord record {
 };
 
 @test:Config {
-    groups: ["procedures"],
-    dependsOn: [testApproximateNumericProcedureCall]
+    groups: ["procedures"]
 }
 function testDatetimeProcedureCall() returns error? {
     int rowId = 35;
@@ -172,8 +169,7 @@ public type MoneyProcedureRecord record {
 };
 
 @test:Config {
-    groups: ["procedures"],
-    dependsOn: [testDatetimeProcedureCall]
+    groups: ["procedures"]
 }
 function testMoneyProcedureCall() returns error? {
     int rowId = 35;
@@ -195,8 +191,7 @@ function testMoneyProcedureCall() returns error? {
 }
 
 @test:Config {
-    groups: ["procedures"],
-    dependsOn: [testMoneyProcedureCall]
+    groups: ["procedures"]
 }
 function testTimestamptzRetrieval() returns error? {
     string datetimetz = "2021-07-21T19:14:51.00+01:30";
@@ -207,6 +202,50 @@ function testTimestamptzRetrieval() returns error? {
 
     test:assertEquals(check datetimetzOutValue.get(time:Utc), check time:utcFromString(datetimetz),
                       "Retrieved date time with timestamp does not match.");
+}
+
+@test:Config {
+    groups: ["procedures"]
+}
+function testMultipleSelectProcedureCall() returns error? {
+    sql:ParameterizedCallQuery sqlQuery = `{call SelectStringTypesMultiple}`;
+    Client dbClient = check new (host, user, password, proceduresDb, port);
+    sql:ProcedureCallResult result = check dbClient->call(sqlQuery, [StringProcedureRecord, StringProcedureRecord]);
+
+    stream<record {}, sql:Error?>? qResult = result.queryResult;
+    if qResult is () {
+        test:assertFail("First result set is empty.");
+    } else {
+        record {|record {} value;|}? data = check qResult.next();
+        record {}? result1 = data?.value;
+        StringProcedureRecord expectedDataRow = {
+            row_id: 1,
+            char_type: "This is a char",
+            varchar_type: "This is a varchar",
+            text_type: "This is a long text"
+        };
+        test:assertEquals(result1, expectedDataRow, "Call procedure first select did not match.");
+    }
+
+    boolean nextResult = check result.getNextQueryResult();
+    if !nextResult {
+        test:assertFail("Only one result set returned.");
+    }
+
+    qResult = result.queryResult;
+    if qResult is () {
+        test:assertFail("Second result set is empty.");
+    } else {
+        record {|record {} value;|}? data = check qResult.next();
+        record {}? result1 = data?.value;
+        record {} expectedDataRow = {
+            "varchar_type": "This is a varchar"
+        };
+        test:assertEquals(result1, expectedDataRow, "Call procedure second select did not match.");
+    }
+
+    check result.close();
+    check dbClient.close();
 }
 
 function queryProcedureClient(string|sql:ParameterizedQuery sqlQuery, string database, typedesc<record {}> resultType)
