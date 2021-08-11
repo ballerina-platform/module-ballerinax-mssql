@@ -40,4 +40,13 @@ public class QueryProcessorUtils {
         return io.ballerina.stdlib.sql.nativeimpl.QueryProcessor.nativeQuery(client, paramSQLString, recordType,
                 statementParametersProcessor, resultParametersProcessor);
     }
+
+    public static Object nativeQueryRow(BObject client, Object paramSQLString, BTypedesc recordType) {
+        MssqlStatementParameterProcessor statementParametersProcessor = MssqlStatementParameterProcessor
+                .getInstance();
+        DefaultResultParameterProcessor resultParametersProcessor = DefaultResultParameterProcessor.getInstance();
+        return io.ballerina.stdlib.sql.nativeimpl.QueryProcessor.nativeQueryRow(client, paramSQLString, recordType,
+                statementParametersProcessor, resultParametersProcessor);
+    }
+
 }
