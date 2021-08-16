@@ -20,6 +20,95 @@ import ballerina/time;
 
 string executeParamsDb = "EXECUTE_PARAMS_DB";
 
+@test:BeforeGroups {
+    value: ["execute-params"]
+}
+function initExecuteParamsTests() returns error? {
+    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
+    _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
+
+    sql:ParameterizedQuery query = `
+
+        DROP TABLE IF EXISTS ExactNumeric;
+
+        CREATE TABLE ExactNumeric(
+            row_id INT PRIMARY KEY,
+            bigint_type  bigint,
+            numeric_type  numeric(10,5),
+            bit_type  bit,
+            smallint_type smallint,
+            decimal_type decimal(5,2),
+            int_type int,
+            tinyint_type tinyint
+        );
+
+        INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, int_type, tinyint_type)
+        VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.00, 2147483647, 255);
+
+        DROP TABLE IF EXISTS ApproximateNumeric;
+
+        CREATE TABLE ApproximateNumeric(
+            row_id INT PRIMARY KEY,
+            float_type float,
+            real_type real
+        );
+
+        INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES
+        (1, 1.79E+308, -1.18E-38);
+
+        DROP TABLE IF EXISTS DateandTime;
+
+        CREATE TABLE DateandTime(
+            row_id INT PRIMARY KEY,
+            date_type  date,
+            dateTimeOffset_type  datetimeoffset,
+            dateTime2_type datetime2,
+            smallDateTime_type smalldatetime,
+            dateTime_type datetime,
+            time_type time
+        );
+
+        INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
+        VALUES (1, '2017-06-26', '2020-01-01 19:14:51', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
+
+        DROP TABLE IF EXISTS StringTypes;
+
+        CREATE TABLE StringTypes (
+            row_id INT PRIMARY KEY,
+            varchar_type VARCHAR(255),
+            char_type CHAR(4),
+            text_type TEXT,
+            nchar_type NCHAR(4),
+            nvarchar_type NVARCHAR(10)
+        );
+
+        DROP TABLE IF EXISTS GeometricTypes;
+
+        CREATE TABLE GeometricTypes (
+            row_id INT PRIMARY KEY,
+            point_type geometry,
+            lineString_type geometry,
+            geometry_type geometry,
+            circularstring_type geometry,
+            compoundcurve_type geometry,
+            polygon_type geometry,
+            curvepolygon_type geometry,
+            multipolygon_type geometry,
+            multilinestring_type geometry,
+            multipoint_type geometry
+        );
+
+        DROP TABLE IF EXISTS MoneyTypes;
+
+        CREATE TABLE MoneyTypes (
+            row_id INT PRIMARY KEY,
+            money_type money,
+            smallmoney_type smallmoney
+        );
+    `;
+    _ = executeQuery(executeParamsDb, query);
+}
+
 @test:Config {
     groups: ["execute", "execute-params"]
 }

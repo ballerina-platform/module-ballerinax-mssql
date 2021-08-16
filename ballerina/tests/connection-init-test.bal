@@ -18,6 +18,14 @@ import ballerina/test;
 
 string connectDB = "CONNECT_DB";
 
+@test:BeforeGroups {
+    value: ["connection-init"]
+}
+function initConnectionTests() returns error? {
+    _ = createQuery(`DROP DATABASE IF EXISTS CONNECT_DB`);
+    _ = createQuery(`CREATE DATABASE CONNECT_DB`);
+}
+
 @test:Config {
     groups: ["connection", "connection-init"]
 }

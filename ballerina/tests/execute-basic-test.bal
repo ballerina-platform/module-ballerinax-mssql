@@ -18,6 +18,68 @@ import ballerina/test;
 
 string executeDb = "EXECUTE_DB";
 
+@test:BeforeGroups {
+    value: ["execute-basic"]
+}
+function initExecuteBasicTests() returns error? {
+    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_DB`);
+    _ = createQuery(`CREATE DATABASE EXECUTE_DB`);
+
+    sql:ParameterizedQuery q4 = `
+        DROP TABLE IF EXISTS ExactNumericTypes;
+
+        CREATE TABLE ExactNumericTypes (
+            id INT NOT NULL IDENTITY PRIMARY KEY,
+            smallint_type SMALLINT,
+            int_type INT,
+            tinyint_type TINYINT,
+            bigint_type BIGINT,
+            decimal_type DECIMAL,
+            numeric_type NUMERIC,
+        );
+
+        DROP TABLE IF EXISTS StringTypes;
+
+        CREATE TABLE StringTypes (
+            id INT PRIMARY KEY,
+            varchar_type VARCHAR(255),
+            char_type CHAR(4),
+            text_type TEXT,
+            nchar_type NCHAR(4),
+            nvarchar_type NVARCHAR(10)
+        );
+
+        INSERT INTO StringTypes (id, varchar_type) VALUES (1, 'test data');
+
+        DROP TABLE IF EXISTS GeometricTypes;
+
+        CREATE TABLE GeometricTypes (
+            row_id INT PRIMARY KEY,
+            point_type geometry,
+            lineString_type geometry,
+            geometry_type geometry,
+            circularstring_type geometry,
+            compoundcurve_type geometry,
+            polygon_type geometry,
+            curvepolygon_type geometry,
+            multipolygon_type geometry,
+            multilinestring_type geometry,
+            multipoint_type geometry
+        );
+
+        DROP TABLE IF EXISTS MoneyTypes;
+
+        CREATE TABLE MoneyTypes (
+            row_id INT PRIMARY KEY,
+            money_type money,
+            smallmoney_type smallmoney
+        );
+
+    `;
+    _ = executeQuery(executeDb, q4);
+}
+
+
 @test:Config {
     groups: ["execute", "execute-basic"]
 }

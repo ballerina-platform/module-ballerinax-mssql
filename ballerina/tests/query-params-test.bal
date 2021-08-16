@@ -20,6 +20,88 @@ import ballerina/time;
 
 string simpleParamsDb = "simple_params_query_db";
 
+@test:BeforeGroups {
+    value: ["query-simple-params"]
+}
+function initQueryParamsTests() returns error? {
+    _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
+    _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
+
+    sql:ParameterizedQuery query = `
+
+    DROP TABLE IF EXISTS ExactNumeric;
+
+    CREATE TABLE ExactNumeric(
+        row_id INT PRIMARY KEY,
+        bigint_type  bigint,
+        numeric_type  numeric(10,5),
+        bit_type  bit,
+        smallint_type smallint,
+        decimal_type decimal(5,2),
+        smallmoney_type smallmoney,
+        int_type INT,
+        tinyint_type tinyint,
+        money_type money
+    );
+
+
+    INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, smallmoney_type, int_type, tinyint_type, money_type)
+    VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.41, 214748.3647, 2147483647, 255, 922337203685477.2807);
+
+    DROP TABLE IF EXISTS ApproximateNumeric;
+
+    CREATE TABLE ApproximateNumeric(
+        row_id INT PRIMARY KEY,
+        float_type float,
+        real_type real
+    );
+
+    INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES (1, 1.79E+308, -1.18E-38);
+
+    DROP TABLE IF EXISTS DateandTime;
+
+    CREATE TABLE DateandTime(
+        row_id INT PRIMARY KEY,
+        date_type  date,
+        dateTimeOffset_type  datetimeoffset,
+        dateTime2_type datetime2,
+        smallDateTime_type smalldatetime,
+        dateTime_type datetime,
+        time_type time
+    );
+
+    INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
+    VALUES (1, '2017-06-26', '2020-01-01 19:14:51 +05:30', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
+
+    DROP TABLE IF EXISTS StringTypes;
+
+    CREATE TABLE StringTypes (
+        row_id INT PRIMARY KEY,
+        varchar_type VARCHAR(255),
+        char_type CHAR(14),
+        text_type TEXT,
+        nchar_type NCHAR(4),
+        nvarchar_type NVARCHAR(10)
+    );
+
+    INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'This is a varchar','This is a char','This is a long text','str4','str5');
+
+    DROP TABLE IF EXISTS GeometricTypes;
+
+    CREATE TABLE GeometricTypes (
+        row_id INT PRIMARY KEY,
+        point_type geometry,
+        pointCol AS point_type.STAsText(),
+        lineString_type geometry,
+        lineCol AS lineString_type.STAsText(),
+    );
+
+    INSERT INTO GeometricTypes (row_id, point_type) VALUES (1,'POINT (4 6)');
+
+    `;
+    _ = executeQuery(simpleParamsDb, query);
+}
+
 @test:Config {
     groups: ["query","query-simple-params"]
 }
