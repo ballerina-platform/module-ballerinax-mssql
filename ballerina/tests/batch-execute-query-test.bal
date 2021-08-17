@@ -109,7 +109,8 @@ function batchUpdateStringTypesTable() returns error? {
 }
 function testBatchExecuteWithEmptyQueryList() returns error? {
     Client dbClient = check new (host, user, password, batchExecuteDB, port);
-    sql:ExecutionResult[] | sql:Error result = dbClient->batchExecute([]);
+    string[] emptyQueryArray = [];
+    sql:ExecutionResult[] | sql:Error result = dbClient->batchExecute(emptyQueryArray);
     if (result is sql:Error) {
         string expectedErrorMessage = " Parameter 'sqlQueries' cannot be empty array";
         test:assertTrue(result.message().startsWith(expectedErrorMessage),
