@@ -100,7 +100,7 @@ public isolated client class Client {
     #            will return a `BatchExecuteError`. However, the JDBC driver may or may not continue to process the
     #            remaining commands in the batch after a failure. The summary of the executed queries in case of an error
     #            can be accessed as `(<sql:BatchExecuteError> result).detail()?.executionResults`.
-    remote isolated function batchExecute(sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[]|sql:Error {
+    remote isolated function batchExecute(string[]|sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[]|sql:Error {
         if (sqlQueries.length() == 0) {
             return error sql:ApplicationError(" Parameter 'sqlQueries' cannot be empty array");
         }
@@ -193,7 +193,7 @@ isolated function createClient(Client mssqlclient, ClientConfiguration clientCon
     'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils"
 } external;
 
-isolated function nativeBatchExecute(Client sqlClient, sql:ParameterizedQuery[] sqlQueries)
+isolated function nativeBatchExecute(Client sqlClient, string[]|sql:ParameterizedQuery[] sqlQueries)
 returns sql:ExecutionResult[]|sql:Error = @java:Method {
     'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils"
 } external;
