@@ -24,8 +24,8 @@ string proceduresDb = "procedures_db";
     value: ["procedures"]
 }
 function initCallProceduresTests() returns error? {
-    _ = createQuery(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
-    _ = createQuery(`CREATE DATABASE PROCEDURES_DB`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS PROCEDURES_DB`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE PROCEDURES_DB`);
 
     sql:ParameterizedQuery query = `
 
@@ -211,16 +211,16 @@ function initCallProceduresTests() returns error? {
         END
      `;
 
-    _ = executeQuery(proceduresDb, query);
-    _ = executeQuery(proceduresDb, query1);
-    _ = executeQuery(proceduresDb, query2);
-    _ = executeQuery(proceduresDb, query3);
-    _ = executeQuery(proceduresDb, query4);
-    _ = executeQuery(proceduresDb, query5);
-    _ = executeQuery(proceduresDb, query6);
-    _ = executeQuery(proceduresDb, query7);
-    _ = executeQuery(proceduresDb, query8);
-    _ = executeQuery(proceduresDb, query9);
+    _ = check executeQueryMssqlClient(query, proceduresDb);
+    _ = check executeQueryMssqlClient(query1, proceduresDb);
+    _ = check executeQueryMssqlClient(query2, proceduresDb);
+    _ = check executeQueryMssqlClient(query3, proceduresDb);
+    _ = check executeQueryMssqlClient(query4, proceduresDb);
+    _ = check executeQueryMssqlClient(query5, proceduresDb);
+    _ = check executeQueryMssqlClient(query6, proceduresDb);
+    _ = check executeQueryMssqlClient(query7, proceduresDb);
+    _ = check executeQueryMssqlClient(query8, proceduresDb);
+    _ = check executeQueryMssqlClient(query9, proceduresDb);
 }
 
 public type StringProcedureRecord record {
@@ -240,7 +240,7 @@ function testStringProcedureCall() returns error? {
     string textValue = "This is a text3";
 
     sql:ParameterizedCallQuery sqlQuery = `exec StringProcedure ${rowId}, ${charValue}, ${varcharValue}, ${textValue};`;
-    sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb, [StringProcedureRecord]);
+    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [StringProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT row_id, char_type, varchar_type, text_type FROM StringTypes WHERE row_id = ${rowId}`;
 
@@ -250,7 +250,7 @@ function testStringProcedureCall() returns error? {
         varchar_type: "This is a varchar3",
         text_type: "This is a text3"
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, StringProcedureRecord), expectedDataRow, 
+    test:assertEquals(check queryMssqlClient(query, StringProcedureRecord, proceduresDb), expectedDataRow,
         "Character Call procedure insert and query did not match.");
 }
 
@@ -279,7 +279,7 @@ function testExactNumericProcedureCall() returns error? {
     sql:ParameterizedCallQuery sqlQuery =
         `exec ExactNumericProcedure ${rowId}, ${smallintType}, ${intType}, ${bigintType}, ${decimalType},
                                 ${numericType}, ${tinyintType};`;
-    sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb, [ExactNumericProcedureRecord]);
+    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [ExactNumericProcedureRecord]);
 
     sql:ParameterizedQuery query =
         `SELECT row_id, smallint_type, int_type, bigint_type, decimal_type, numeric_type, tinyint_type
@@ -294,7 +294,7 @@ function testExactNumericProcedureCall() returns error? {
         numeric_type: 12.12000,
         tinyint_type: 255
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, ExactNumericProcedureRecord), expectedDataRow,
+    test:assertEquals(check queryMssqlClient(query, ExactNumericProcedureRecord, proceduresDb), expectedDataRow,
                       "Numeric Call procedure insert and query did not match.");
 }
 
@@ -312,7 +312,7 @@ function testApproximateNumericProcedureCall() returns error? {
     float floatType = 1.79E+308;
     float realType = -1.179999945774631E-38;
     sql:ParameterizedCallQuery sqlQuery = `exec ApproximateNumericProcedure ${rowId}, ${floatType}, ${realType};`;
-    sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb, [ApproximateNumericProcedureRecord]);
+    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [ApproximateNumericProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT * FROM ApproximateNumeric WHERE row_id = ${rowId}`;
 
@@ -321,7 +321,7 @@ function testApproximateNumericProcedureCall() returns error? {
         float_type: 1.79E+308,
         real_type:-1.179999945774631E-38
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, ApproximateNumericProcedureRecord), expectedDataRow,
+    test:assertEquals(check queryMssqlClient(query, ApproximateNumericProcedureRecord, proceduresDb), expectedDataRow,
                       "ApproximateNumeric Call procedure insert and query did not match.");
 }
 
@@ -348,7 +348,7 @@ function testDatetimeProcedureCall() returns error? {
     sql:TimeValue time = new ("09:46:22");
     sql:ParameterizedCallQuery sqlQuery =
         `exec DatetimeProcedure ${rowId}, ${date}, ${date_time_offset}, ${date_time2}, ${small_date_time}, ${date_time}, ${time};`;
-    sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
+    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT * FROM DateandTime WHERE row_id = ${rowId}`;
 
@@ -361,7 +361,7 @@ function testDatetimeProcedureCall() returns error? {
         smallDateTime_type: "2007-05-10 10:00:00.0",
         dateTimeOffset_type: "2020-01-01 19:14:51.0021425 +05:30"
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, DatetimeProcedureRecord), expectedDataRow,
+    test:assertEquals(check queryMssqlClient(query, DatetimeProcedureRecord, proceduresDb), expectedDataRow,
                       "Datetime Call procedure insert and query did not match.");
 }
 
@@ -379,7 +379,7 @@ function testMoneyProcedureCall() returns error? {
     MoneyValue moneyType = new(2356.12);
     SmallMoneyValue smallMoneyType = new(123.45);
     sql:ParameterizedCallQuery sqlQuery = `exec MoneyProcedure ${rowId}, ${moneyType}, ${smallMoneyType};`;
-    sql:ProcedureCallResult result = check callProcedure(sqlQuery, proceduresDb, [MoneyProcedureRecord]);
+    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [MoneyProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT *
         from MoneyTypes where row_id = ${rowId}`;
@@ -389,7 +389,7 @@ function testMoneyProcedureCall() returns error? {
         money_type: "2356.1200",
         smallMoney_type: "123.4500"
     };
-    test:assertEquals(check queryProcedureClient(query, proceduresDb, MoneyProcedureRecord), expectedDataRow,
+    test:assertEquals(check queryMssqlClient(query, MoneyProcedureRecord, proceduresDb), expectedDataRow,
                       "Money Call procedure insert and query did not match.");
 }
 
@@ -401,7 +401,7 @@ function testTimestamptzRetrieval() returns error? {
     sql:TimestampWithTimezoneOutParameter datetimetzOutValue = new;
 
     sql:ParameterizedCallQuery sqlQuery = `{call DateTimeOutProcedure (2, ${datetimetzOutValue})}`;
-    _ = check callProcedure(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
+    _ = check callProcedureMssqlClient(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
 
     test:assertEquals(check datetimetzOutValue.get(time:Utc), check time:utcFromString(datetimetz),
                       "Retrieved date time with timestamp does not match.");
@@ -412,7 +412,7 @@ function testTimestamptzRetrieval() returns error? {
 }
 function testMultipleSelectProcedureCall() returns error? {
     sql:ParameterizedCallQuery sqlQuery = `{call SelectStringTypesMultiple}`;
-    Client dbClient = check new (host, user, password, proceduresDb, port);
+    Client dbClient = check getMssqlClient(proceduresDb);
     sql:ProcedureCallResult result = check dbClient->call(sqlQuery, [StringProcedureRecord, StringProcedureRecord]);
 
     stream<record {}, sql:Error?>? qResult = result.queryResult;
@@ -449,30 +449,4 @@ function testMultipleSelectProcedureCall() returns error? {
 
     check result.close();
     check dbClient.close();
-}
-
-function queryProcedureClient(string|sql:ParameterizedQuery sqlQuery, string database, typedesc<record {}> resultType)
-returns record {} | error {
-    Client dbClient = check new (host, user, password, database, port);
-    stream<record{}, error?> streamData = dbClient->query(sqlQuery, resultType);
-    record {|record {} value;|}? data = check streamData.next();
-    check streamData.close();
-    record {}? value = data?.value;
-    check dbClient.close();
-    if (value is ()) {
-        return {};
-    } else {
-        return value;
-    }
-}
-
-function callProcedure(sql:ParameterizedCallQuery sqlQuery, string database, typedesc<record {}>[] rowTypes = []) returns sql:ProcedureCallResult | error {
-    Client dbClient = check new (host, user, password, database, port, connectionPool = {
-        maxOpenConnections: 25,
-        maxConnectionLifeTime : 15,
-        minIdleConnections : 15
-    });
-    sql:ProcedureCallResult result = check dbClient->call(sqlQuery, rowTypes);
-    check dbClient.close();
-    return result;
 }

@@ -24,8 +24,8 @@ string executeParamsDb = "EXECUTE_PARAMS_DB";
     value: ["execute-params"]
 }
 function initExecuteParamsTests() returns error? {
-    _ = createQuery(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
-    _ = createQuery(`CREATE DATABASE EXECUTE_PARAMS_DB`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS EXECUTE_PARAMS_DB`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE EXECUTE_PARAMS_DB`);
 
     sql:ParameterizedQuery query = `
 
@@ -106,7 +106,7 @@ function initExecuteParamsTests() returns error? {
             smallmoney_type smallmoney
         );
     `;
-    _ = executeQuery(executeParamsDb, query);
+    _ = check executeQueryMssqlClient(query, executeParamsDb);
 }
 
 @test:Config {
@@ -500,14 +500,6 @@ function testInsertIntoMoneyDataTable4() returns error? {
         `INSERT INTO MoneyTypes (row_id, money_type, smallmoney_type)
          VALUES(${rowId}, ${moneyType}, ${smallMoneyType})`;
     validateResult(check executeQueryMssqlClient(sqlQuery, executeParamsDb), 1, rowId);
-}
-
-
-function executeQueryMssqlClient(sql:ParameterizedQuery sqlQuery, string database) returns sql:ExecutionResult | error {
-    Client dbClient = check new (host, user, password, database, port);
-    sql:ExecutionResult result = check dbClient->execute(sqlQuery);
-    check dbClient.close();
-    return result;
 }
 
 isolated function validateResult(sql:ExecutionResult result, int rowCount, int? lastId = ()) {

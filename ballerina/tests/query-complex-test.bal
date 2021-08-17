@@ -23,8 +23,8 @@ string complexQueryDb = "complex_query_db";
     value: ["query-complex"]
 }
 function initQueryComplexTests() returns error? {
-    _ = createQuery(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
-    _ = createQuery(`CREATE DATABASE COMPLEX_QUERY_DB`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS COMPLEX_QUERY_DB`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE COMPLEX_QUERY_DB`);
 
     sql:ParameterizedQuery query = `
 
@@ -92,7 +92,7 @@ function initQueryComplexTests() returns error? {
             smallmoney_type smallmoney
         );
     `;
-    _ = executeQuery(complexQueryDb, query);
+    _ = check executeQueryMssqlClient(query, complexQueryDb);
 }
 
 public type ExactNumericRecord record {
@@ -121,7 +121,7 @@ public type ExactNumericRecord2 record {
 function testSelectFromExactNumericDataTable() returns error? {
     int rowId = 1;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId}`;
-    _ = validateComplexExactNumericTableResult(check complexQueryMssqlClient(sqlQuery, ExactNumericRecord, database = complexQueryDb));
+    _ = validateComplexExactNumericTableResult(check queryMssqlClient(sqlQuery, ExactNumericRecord, complexQueryDb));
 }
 
 isolated function validateComplexExactNumericTableResult(record{}? returnData) {
@@ -145,7 +145,7 @@ isolated function validateComplexExactNumericTableResult(record{}? returnData) {
 function testSelectFromExactNumericDataTable2() returns error? {
     int rowId = 2;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId}`;
-    _ = validateExactNumericTableResult2(check complexQueryMssqlClient(sqlQuery, ExactNumericRecord2, database = complexQueryDb));
+    _ = validateExactNumericTableResult2(check queryMssqlClient(sqlQuery, ExactNumericRecord2, complexQueryDb));
 }
 
 isolated function validateExactNumericTableResult2(record{}? returnData) {
@@ -175,7 +175,7 @@ public type CharacterRecord record {
 function testSelectFromStringDataTable() returns error? {
     int rowId = 1;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE row_id = ${rowId}`;
-    _ = validateComplexStringTableResult(check complexQueryMssqlClient(sqlQuery, CharacterRecord, database = complexQueryDb));
+        _ = validateComplexStringTableResult(check queryMssqlClient(sqlQuery, CharacterRecord, complexQueryDb));
 }
 
 isolated function validateComplexStringTableResult(record{}? returnData) {
@@ -196,7 +196,7 @@ isolated function validateComplexStringTableResult(record{}? returnData) {
 function testSelectFromStringDataTable2() returns error? {
     int rowId = 3;
         sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE row_id = ${rowId}`;
-    _ = validateComplexStringTableResult2(check complexQueryMssqlClient(sqlQuery, CharacterRecord, database = complexQueryDb));
+    _ = validateComplexStringTableResult2(check queryMssqlClient(sqlQuery, CharacterRecord, complexQueryDb));
 }
 
 isolated function validateComplexStringTableResult2(record{}? returnData) {
@@ -206,17 +206,6 @@ isolated function validateComplexStringTableResult2(record{}? returnData) {
         test:assertEquals(returnData["row_id"], 3);
         test:assertEquals(returnData["char_type"], ());
         test:assertEquals(returnData["varchar_type"], ());
-        test:assertEquals(returnData["text_type"], ());   
+        test:assertEquals(returnData["text_type"], ());
     } 
-}
-
-function complexQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}> resultType, string database = complexQueryDb)
-returns record {}? | error {
-    Client dbClient = check new (host, user, password, database, port);
-    stream<record {}, error?> streamData = dbClient->query(sqlQuery, resultType);
-    record {|record {} value;|}? data = check streamData.next();
-    check streamData.close();
-    record {}? value = data?.value;
-    check dbClient.close();
-    return value;
 }

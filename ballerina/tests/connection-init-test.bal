@@ -22,8 +22,8 @@ string connectDB = "CONNECT_DB";
     value: ["connection-init"]
 }
 function initConnectionTests() returns error? {
-    _ = createQuery(`DROP DATABASE IF EXISTS CONNECT_DB`);
-    _ = createQuery(`CREATE DATABASE CONNECT_DB`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS CONNECT_DB`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE CONNECT_DB`);
 }
 
 @test:Config {
@@ -79,7 +79,7 @@ function testWithOptions() returns error? {
         socketTimeout: 60,
         loginTimeout: 60
     };
-    Client dbClient = check new (user= user, password = password, database = connectDB, port = port, options = options);
+    Client dbClient = check new (user = user, password = password, database = connectDB, port = port, options = options);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with options fails.");
 }

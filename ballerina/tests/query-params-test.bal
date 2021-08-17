@@ -24,82 +24,81 @@ string simpleParamsDb = "simple_params_query_db";
     value: ["query-simple-params"]
 }
 function initQueryParamsTests() returns error? {
-    _ = createQuery(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
-    _ = createQuery(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS SIMPLE_PARAMS_QUERY_DB`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE SIMPLE_PARAMS_QUERY_DB`);
 
     sql:ParameterizedQuery query = `
 
-    DROP TABLE IF EXISTS ExactNumeric;
+        DROP TABLE IF EXISTS ExactNumeric;
 
-    CREATE TABLE ExactNumeric(
-        row_id INT PRIMARY KEY,
-        bigint_type  bigint,
-        numeric_type  numeric(10,5),
-        bit_type  bit,
-        smallint_type smallint,
-        decimal_type decimal(5,2),
-        smallmoney_type smallmoney,
-        int_type INT,
-        tinyint_type tinyint,
-        money_type money
-    );
+        CREATE TABLE ExactNumeric(
+            row_id INT PRIMARY KEY,
+            bigint_type  bigint,
+            numeric_type  numeric(10,5),
+            bit_type  bit,
+            smallint_type smallint,
+            decimal_type decimal(5,2),
+            smallmoney_type smallmoney,
+            int_type INT,
+            tinyint_type tinyint,
+            money_type money
+        );
 
 
-    INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, smallmoney_type, int_type, tinyint_type, money_type)
-    VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.41, 214748.3647, 2147483647, 255, 922337203685477.2807);
+        INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, smallmoney_type, int_type, tinyint_type, money_type)
+        VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.41, 214748.3647, 2147483647, 255, 922337203685477.2807);
 
-    DROP TABLE IF EXISTS ApproximateNumeric;
+        DROP TABLE IF EXISTS ApproximateNumeric;
 
-    CREATE TABLE ApproximateNumeric(
-        row_id INT PRIMARY KEY,
-        float_type float,
-        real_type real
-    );
+        CREATE TABLE ApproximateNumeric(
+            row_id INT PRIMARY KEY,
+            float_type float,
+            real_type real
+        );
 
-    INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES (1, 1.79E+308, -1.18E-38);
+        INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES (1, 1.79E+308, -1.18E-38);
 
-    DROP TABLE IF EXISTS DateandTime;
+        DROP TABLE IF EXISTS DateandTime;
 
-    CREATE TABLE DateandTime(
-        row_id INT PRIMARY KEY,
-        date_type  date,
-        dateTimeOffset_type  datetimeoffset,
-        dateTime2_type datetime2,
-        smallDateTime_type smalldatetime,
-        dateTime_type datetime,
-        time_type time
-    );
+        CREATE TABLE DateandTime(
+            row_id INT PRIMARY KEY,
+            date_type  date,
+            dateTimeOffset_type  datetimeoffset,
+            dateTime2_type datetime2,
+            smallDateTime_type smalldatetime,
+            dateTime_type datetime,
+            time_type time
+        );
 
-    INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
-    VALUES (1, '2017-06-26', '2020-01-01 19:14:51 +05:30', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
+        INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
+        VALUES (1, '2017-06-26', '2020-01-01 19:14:51 +05:30', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
 
-    DROP TABLE IF EXISTS StringTypes;
+        DROP TABLE IF EXISTS StringTypes;
 
-    CREATE TABLE StringTypes (
-        row_id INT PRIMARY KEY,
-        varchar_type VARCHAR(255),
-        char_type CHAR(14),
-        text_type TEXT,
-        nchar_type NCHAR(4),
-        nvarchar_type NVARCHAR(10)
-    );
+        CREATE TABLE StringTypes (
+            row_id INT PRIMARY KEY,
+            varchar_type VARCHAR(255),
+            char_type CHAR(14),
+            text_type TEXT,
+            nchar_type NCHAR(4),
+            nvarchar_type NVARCHAR(10)
+        );
 
-    INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'This is a varchar','This is a char','This is a long text','str4','str5');
+        INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type, nchar_type, nvarchar_type) VALUES (1,'This is a varchar','This is a char','This is a long text','str4','str5');
 
-    DROP TABLE IF EXISTS GeometricTypes;
+        DROP TABLE IF EXISTS GeometricTypes;
 
-    CREATE TABLE GeometricTypes (
-        row_id INT PRIMARY KEY,
-        point_type geometry,
-        pointCol AS point_type.STAsText(),
-        lineString_type geometry,
-        lineCol AS lineString_type.STAsText(),
-    );
+        CREATE TABLE GeometricTypes (
+            row_id INT PRIMARY KEY,
+            point_type geometry,
+            pointCol AS point_type.STAsText(),
+            lineString_type geometry,
+            lineCol AS lineString_type.STAsText(),
+        );
 
-    INSERT INTO GeometricTypes (row_id, point_type) VALUES (1,'POINT (4 6)');
-
+        INSERT INTO GeometricTypes (row_id, point_type) VALUES (1,'POINT (4 6)');
     `;
-    _ = executeQuery(simpleParamsDb, query);
+    _ = check executeQueryMssqlClient(query, simpleParamsDb);
 }
 
 @test:Config {
@@ -108,7 +107,7 @@ function initQueryParamsTests() returns error? {
 function querySingleIntParam() returns error? {
     int rowId = 1;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId}`;
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -120,8 +119,8 @@ function queryDoubleIntParam() returns error? {
     sql:IntegerValue intValue2 = new(2147483647);
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND int_type =  ${intValue1}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND int_type =  ${intValue2}`;
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -133,8 +132,8 @@ function queryBigintParam() returns error? {
     sql:BigIntValue bigInt2 = new(9223372036854775807);
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND bigint_type = ${bigInt1}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND bigint_type = ${bigInt2}`;
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -147,8 +146,8 @@ function querySmallintParam() returns error? {
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND smallint_type = ${smallInt1}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND smallint_type = ${smallInt2}`;
 
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -158,7 +157,7 @@ function queryTinyintParam() returns error? {
     int rowId = 1;
     int tinyInt = 255;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND tinyint_type = ${tinyInt}`;
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -170,8 +169,8 @@ function queryNumericParam() returns error? {
     sql:NumericValue numericVal2 = new(12.12000);
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND numeric_type = ${numericVal1}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND numeric_type = ${numericVal2}`;
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -183,8 +182,8 @@ function queryDecimalParam() returns error? {
     sql:DecimalValue decimalVal2 = new(123.41);
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND decimal_type = ${decimalVal1}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM ExactNumeric WHERE row_id = ${rowId} AND decimal_type = ${decimalVal2}`;
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -195,8 +194,8 @@ function queryVarcharParam() returns error? {
     sql:VarcharValue varcharValue2 = new("This is a varchar");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM StringTypes WHERE varchar_type = ${varcharValue1}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM StringTypes WHERE varchar_type = ${varcharValue2}`;
-    validateStringTypeTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateStringTypeTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateStringTypeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateStringTypeTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -207,8 +206,8 @@ function queryCharParam() returns error? {
     sql:CharValue charValue2 = new("This is a char");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM StringTypes WHERE char_type = ${charValue1}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM StringTypes WHERE char_type = ${charValue2}`;
-    validateStringTypeTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateStringTypeTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateStringTypeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateStringTypeTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -218,7 +217,7 @@ function queryIntAndStringParam() returns error? {
     string charVal = "This is a char";
     int rowId =1;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE char_type = ${charVal} AND row_id = ${rowId}`;
-    validateStringTypeTableResult(check simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb));
+    validateStringTypeTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -227,7 +226,7 @@ function queryIntAndStringParam() returns error? {
 function queryFloatParam() returns error? {
     int rowId = 1;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ApproximateNumeric WHERE row_id = ${rowId}`;
-    validateApproximateNumericTableResult(check simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb));
+    validateApproximateNumericTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -236,7 +235,7 @@ function queryFloatParam() returns error? {
 function queryBitStringParam() returns error? {
     sql:BitValue typeVal = new(true);
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE bit_type = ${typeVal}`;
-    validateExactNumericTableResult(check simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb));
+    validateExactNumericTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -245,7 +244,7 @@ function queryBitStringParam() returns error? {
 function queryBitInvalidIntParam() returns error? {
     sql:BitValue typeVal = new (12);
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE bit_type = ${typeVal}`;
-    record{}|error? returnVal = trap simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb);
+    record{}|error? returnVal = trap queryMssqlClient(sqlQuery, database = simpleParamsDb);
     test:assertTrue(returnVal is error);
     error dbError = <error> returnVal;
     test:assertEquals(dbError.message(), "Only 1 or 0 can be passed for BitValue SQL Type, but found :12");
@@ -261,8 +260,8 @@ function queryDateValueParam() returns error? {
     sql:DateValue dateValue2 = new ("2017-06-26");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE date_type = ${dateValue1} AND row_id = ${rowId}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM DateandTime WHERE date_type = ${dateValue2} AND row_id = ${rowId}`;
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -275,8 +274,8 @@ function queryDateTimeOffsetValueParam() returns error? {
     sql:DateTimeValue dateTimeOffsetValue2 = new("2020-01-01 19:14:51.0000000 +05:30");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE dateTimeOffset_type = ${dateTimeOffsetValue1} AND row_id = ${rowId}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM DateandTime WHERE dateTimeOffset_type = ${dateTimeOffsetValue2} AND row_id = ${rowId}`;
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -289,8 +288,8 @@ function queryDateTime2ValueParam() returns error? {
     sql:DateTimeValue dateTimeValue2 = new ("1900-01-01 00:25:00.0021425");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE dateTime2_type = ${dateTimeValue1} AND row_id = ${rowId}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM DateandTime WHERE dateTime2_type = ${dateTimeValue2} AND row_id = ${rowId}`;
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -303,8 +302,8 @@ function querySmallDateTimeValueParam() returns error? {
     sql:DateTimeValue smallDateTimeValue2 = new ("2007-05-10 10:00:00.0");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE smallDateTime_type = ${smallDateTimeValue1} AND row_id = ${rowId}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM DateandTime WHERE smallDateTime_type = ${smallDateTimeValue2} AND row_id = ${rowId}`;
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery1, database = simpleParamsDb));
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery2, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery2, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -314,7 +313,7 @@ function queryTimeValueParam() returns error? {
     int rowId = 1;
     sql:TimeValue timeValue2 = new ("09:46:22");
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM DateandTime WHERE time_type = ${timeValue2} AND row_id = ${rowId}`;
-    validateDateTimeTableResult(check simpleQueryMssqlClient(sqlQuery, database = simpleParamsDb));
+    validateDateTimeTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
 
 @test:Config {
@@ -422,17 +421,6 @@ function queryValueNegative2() returns error? {
     } else {
         test:assertFail("Expected error when query returns unexpected result type.");
     }
-}
-
-function simpleQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, string database = simpleParamsDb)
-returns record {}? | error? {
-    Client dbClient = check new(host, user, password, database, port);
-    stream<record {}, error?> streamData = dbClient->query(sqlQuery);
-    record {|record {} value;|}? data = check streamData.next();
-    check streamData.close();
-    record {}? value = data?.value;
-    check dbClient.close();
-    return value;
 }
 
 isolated function validateExactNumericTableResult(record{}? returnData) {

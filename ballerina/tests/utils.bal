@@ -14,64 +14,49 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/io;
 import ballerina/sql;
 
-isolated function createQuery(sql:ParameterizedQuery query) {
 
-    Client|sql:Error mssqlClient = new(user="sa",password="Test123#");
-
-    if(mssqlClient is sql:Error) {
-        io:println("Client init failed\n",mssqlClient);
-    }
-    else{
-        sql:ExecutionResult|sql:Error result__;
-        sql:Error? e__;
-
-        result__ = mssqlClient->execute(query);
-        if(result__ is sql:Error) {
-            io:println("Init Database drop failed\n",result__);
-        }
-        else{
-            io:println("Init Database drop passed\n",result__);
-        }
-        e__ = mssqlClient.close();
-
-        if(e__ is sql:Error) {
-            io:println("Client close failed\n",e__);
-        }
-        else{
-            io:println("Client closed");
-        }
-    }
-
+function getMssqlClient(string? database = ()) returns Client|error {
+    Client dbClient = check new (host, user, password, database, port);
+    return dbClient;
 }
 
-isolated function executeQuery(string database, sql:ParameterizedQuery query) {
-
-    Client|sql:Error mssqlClient = new(user="sa",password="Test123#", database = database);
-
-    if(mssqlClient is sql:Error) {
-        io:println("Client init failed\n",mssqlClient);
+function queryMssqlClient(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string? database = ())
+returns record {}|error? {
+    Client dbClient = check getMssqlClient(database);
+    stream<record {}, error?> streamData;
+    if resultType is () {
+        streamData = dbClient->query(sqlQuery);
+    } else {
+        streamData = dbClient->query(sqlQuery, resultType);
     }
-    else{
-        sql:ExecutionResult|sql:Error result__;
-        sql:Error? e__;
+    record {|record {} value;|}? data = check streamData.next();
+    check streamData.close();
+    record {}? value = data?.value;
+    check dbClient.close();
+    return value;
+}
 
-        result__ = mssqlClient->execute(query);
-        if(result__ is sql:Error) {
-            io:println("Init Execute drop failed\n",result__);
-        }
-        else{
-            io:println("Init Execute drop passed\n",result__);
-        }
-        e__ = mssqlClient.close();
+function executeQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, string? database = ())
+returns sql:ExecutionResult|error {
+    Client dbClient = check getMssqlClient(database);
+    sql:ExecutionResult result = check dbClient->execute(sqlQuery);
+    check dbClient.close();
+    return result;
+}
 
-        if(e__ is sql:Error) {
-            io:println("Client close1 failed\n",e__);
-        }
-        else{
-            io:println("Client closed");
-        }
-    }
+function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, string? database = ()) returns sql:ExecutionResult[] | error {
+    Client dbClient = check getMssqlClient(database);
+    sql:ExecutionResult[] result = check dbClient->batchExecute(sqlQueries);
+    check dbClient.close();
+    return result;
+}
+
+function callProcedureMssqlClient(sql:ParameterizedCallQuery sqlQuery, string database, typedesc<record {}>[] rowTypes = [])
+returns sql:ProcedureCallResult | error {
+    Client dbClient = check getMssqlClient(database);
+    sql:ProcedureCallResult result = check dbClient->call(sqlQuery, rowTypes);
+    check dbClient.close();
+    return result;
 }

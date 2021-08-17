@@ -25,10 +25,30 @@ string poolDB_2 = "POOL_DB_2";
     value: ["pool"]
 }
 function initConnectionPoolTests() returns error? {
-   _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_1`);
-   _ = createQuery(`CREATE DATABASE POOL_DB_1`);
-   _ = createQuery(`DROP DATABASE IF EXISTS POOL_DB_2`);
-   _ = createQuery(`CREATE DATABASE POOL_DB_2`);
+   _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS POOL_DB_1`);
+   _ = check executeQueryMssqlClient(`CREATE DATABASE POOL_DB_1`);
+   _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS POOL_DB_2`);
+   _ = check executeQueryMssqlClient(`CREATE DATABASE POOL_DB_2`);
+
+   sql:ParameterizedQuery q1 = `
+       DROP TABLE IF EXISTS Customers;
+
+       CREATE TABLE Customers(
+           customerId INT NOT NULL IDENTITY PRIMARY KEY,
+           firstName  VARCHAR(300),
+           lastName  VARCHAR(300),
+           registrationID INT,
+           creditLimit FLOAT,
+           country  VARCHAR(300)
+       );
+
+       INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
+       VALUES ('Peter', 'Stuart', 1, 5000.75, 'USA');
+
+       INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
+       VALUES ('Dan', 'Brown', 2, 10000, 'UK');
+   `;
+   _ = check executeQueryMssqlClient(q1, poolDB_1);
 
    sql:ParameterizedQuery q2 = `
        DROP TABLE IF EXISTS Customers;
@@ -48,27 +68,7 @@ function initConnectionPoolTests() returns error? {
        INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
        VALUES ('Dan', 'Brown', 2, 10000, 'UK');
    `;
-   _ = executeQuery(poolDB_1, q2);
-
-   sql:ParameterizedQuery q3 = `
-       DROP TABLE IF EXISTS Customers;
-
-       CREATE TABLE Customers(
-           customerId INT NOT NULL IDENTITY PRIMARY KEY,
-           firstName  VARCHAR(300),
-           lastName  VARCHAR(300),
-           registrationID INT,
-           creditLimit FLOAT,
-           country  VARCHAR(300)
-       );
-
-       INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
-       VALUES ('Peter', 'Stuart', 1, 5000.75, 'USA');
-
-       INSERT INTO Customers (firstName,lastName,registrationID,creditLimit,country)
-       VALUES ('Dan', 'Brown', 2, 10000, 'UK');
-   `;
-   _ = executeQuery(poolDB_2, q3);
+   _ = check executeQueryMssqlClient(q2, poolDB_2);
 }
 
 public type Result record {

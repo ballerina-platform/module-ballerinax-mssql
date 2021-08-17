@@ -23,8 +23,8 @@ string keyStorePath = "./tests/resources/keystore/client/client-keystore.p12";
     value: ["ssl"]
 }
 function initConnectionSSLTests() returns error? {
-    _ = createQuery(`DROP DATABASE IF EXISTS SSL_CONNECT_DB`);
-    _ = createQuery(`CREATE DATABASE SSL_CONNECT_DB`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS SSL_CONNECT_DB`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE SSL_CONNECT_DB`);
 }
 
 @test:Config {
