@@ -19,6 +19,14 @@ string sslDb = "SSL_CONNECT_DB";
 string trustStorePath = "./tests/resources/keystore/client/client-truststore.p12";
 string keyStorePath = "./tests/resources/keystore/client/client-keystore.p12";
 
+@test:BeforeGroups {
+    value: ["ssl"]
+}
+function initConnectionSSLTests() returns error? {
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS SSL_CONNECT_DB`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE SSL_CONNECT_DB`);
+}
+
 @test:Config {
     groups: ["connection", "ssl"]
 }
