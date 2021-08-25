@@ -39,6 +39,6 @@ public class ExecuteProcessorUtils {
 
     public static Object nativeBatchExecute(Environment env, BObject client, BArray paramSQLStrings) {
         return io.ballerina.stdlib.sql.nativeimpl.ExecuteProcessor.nativeBatchExecute(env, client, paramSQLStrings,
-                MssqlStatementParameterProcessor.getInstance(), false);
+                MssqlStatementParameterProcessor.getInstance());
     }
 }
