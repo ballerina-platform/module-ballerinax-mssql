@@ -23,7 +23,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.stdlib.mssql.Constants;
 import io.ballerina.stdlib.mssql.utils.ConverterUtils;
-import io.ballerina.stdlib.sql.exception.ApplicationError;
+import io.ballerina.stdlib.sql.exception.DataError;
 import io.ballerina.stdlib.sql.parameterprocessor.DefaultStatementParameterProcessor;
 
 import java.sql.Connection;
@@ -51,7 +51,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     @Override
     protected void setCustomSqlTypedParam(Connection connection, PreparedStatement preparedStatement,
                                           int index, BObject typedValue)
-            throws SQLException, ApplicationError {
+            throws SQLException, DataError {
         String sqlType = typedValue.getType().getName();
         Object value = typedValue.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
         switch (sqlType) {
@@ -90,12 +90,12 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
                 setMoney(preparedStatement, index, value);
                 break;
             default:
-                throw new ApplicationError("Unsupported SQL type: " + sqlType);
+                throw new DataError("Unsupported SQL type: " + sqlType);
         }
     }
 
     private void setPoint(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -106,7 +106,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setLineString(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -117,7 +117,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setCircularString(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -128,7 +128,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setCompoundCurve(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -139,7 +139,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setPolygon(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -150,7 +150,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setCurvePolygon(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -161,7 +161,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setMultiPoint(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -172,7 +172,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setMultiLineString(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -183,7 +183,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setMultiPolygon(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
@@ -194,7 +194,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     }
 
     private void setGeometryString(PreparedStatement preparedStatement, int index, Object value, Object srid)
-            throws SQLException, ApplicationError {
+            throws SQLException {
         if (value == null) {
             preparedStatement.setObject(index, null);
         } else {
