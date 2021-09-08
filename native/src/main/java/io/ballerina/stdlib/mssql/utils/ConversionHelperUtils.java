@@ -29,8 +29,10 @@ import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.stdlib.mssql.Constants;
+import io.ballerina.stdlib.sql.exception.DataError;
+import io.ballerina.stdlib.sql.exception.TypeMismatchError;
+import io.ballerina.stdlib.sql.utils.Utils;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -104,7 +106,7 @@ public class ConversionHelperUtils {
         return String.join(", ", pointStrings);
     }
 
-    protected static String getCompoundCurveText(Object[] elements, int numElements) throws SQLException {
+    protected static String getCompoundCurveText(Object[] elements, int numElements) throws DataError {
         String[] stringElements = new String[numElements];
         for (int i = 0; i < numElements; i++) {
             BObject element = (BObject) elements[i];
@@ -128,13 +130,14 @@ public class ConversionHelperUtils {
                 continue;
             }
 
-            throw new SQLException("Unsupported value: " + element + " for type: CompoundCurve");
+            throw new TypeMismatchError("CompoundCurve", Utils.getBTypeName(element.getType()),
+                    new String[]{Constants.CustomTypeNames.LINESTRING, Constants.CustomTypeNames.CIRCULARSTRING});
 
         }
         return String.join(", ", stringElements);
     }
 
-    protected static String getCurvePolygonText(Object[] elements, int numElements) throws SQLException {
+    protected static String getCurvePolygonText(Object[] elements, int numElements) throws DataError {
         String[] stringElements = new String[numElements];
         for (int i = 0; i < numElements; i++) {
             BObject element = (BObject) elements[i];
@@ -164,13 +167,14 @@ public class ConversionHelperUtils {
                 continue;
             }
 
-            throw new SQLException("Unsupported Value: " + element + " for type: Compound Curve");
-
+            throw new TypeMismatchError("Compound Curve", Utils.getBTypeName(element.getType()),
+                    new String[]{Constants.CustomTypeNames.LINESTRING, Constants.CustomTypeNames.CIRCULARSTRING,
+                            Constants.CustomTypeNames.COMPOUNDCURVE});
         }
         return String.join(", ", stringElements);
     }
 
-    protected static String getPolygonText(Object[] elements, int numElements) throws SQLException {
+    protected static String getPolygonText(Object[] elements, int numElements) throws DataError {
         String[] stringElements = new String[numElements];
         for (int i = 0; i < numElements; i++) {
             BObject element = (BObject) elements[i];
@@ -187,7 +191,8 @@ public class ConversionHelperUtils {
                 continue;
             }
 
-            throw new SQLException("Unsupported Value: " + element + " for type: Polygon");
+            throw new TypeMismatchError("Polygon", Utils.getBTypeName(element.getType()),
+                    Constants.CustomTypeNames.LINESTRING);
         }
         return String.join(", ", stringElements);
     }
@@ -204,7 +209,7 @@ public class ConversionHelperUtils {
         return String.join(", ", stringElements);
     }
 
-    protected static String getMultiLineStringText(Object[] elements, int numElements) throws SQLException {
+    protected static String getMultiLineStringText(Object[] elements, int numElements) throws DataError {
         String[] stringElements = new String[numElements];
 
         // Convert array of lines into an array of strings
@@ -222,13 +227,14 @@ public class ConversionHelperUtils {
                 stringElements[i] = String.format("(%s)", lineStringText);
                 continue;
             }
-            throw new SQLException("Unsupported Value: " + element + " for type: Compound Curve");
+            throw new TypeMismatchError("Compound Curve", Utils.getBTypeName(element.getType()),
+                    Constants.CustomTypeNames.LINESTRING);
         }
         // Combine all lines into a multi-line
         return String.join(", ", stringElements);
     }
 
-    protected static String getMultiPolygonText(Object[] elements, int numElements) throws SQLException {
+    protected static String getMultiPolygonText(Object[] elements, int numElements) throws DataError {
         String[] stringElements = new String[numElements];
 
         // Convert array of polygons into an array of strings
@@ -246,7 +252,8 @@ public class ConversionHelperUtils {
                 stringElements[i] = String.format("(%s)", polygonText);
                 continue;
             }
-            throw new SQLException("Unsupported Value: " + element + " for type: MultiPolygon");
+            throw new TypeMismatchError("MultiPloygon", Utils.getBTypeName(element.getType()),
+                    Constants.CustomTypeNames.POLYGON);
         }
         // Combine all polygons into a multi-polygon
         return String.join(", ", stringElements);

@@ -26,6 +26,8 @@ import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
 import io.ballerina.stdlib.mssql.Constants;
+import io.ballerina.stdlib.sql.exception.DataError;
+import io.ballerina.stdlib.sql.exception.TypeMismatchError;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -36,7 +38,7 @@ import java.util.Map;
  * @since 0.1.0
  */
 public class ConverterUtils {
-    public static Geometry convertPoint(Object value, Object srid) throws SQLException {
+    public static Geometry convertPoint(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -45,7 +47,8 @@ public class ConverterUtils {
             String pointText = ConversionHelperUtils.getPointText(pointValue);
             wkt = String.format("POINT (%s)", pointText);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: Point");
+            throw new TypeMismatchError("Point", value.getClass().getSimpleName(),
+                    "record{}");
         }
 
         int sridInt = 0;
@@ -56,7 +59,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertLineString(Object value, Object srid) throws SQLException {
+    public static Geometry convertLineString(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -65,7 +68,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("LINESTRING (%s)", lineStringText);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: LineString");
+            throw new TypeMismatchError("LineString", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -76,7 +80,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertCircularString(Object value, Object srid) throws SQLException {
+    public static Geometry convertCircularString(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -85,7 +89,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("CIRCULARSTRING (%s)", circularStringText);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: Circular String");
+            throw new TypeMismatchError("Circular String", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -96,7 +101,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertCompoundCurve(Object value, Object srid) throws SQLException {
+    public static Geometry convertCompoundCurve(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -105,7 +110,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("COMPOUNDCURVE (%s)", compoundCurveText);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: Compound Curve");
+            throw new TypeMismatchError("Compound Curve", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -116,7 +122,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertPolygon(Object value, Object srid) throws SQLException {
+    public static Geometry convertPolygon(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -125,7 +131,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("POLYGON (%s)", polygonText);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: Polygon");
+            throw new TypeMismatchError("Polygon", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -136,7 +143,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertCurvePolygon(Object value, Object srid) throws SQLException {
+    public static Geometry convertCurvePolygon(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -145,7 +152,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("CURVEPOLYGON (%s)", curvePolygonText);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: CurvePolygon");
+            throw new TypeMismatchError("CurvePolygon", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -156,7 +164,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertMultiPoint(Object value, Object srid) throws SQLException {
+    public static Geometry convertMultiPoint(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -165,7 +173,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("MULTIPOINT (%s)", String.join(", ", multiPointText));
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: LineString");
+            throw new TypeMismatchError("LineString", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -176,7 +185,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertMultiLineString(Object value, Object srid) throws SQLException {
+    public static Geometry convertMultiLineString(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -185,7 +194,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("MULTILINESTRING (%s)", multiLineStringText);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: LineString");
+            throw new TypeMismatchError("LineString", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -196,7 +206,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertMultiPolygon(Object value, Object srid) throws SQLException {
+    public static Geometry convertMultiPolygon(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -205,7 +215,8 @@ public class ConverterUtils {
                     ((BArray) value).size());
             wkt = String.format("MULTIPOLYGON (%s)", multiPolygonTest);
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: MultiPolygon");
+            throw new TypeMismatchError("MultiPolygon", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -216,7 +227,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Geometry convertGeometryString(Object value, Object srid) throws SQLException {
+    public static Geometry convertGeometryString(Object value, Object srid) throws DataError, SQLException {
         String wkt;
         if (value instanceof BString) {
             wkt = value.toString();
@@ -295,12 +306,18 @@ public class ConverterUtils {
                     continue;
                 }
 
-                throw new SQLException("Unsupported Value: " + value + " for type: GeometryCollection");
+                throw new TypeMismatchError("GeometryCollection", value.getClass().getSimpleName(),
+                        new String[]{"string", Constants.CustomTypeNames.POINT, Constants.CustomTypeNames.LINESTRING,
+                                Constants.CustomTypeNames.CIRCULARSTRING, Constants.CustomTypeNames.COMPOUNDCURVE,
+                                Constants.CustomTypeNames.POLYGON, Constants.CustomTypeNames.CURVEPOLYGON,
+                                Constants.CustomTypeNames.MULTIPOINT, Constants.CustomTypeNames.MULTILINESTRING,
+                                Constants.CustomTypeNames.MULTIPOLYGON});
             }
             // Combine all elements into a geometry collection
             wkt = String.format("GEOMETRYCOLLECTION (%s)", String.join(", ", stringElements));
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: GeometryCollection");
+            throw new TypeMismatchError("GeometryCollection", value.getClass().getSimpleName(),
+                    "Array");
         }
 
         int sridInt = 0;
@@ -311,7 +328,7 @@ public class ConverterUtils {
         return Geometry.STGeomFromText(wkt, sridInt);
     }
 
-    public static Object convertMoney(Object value) throws SQLException {
+    public static Object convertMoney(Object value) throws DataError {
         Object money;
         if (value instanceof BString) {
             money = value.toString();
@@ -320,7 +337,8 @@ public class ConverterUtils {
         } else if (value instanceof Double) {
             money = value;
         } else {
-            throw new SQLException("Unsupported Value: " + value + " for type: money");
+            throw new TypeMismatchError("Money", value.getClass().getSimpleName(),
+                    new String[]{"string", "decimal", "double"});
         }
         return money;
     }
