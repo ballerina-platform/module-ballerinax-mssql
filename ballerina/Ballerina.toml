@@ -1,15 +1,15 @@
 [package]
 org = "ballerinax"
 name = "mssql"
-version = "@toml.version@"
+version = "1.0.0"
 distribution = "slbeta3"
 
 [[platform.java11.dependency]]
-path = "../native/build/libs/mssql-native-@project.version@.jar"
+path = "../native/build/libs/mssql-native-1.0.0-SNAPSHOT.jar"
 
 [[platform.java11.dependency]]
-path = "./lib/sql-native-@sql.native.version@.jar"
+path = "./lib/sql-native-1.0.0-20210907-164900-026cd0b.jar"
 
 [[platform.java11.dependency]]
-path = "./lib/mssql-jdbc-@mssqlDriverVersion@.jar"
+path = "./lib/mssql-jdbc-9.2.0.jre11.jar"
 scope = "testOnly"
