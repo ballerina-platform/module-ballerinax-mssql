@@ -193,7 +193,7 @@ startTestDockerContainer.dependsOn createTestDockerImage
 build.dependsOn "generatePomFileForMavenPublication"
 build.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-native:build"
-//test.dependsOn startTestDockerContainer
+test.dependsOn startTestDockerContainer
 
 publishToMavenLocal.dependsOn build
 publish.dependsOn build
