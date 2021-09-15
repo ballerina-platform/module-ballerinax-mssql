@@ -1,6 +1,6 @@
 [package]
 org = "mssql"
-name = "@example.name@"
+name = "execute_operation"
 version = "0.1.0"
 
 [[platform.java11.dependency]]
