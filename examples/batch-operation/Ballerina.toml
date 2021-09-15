@@ -1,6 +1,6 @@
 [package]
 org = "mssql"
-name = "call_stored_procedures"
+name = "batch_operation"
 version = "0.1.0"
 
 [[platform.java11.dependency]]
