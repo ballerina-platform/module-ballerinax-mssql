@@ -34,14 +34,16 @@ This example shows the different ways of creating the `mssql:Client`.
 The client can be created with an empty constructor, and thereby, the client will be initialized with the default properties.
 
 ```ballerina
-mssql:Client|sql:Error dbClient = new ();
+mssql:Client|sql:Error dbClient = new();
 ```
 
 The `dbClient` receives the host, username, and password. Since the properties are passed in the same order as they are defined
 in the `mssql:Client`, you can pass them without named params.
 
 ```ballerina
-mssql:Client|sql:Error dbClient = new ("localhost", "rootUser", "rootPass", "information_schema", 1443);
+mssql:Client|sql:Error dbClient = new(
+   "localhost", "rootUser", "rootPass", "information_schema", 1443
+);
 ```
 
 The `dbClient` uses the named params to pass the attributes since it is skipping some params in the constructor.
@@ -60,7 +62,9 @@ mssql:Options mssqlOptions = {
   loginTimeout: 10
 };
 
-mssql:Client|sql:Error dbClient = new (user = "rootUser", password = "rootPass", options = mssqlOptions);
+mssql:Client|sql:Error dbClient = new(
+   user = "rootUser", password = "rootPass", options = mssqlOptions
+);
 ```
 
 Similarly, the `dbClient` uses the named params and it provides an unshared connection pool of the
@@ -69,8 +73,10 @@ type to be used within the client.
 For more details about connection pooling, see the [`sql` Module](https://docs.central.ballerina.io/ballerina/sql/latest).
 
 ```ballerina
-mssql:Client|sql:Error dbClient = new (user = "rootUser", password = "rootPass", 
-                                       connectionPool = {maxOpenConnections: 5});
+mssql:Client|sql:Error dbClient = new(
+   user = "rootUser", password = "rootPass", 
+   connectionPool = {maxOpenConnections: 5}
+);
 ```
 
 #### Using SSL
@@ -131,9 +137,15 @@ connection pool handling.  For its properties and possible values, see the [`sql
     ```ballerina
     sql:ConnectionPool connPool = {maxOpenConnections: 5};
     
-    mssql:Client|sql:Error dbClient1 = new ("localhost", "rootUser", "rootPass", connectionPool = connPool);
-    mssql:Client|sql:Error dbClient2 = new ("localhost", "rootUser", "rootPass", connectionPool = connPool);
-    mssql:Client|sql:Error dbClient3 = new ("localhost", "rootUser", "rootPass", connectionPool = connPool);
+    mssql:Client|sql:Error dbClient1 = new(
+        "localhost", "rootUser", "rootPass", connectionPool = connPool
+    );
+    mssql:Client|sql:Error dbClient2 = new(
+        "localhost", "rootUser", "rootPass", connectionPool = connPool
+    );
+    mssql:Client|sql:Error dbClient3 = new(
+        "localhost", "rootUser", "rootPass", connectionPool = connPool
+    );
     ```
 
 For more details about each property, see the [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) constructor.
@@ -235,7 +247,9 @@ In this sample, the query parameter values are passed directly into the query st
 remote function.
 
 ```ballerina
-sql:ExecutionResult result = check dbClient->execute(`INSERT INTO student(age, name) VALUES (23, 'john')`);
+sql:ExecutionResult result = check dbClient->execute(`
+   INSERT INTO student(age, name) VALUES (23, 'john')
+`);
 ```
 
 In this sample, the parameter values, which are in local variables are used to parameterize the SQL query in
