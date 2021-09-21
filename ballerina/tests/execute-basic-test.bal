@@ -166,7 +166,7 @@ function testInsertAndSelectTableWithGeneratedKeys() returns error? {
     if (insertId is string) {
         int|error id = int:fromString(insertId);
         if (id is int) {
-            string query = string `SELECT * from ExactNumericTypes where id = ${id}`;
+            sql:ParameterizedQuery query = `SELECT * from ExactNumericTypes where id = ${id}`;
             record {}? queryResult = check queryMssqlClient(query, database = executeDb);
             test:assertNotExactEquals(queryResult, (), "Incorrect InsertId returned.");
         } else {
@@ -191,7 +191,7 @@ function testInsertWithAllNilAndSelectTableWithGeneratedKeys() returns error? {
     if (insertedId is string) {
         int|error id = int:fromString(insertedId);
         if (id is int) {
-            string query = string `SELECT * FROM ExactNumericTypes WHERE id = ${id}`;
+            sql:ParameterizedQuery query = `SELECT * FROM ExactNumericTypes WHERE id = ${id}`;
             record {}? queryResult = check queryMssqlClient(query, database = executeDb);
             test:assertNotExactEquals(queryResult, (), "Incorrect InsertId returned.");
         } else {
@@ -224,7 +224,7 @@ function testInsertWithStringAndSelectTable() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(insertQuery, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
-    string query = string `SELECT * FROM StringTypes WHERE id = ${intIDVal}`;
+    sql:ParameterizedQuery query = `SELECT * FROM StringTypes WHERE id = ${intIDVal}`;
     record {}? queryResult = check queryMssqlClient(query, StringData, executeDb);
 
     StringData expectedInsertRow = {
