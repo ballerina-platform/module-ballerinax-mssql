@@ -178,8 +178,8 @@ sql:ParameterizedQuery query = `SELECT * FROM students WHERE
 ```ballerina
 int[] ids = [10, 50];
 int age = 12;
-sql:ParameterizedQuery query = `SELECT * FROM students WHERE 
-                                id < ${ids[0]} AND age > ${age}`;
+sql:ParameterizedQuery query = `SELECT * FROM students
+                                WHERE id < ${ids[0]} AND age > ${age}`;
 ```
 
 Moreover, the SQL package has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
@@ -220,8 +220,9 @@ The `CREATE` statement is executed via the `execute` remote function of the clie
 
 ```ballerina
 // Create the ‘Students’ table with the  ‘id’, 'name', and ‘age’ fields.
-sql:ExecutionResult result = check dbClient->execute("CREATE TABLE student(id INT AUTO_INCREMENT, " +
-                         "age INT, name VARCHAR(255), PRIMARY KEY (id))");
+sql:ExecutionResult result = check dbClient->execute(`
+   CREATE TABLE student(id INT AUTO_INCREMENT, age INT, name VARCHAR(255), PRIMARY KEY (id))
+`);
 //A value of the`sql:ExecutionResult` type is returned for the 'result'. 
 ```
 
@@ -234,7 +235,7 @@ In this sample, the query parameter values are passed directly into the query st
 remote function.
 
 ```ballerina
-sql:ExecutionResult result = check dbClient->execute("INSERT INTO student(age, name) VALUES (23, 'john')");
+sql:ExecutionResult result = check dbClient->execute(`INSERT INTO student(age, name) VALUES (23, 'john')`);
 ```
 
 In this sample, the parameter values, which are in local variables are used to parameterize the SQL query in
