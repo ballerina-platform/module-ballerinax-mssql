@@ -52,7 +52,7 @@ public isolated client class Client {
 
     # Queries the database with the query provided by the user and returns the result as a stream.
     #
-    # + sqlQuery - The query which needs to be executed as  an `sql:ParameterizedQuery`. Usage of string is deprecated
+    # + sqlQuery - The query which needs to be executed as an `sql:ParameterizedQuery`. Usage of string is deprecated
     # + rowType - The `typedesc` of the record that should be returned as a result. If this is not provided, the default
     #             column names of the query result set will be used for the record attributes.
     # + return - Stream of records in the type of `rowType`
