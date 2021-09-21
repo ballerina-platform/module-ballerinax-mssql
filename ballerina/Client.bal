@@ -77,7 +77,7 @@ public isolated client class Client {
 
     # Executes the DDL or DML SQL queries provided by the user, and returns a summary of the execution.
     #
-    # + sqlQuery - The DDL or DML query such as INSERT, DELETE, UPDATE, etc. as an `sql:ParameterizedQuery`.
+    # + sqlQuery - The DDL or DML query such as `INSERT`, `DELETE`, `UPDATE`, etc. as an `sql:ParameterizedQuery`.
     #              Usage of `string` is deprecated
     #              when the query has params to be passed in
     # + return - Summary of the SQL update query as an `ExecutionResult` or returns an `Error`
