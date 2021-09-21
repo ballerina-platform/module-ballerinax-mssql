@@ -22,7 +22,7 @@ function getMssqlClient(string? database = ()) returns Client|error {
     return dbClient;
 }
 
-function queryMssqlClient(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string? database = ())
+function queryMssqlClient(sql:ParameterizedQuery sqlQuery, typedesc<record {}>? resultType = (), string? database = ())
 returns record {}|error? {
     Client dbClient = check getMssqlClient(database);
     stream<record {}, error?> streamData;
@@ -38,7 +38,7 @@ returns record {}|error? {
     return value;
 }
 
-function executeQueryMssqlClient(string|sql:ParameterizedQuery sqlQuery, string? database = ())
+function executeQueryMssqlClient(sql:ParameterizedQuery sqlQuery, string? database = ())
 returns sql:ExecutionResult|error {
     Client dbClient = check getMssqlClient(database);
     sql:ExecutionResult result = check dbClient->execute(sqlQuery);

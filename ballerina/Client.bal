@@ -50,12 +50,11 @@ public isolated client class Client {
         return createClient(self, clientConfig, sql:getGlobalConnectionPool());
     }
 
-    # Queries the database with the query provided by the user and returns the result as a stream.
+    # Queries the database with the query provided by the user, and returns the result as a stream.
     #
-    # + sqlQuery - The query which needs to be executed as  a `string` or `ParameterizedQuery` when the SQL query has
-    #              params to be passed in
+    # + sqlQuery - The query, which needs to be executed as an `sql:ParameterizedQuery`. Usage of `string` is depreciated
     # + rowType - The `typedesc` of the record that should be returned as a result. If this is not provided, the default
-    #             column names of the query result set will be used for the record attributes.
+    #             column names of the query result set will be used for the record attributes
     # + return - Stream of records in the type of `rowType`
     remote isolated function query(string|sql:ParameterizedQuery sqlQuery, typedesc<record {}> rowType = <>)
     returns stream <rowType, sql:Error?> = @java:Method {
@@ -66,22 +65,22 @@ public isolated client class Client {
     # Queries the database with the provided query and returns the first row as a record if the expected return type is
     # a record. If the expected return type is not a record, then a single value is returned.
     #
-    # + sqlQuery - The query to be executed as a `sql:ParameterizedQuery` which returns only one row result
+    # + sqlQuery - The query to be executed as an `sql:ParameterizedQuery`, which returns only one result row
     # + returnType - The `typedesc` of the record/type that should be returned as a result. If this is not provided, the
     #                default column names/type of the query result set will be used
-    # + return - Result in the type of `returnType`
+    # + return - Result in the `returnType` type
     remote isolated function queryRow(sql:ParameterizedQuery sqlQuery, typedesc<any> returnType = <>)
     returns returnType|sql:Error = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.QueryProcessorUtils",
         name: "nativeQueryRow"
     } external;
 
-    # Executes the DDL or DML SQL queries provided by the user, and returns a summary of the execution.
+    # Executes the provided DDL or DML SQL query and returns a summary of the execution.
     #
-    # + sqlQuery - The DDL or DML query such as INSERT, DELETE, UPDATE, etc. as a `string` or `ParameterizedQuery`
-    #              when the query has params to be passed in
-    # + return - Summary of the SQL update query as an `ExecutionResult` or returns an `Error`
-    #           if any error occurred when executing the query
+    # + sqlQuery - The DDL or DML queries such as `INSERT`, `DELETE`, `UPDATE`, etc. as an `sql:ParameterizedQuery`.
+    #              Usage of `string` is depreciated
+    # + return - Summary of the SQL update query as an `sql:ExecutionResult` or an `sql:Error`
+    #            if any error occurred when executing the query
     remote isolated function execute(string|sql:ParameterizedQuery sqlQuery)
     returns sql:ExecutionResult|sql:Error = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils",
@@ -91,8 +90,8 @@ public isolated client class Client {
     # Executes a provided batch of parameterized DDL or DML SQL queries
     # and returns the summary of the execution.
     #
-    # + sqlQueries - The DDL or DML queries such as `INSERT`, `DELETE`, `UPDATE`, etc. as a `sql:ParameterizedQuery` with an array
-    #                of values passed in
+    # + sqlQueries - The DDL or DML queries such as `INSERT`, `DELETE`, `UPDATE`, etc. as an `sql:ParameterizedQuery`
+    #                with an array of values passed in
     # + return - Summary of the executed SQL queries as an `sql:ExecutionResult[]`, which includes details such as
     #            `affectedRowCount` and `lastInsertId`. If one of the commands in the batch fails, this function
     #            will return an `sql:BatchExecuteError`. However, the MSSQL driver may or may not continue to process the
@@ -105,21 +104,21 @@ public isolated client class Client {
         return nativeBatchExecute(self, sqlQueries);
     }
 
-    # Executes a SQL stored procedure and returns the result as a stream and an execution summary.
+    # Executes a SQL stored procedure and returns the result as stream and execution summary.
     #
-    # + sqlQuery - The query to execute the SQL stored procedure
+    # + sqlQuery - The query to execute the SQL stored procedure as an `sql:ParameterizedQuery`. Usage of `string` is depreciated
     # + rowTypes - The array of `typedesc` of the records that should be returned as a result. If this is not provided,
-    #               the default column names of the query result set will be used for the record attributes.
-    # + return - Summary of the execution is returned in a `ProcedureCallResult` or an `sql:Error`
+    #               the default column names of the query result set will be used for the record attributes
+    # + return - Summary of the execution is returned in an `sql:ProcedureCallResult`, or an `sql:Error`
     remote isolated function call(string|sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
     returns sql:ProcedureCallResult|sql:Error = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.CallProcessorUtils",
         name: "nativeCall"
     } external;
 
-    # Close the SQL client.
+    # Closes the SQL client.
     #
-    # + return - Possible error during closing the client
+    # + return - Possible error when closing the client
     public isolated function close() returns sql:Error?  = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils",
         name: "close"

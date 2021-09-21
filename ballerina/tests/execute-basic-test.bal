@@ -85,7 +85,7 @@ function initExecuteBasicTests() returns error? {
 }
 function testCreateTable() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "CREATE TABLE Student(studentID int, LastName varchar(255))", executeDb);
+        `CREATE TABLE Student(studentID int, LastName varchar(255))`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 0, "Affected row count is different.");
     test:assertExactEquals(result.lastInsertId, (), "Last Insert Id is not nil.");
 }
@@ -96,7 +96,7 @@ function testCreateTable() returns error? {
 }
 function testInsertTable() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "INSERT INTO ExactNumericTypes (int_type) VALUES (20)", executeDb);
+        `INSERT INTO ExactNumericTypes (int_type) VALUES (20)`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     string|int? insertId = result.lastInsertId;
     if (insertId is string) {
@@ -117,7 +117,7 @@ function testInsertTable() returns error? {
 }
 function testInsertTableWithoutGeneratedKeys() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "INSERT INTO StringTypes (id, varchar_type) VALUES (5, 'test data')", executeDb);
+        `INSERT INTO StringTypes (id, varchar_type) VALUES (5, 'test data')`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     test:assertEquals(result.lastInsertId, (), "Last Insert Id is nil.");
 }
@@ -128,7 +128,7 @@ function testInsertTableWithoutGeneratedKeys() returns error? {
 }
 function testInsertTableWithGeneratedKeys() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "INSERT INTO ExactNumericTypes (int_type) VALUES (21)", executeDb);
+        `INSERT INTO ExactNumericTypes (int_type) VALUES (21)`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
     string|int? insertId = result.lastInsertId;
     if (insertId is string) {
@@ -159,14 +159,14 @@ type ExactNumericType record {
 }
 function testInsertAndSelectTableWithGeneratedKeys() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "INSERT INTO ExactNumericTypes (int_type) VALUES (31)", executeDb);
+        `INSERT INTO ExactNumericTypes (int_type) VALUES (31)`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     string|int? insertId = result.lastInsertId;
     if (insertId is string) {
         int|error id = int:fromString(insertId);
         if (id is int) {
-            string query = string `SELECT * from ExactNumericTypes where id = ${id}`;
+            sql:ParameterizedQuery query = `SELECT * from ExactNumericTypes where id = ${id}`;
             record {}? queryResult = check queryMssqlClient(query, database = executeDb);
             test:assertNotExactEquals(queryResult, (), "Incorrect InsertId returned.");
         } else {
@@ -183,15 +183,15 @@ function testInsertAndSelectTableWithGeneratedKeys() returns error? {
 }
 function testInsertWithAllNilAndSelectTableWithGeneratedKeys() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "INSERT INTO ExactNumericTypes (smallint_type, int_type, bigint_type, decimal_type, numeric_type) "
-                 + "VALUES (null, null, null, null, null)", executeDb);
+        `INSERT INTO ExactNumericTypes (smallint_type, int_type, bigint_type, decimal_type, numeric_type)
+         VALUES (null, null, null, null, null)`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     string|int? insertedId = result.lastInsertId;
     if (insertedId is string) {
         int|error id = int:fromString(insertedId);
         if (id is int) {
-            string query = string `SELECT * FROM ExactNumericTypes WHERE id = ${id}`;
+            sql:ParameterizedQuery query = `SELECT * FROM ExactNumericTypes WHERE id = ${id}`;
             record {}? queryResult = check queryMssqlClient(query, database = executeDb);
             test:assertNotExactEquals(queryResult, (), "Incorrect InsertId returned.");
         } else {
@@ -217,12 +217,14 @@ type StringData record {
 }
 function testInsertWithStringAndSelectTable() returns error? {
     string intIDVal = "25";
-    string insertQuery = "INSERT INTO StringTypes (id, varchar_type, char_type, text_type"
-        + ", nchar_type, nvarchar_type) VALUES (" + intIDVal + ",'str1','str2','str3','str4','str5')";
+    sql:ParameterizedQuery insertQuery = `
+        INSERT INTO StringTypes (id, varchar_type, char_type, text_type, nchar_type, nvarchar_type)
+        VALUES (${intIDVal},'str1','str2','str3','str4','str5')
+    `;
     sql:ExecutionResult result = check executeQueryMssqlClient(insertQuery, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
-    string query = string `SELECT * FROM StringTypes WHERE id = ${intIDVal}`;
+    sql:ParameterizedQuery query = `SELECT * FROM StringTypes WHERE id = ${intIDVal}`;
     record {}? queryResult = check queryMssqlClient(query, StringData, executeDb);
 
     StringData expectedInsertRow = {
@@ -246,12 +248,12 @@ type ResultCount record {
 }
 function testUpdateNumericData() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "UPDATE ExactNumericTypes SET int_type = 11 WHERE int_type = 20", executeDb);
+        `UPDATE ExactNumericTypes SET int_type = 11 WHERE int_type = 20`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     Client dbClient = check getMssqlClient(executeDb);
     stream<record{}, error?> queryResult = dbClient->query(
-        "SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 11", ResultCount);
+        `SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 11`, ResultCount);
     stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
@@ -266,12 +268,12 @@ function testUpdateNumericData() returns error? {
 }
 function testUpdateStringData() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "UPDATE StringTypes SET varchar_type = 'updatedstring' WHERE varchar_type = 'str1'", executeDb);
+        `UPDATE StringTypes SET varchar_type = 'updatedstring' WHERE varchar_type = 'str1'`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     Client dbClient = check getMssqlClient(executeDb);
     stream<record{}, error?> queryResult = dbClient->query(
-        "SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'updatedstring'", ResultCount);
+        `SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'updatedstring'`, ResultCount);
     stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
@@ -286,14 +288,14 @@ function testUpdateStringData() returns error? {
 }
 function testDeleteNumericData() returns error? {
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "INSERT INTO ExactNumericTypes (int_type) VALUES (1451)", executeDb);
+        `INSERT INTO ExactNumericTypes (int_type) VALUES (1451)`, executeDb);
     result = check executeQueryMssqlClient(
-        "DELETE FROM ExactNumericTypes WHERE int_type = 1451", executeDb);
+        `DELETE FROM ExactNumericTypes WHERE int_type = 1451`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     Client dbClient = check getMssqlClient(executeDb);
     stream<record{}, error?> queryResult = dbClient->query(
-        "SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 1451", ResultCount);
+        `SELECT COUNT(*) as countval FROM ExactNumericTypes WHERE int_type = 1451`, ResultCount);
     stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
@@ -309,13 +311,13 @@ function testDeleteNumericData() returns error? {
 function testDeleteStringData() returns error? {
     string intId = "28";
     sql:ExecutionResult result = check executeQueryMssqlClient(
-        "INSERT INTO StringTypes (id, varchar_type) VALUES (" + intId +", 'deletestr')", executeDb);
-    result = check executeQueryMssqlClient("DELETE FROM StringTypes WHERE varchar_type = 'deletestr'", executeDb);
+        `INSERT INTO StringTypes (id, varchar_type) VALUES (${intId}, 'deletestr')`, executeDb);
+    result = check executeQueryMssqlClient(`DELETE FROM StringTypes WHERE varchar_type = 'deletestr'`, executeDb);
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     Client dbClient = check getMssqlClient(executeDb);
     stream<record{}, error?> queryResult = dbClient->query(
-        "SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'deletestr'", ResultCount);
+        `SELECT COUNT(*) as countval FROM StringTypes WHERE varchar_type = 'deletestr'`, ResultCount);
     stream<ResultCount, sql:Error?> streamData = <stream<ResultCount, sql:Error?>>queryResult;
     record {|ResultCount value;|}? data = check streamData.next();
     check streamData.close();
