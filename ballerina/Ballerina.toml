@@ -8,7 +8,7 @@ distribution = "slbeta3"
 path = "../native/build/libs/mssql-native-1.0.0-SNAPSHOT.jar"
 
 [[platform.java11.dependency]]
-path = "./lib/sql-native-1.0.0-20210915-101000-98feec8.jar"
+path = "./lib/sql-native-1.0.0-20211006-122700-7ce6614.jar"
 
 [[platform.java11.dependency]]
 path = "./lib/mssql-jdbc-9.2.0.jre11.jar"
