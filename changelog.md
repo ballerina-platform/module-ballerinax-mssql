@@ -14,3 +14,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for MSSQL Geometry data types 
 - [Add support for queryRow](https://github.com/ballerina-platform/ballerina-standard-library/issues/1604)
 
+### Changed
+- [Remove support for string parameter in SQL APIs](https://github.com/ballerina-platform/ballerina-standard-library/issues/2010)

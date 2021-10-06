@@ -32,7 +32,7 @@ public class ExecuteProcessorUtils {
     private ExecuteProcessorUtils() {
     }
 
-    public static Object nativeExecute(Environment env, BObject client, Object paramSQLString) {
+    public static Object nativeExecute(Environment env, BObject client, BObject paramSQLString) {
         return io.ballerina.stdlib.sql.nativeimpl.ExecuteProcessor.nativeExecute(env, client, paramSQLString,
           MssqlStatementParameterProcessor.getInstance());
     }
