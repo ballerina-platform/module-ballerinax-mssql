@@ -22,38 +22,12 @@ apply plugin: 'java'
 
 description = 'Ballerina - MSSQL Examples'
 
-def ballerinaModulePath = "${project.rootDir}/ballerina/"
-def ballerinaDistPath = "${ballerinaModulePath}/build/target/extracted-distributions/jballerina-tools-zip/jballerina-tools-${ballerinaLangVersion}"
-def ballerinaDist = "${buildDir}/target/ballerina-distribution"
+def ballerinaDist = "${project.rootDir}/target/ballerina-runtime"
 def examples = ["query-operation", "execute-operation", "complex-queries-operation", "batch-operation", "call-stored-procedures"]
 
 clean {
     examples.forEach { example ->
         delete "${projectDir}/${example}/target"
-    }
-}
-
-task copyDistribution(type: Copy) {
-    from ballerinaDistPath
-    into ballerinaDist
-}
-
-task copyPackageBala {
-    doLast {
-        copy {
-            from "${ballerinaModulePath}/build/cache_parent"
-            into "${ballerinaDist}/repo"
-            copy {
-                into("bala/ballerina") {
-                    from "bala/ballerina"
-                }
-            }
-            copy {
-                into("cache/ballerina/") {
-                    from "cache/ballerina"
-                }
-            }
-        }
     }
 }
 
@@ -146,10 +120,8 @@ task stopExampleDockerContainer() {
     }
 }
 
-copyDistribution.dependsOn ":mssql-ballerina:build"
-copyPackageBala.dependsOn copyDistribution
-buildExamples.dependsOn copyPackageBala, updateTomlFiles
-testExamples.dependsOn copyPackageBala, updateTomlFiles
+buildExamples.dependsOn ":mssql-ballerina:build", updateTomlFiles
+testExamples.dependsOn ":mssql-ballerina:build", updateTomlFiles
 test.dependsOn testExamples
 build.dependsOn buildExamples
 build.finalizedBy stopExampleDockerContainer
