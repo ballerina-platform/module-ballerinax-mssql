@@ -423,16 +423,16 @@ function testInsertIntoGeometricDataTable2() returns error? {
 }
 function testInsertIntoGeometricDataTable3() returns error? {
     int rowId = 22;
-    PointValue pointType = new("");
-    LineStringValue lineStringType = new("");
-    GeometryCollectionValue geometryType = new("");
-    CircularStringValue circularStringType = new("");
-    CompoundCurveValue compoundCurveType = new("");
-    PolygonValue polygonType = new("");
-    MultiPolygonValue multiPolygonType = new("");
-    CurvePolygonValue curvePolygonType = new("");
-    MultiLineStringValue multiLineStringType = new("");
-    MultiPointValue multiPointType = new("");
+    PointValue pointType = new ();
+    LineStringValue lineStringType = new ();
+    GeometryCollectionValue geometryType = new ();
+    CircularStringValue circularStringType = new ();
+    CompoundCurveValue compoundCurveType = new ();
+    PolygonValue polygonType = new ();
+    MultiPolygonValue multiPolygonType = new ();
+    CurvePolygonValue curvePolygonType = new ();
+    MultiLineStringValue multiLineStringType = new ();
+    MultiPointValue multiPointType = new ();
 
     sql:ParameterizedQuery sqlQuery =
       `INSERT INTO GeometricTypes (row_id, point_type, lineString_type, geometry_type, circularstring_type, compoundcurve_type,
@@ -478,8 +478,8 @@ function testInsertIntoMoneyDataTable2() returns error? {
 }
 function testInsertIntoMoneyDataTable3() returns error? {
     int rowId = 4;
-    MoneyValue moneyType = new("");
-    SmallMoneyValue smallMoneyType = new("");
+    MoneyValue moneyType = new ();
+    SmallMoneyValue smallMoneyType = new ();
 
     sql:ParameterizedQuery sqlQuery =
         `INSERT INTO MoneyTypes (row_id, money_type, smallmoney_type)

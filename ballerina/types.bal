@@ -20,7 +20,7 @@ import ballerina/sql;
 
 # Represents Point Datatype in MSSQL.
 #
-# + x - The x coordinate of the point
+# + x - The x cordinate of the point
 # + y - The y coordinate of the point
 public type Point record {
     decimal x;
@@ -47,10 +47,10 @@ public type GeometryCollectionElement PointValue | LineStringValue | CircularStr
 # + srid - The spatial reference ID of the instance
 public distinct class PointValue {
     *sql:TypedValue;
-    public Point|string value;
+    public Point|string? value;
     public int? srid = ();
     
-    public isolated function init(Point|string value, int? srid = ()) {
+    public isolated function init(Point|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -62,10 +62,10 @@ public distinct class PointValue {
 # + srid - The spatial reference ID of the instance
 public distinct class MultiPointValue {
     *sql:TypedValue;
-    public Point[]|string value;
+    public Point[]|string? value;
     public int? srid = ();
 
-    public isolated function init(Point[]|string value, int? srid = ()) {
+    public isolated function init(Point[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -77,10 +77,10 @@ public distinct class MultiPointValue {
 # + srid - The spatial reference ID of the instance
 public distinct class LineStringValue {
     *sql:TypedValue;
-    public Point[]|string value;
+    public Point[]|string? value;
     public int? srid = ();
 
-    public isolated function init(Point[]|string value, int? srid = ()) {
+    public isolated function init(Point[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -92,10 +92,10 @@ public distinct class LineStringValue {
 # + srid - The spatial reference ID of the instance
 public distinct class MultiLineStringValue {
     *sql:TypedValue;
-    public LineStringValue[]|string value;
+    public LineStringValue[]|string? value;
     public int? srid = ();
 
-    public isolated function init(LineStringValue[]|string value, int? srid = ()) {
+    public isolated function init(LineStringValue[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -107,10 +107,10 @@ public distinct class MultiLineStringValue {
 # + srid - The spatial reference ID of the instance
 public distinct class CircularStringValue {
     *sql:TypedValue;
-    public Point[]|string value;
+    public Point[]|string? value;
     public int? srid = ();
 
-    public isolated function init(Point[]|string value, int? srid = ()) {
+    public isolated function init(Point[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -125,7 +125,7 @@ public distinct class CompoundCurveValue {
     public CompoundCurveElement[]|string? value;
     public int? srid = ();
 
-    public isolated function init(CompoundCurveElement[]|string value, int? srid = ()) {
+    public isolated function init(CompoundCurveElement[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -137,10 +137,10 @@ public distinct class CompoundCurveValue {
 # + srid - The spatial reference ID of the instance
 public distinct class PolygonValue {
     *sql:TypedValue;
-    public LineStringValue[]|string value;
+    public LineStringValue[]|string? value;
     public int? srid = ();
 
-    public isolated function init(LineStringValue[]|string value, int? srid = ()) {
+    public isolated function init(LineStringValue[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -152,10 +152,10 @@ public distinct class PolygonValue {
 # + srid - The spatial reference ID of the instance
 public distinct class MultiPolygonValue {
     *sql:TypedValue;
-    public PolygonValue[]|string value;
+    public PolygonValue[]|string? value;
     public int? srid = ();
 
-    public isolated function init(PolygonValue[]|string value, int? srid = ()) {
+    public isolated function init(PolygonValue[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -167,10 +167,10 @@ public distinct class MultiPolygonValue {
 # + srid - The spatial reference ID of the instance
 public distinct class CurvePolygonValue {
     *sql:TypedValue;
-    public CircularArcRing[]|string value;
+    public CircularArcRing[]|string? value;
     public int? srid = ();
 
-    public isolated function init(CircularArcRing[]|string value, int? srid = ()) {
+    public isolated function init(CircularArcRing[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -182,10 +182,10 @@ public distinct class CurvePolygonValue {
 # + srid - The spatial reference ID of the instance
 public distinct class GeometryCollectionValue {
     *sql:TypedValue;
-    public GeometryCollectionElement[]|string value;
+    public GeometryCollectionElement[]|string? value;
     public int? srid = ();
 
-    public isolated function init(GeometryCollectionElement[]|string value, int? srid = ()) {
+    public isolated function init(GeometryCollectionElement[]|string? value = (), int? srid = ()) {
         self.value = value;
         self.srid = srid;
     }
@@ -198,9 +198,9 @@ public distinct class GeometryCollectionValue {
 # + value - Value of parameter passed into the SQL statement
 public distinct class MoneyValue {
     *sql:TypedValue;
-    public decimal|float|string value;
+    public decimal|float|string? value;
 
-    public isolated function init(decimal|float|string value) {
+    public isolated function init(decimal|float|string? value = ()) {
         self.value = value;
     }  
 }
@@ -210,9 +210,9 @@ public distinct class MoneyValue {
 # + value - Value of parameter passed into the SQL statement
 public distinct class SmallMoneyValue {
     *sql:TypedValue;
-    public decimal|float|string value;
+    public decimal|float|string? value;
 
-    public isolated function init(decimal|float|string value) {
+    public isolated function init(decimal|float|string? value = ()) {
         self.value = value;
     }  
 }
