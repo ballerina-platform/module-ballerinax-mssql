@@ -34,9 +34,9 @@ function initCallProceduresTests() returns error? {
         CREATE TABLE ExactNumeric(
             row_id INT PRIMARY KEY,
             bigint_type  bigint,
-            numeric_type  numeric(10,5),
+            numeric_type  numeric(10, 5),
             smallint_type smallint,
-            decimal_type decimal(5,2),
+            decimal_type decimal(5, 2),
             int_type INT,
             tinyint_type tinyint,
         );
@@ -57,9 +57,9 @@ function initCallProceduresTests() returns error? {
 
         INSERT INTO ApproximateNumeric (row_id, float_type, real_type) VALUES (1, 1.79E+308, -1.18E-38);
 
-        DROP TABLE IF EXISTS DateandTime;
+        DROP TABLE IF EXISTS DateAndTime;
 
-        CREATE TABLE DateandTime(
+        CREATE TABLE DateAndTime(
             row_id INT PRIMARY KEY,
             date_type  date,
             dateTimeOffset_type  datetimeoffset,
@@ -69,7 +69,7 @@ function initCallProceduresTests() returns error? {
             time_type time
         );
 
-        INSERT INTO DateandTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
+        INSERT INTO DateAndTime (row_id, date_type, dateTimeOffset_type, dateTime2_type, smallDateTime_type , dateTime_type, time_type)
         VALUES (1, '2017-06-26', '2020-01-01 19:14:51 +05:30', '1900-01-01 00:25:00.0021425', '2007-05-10 10:00:20', '2017-06-26 09:54:21.325', '09:46:22');
 
         DROP TABLE IF EXISTS StringTypes;
@@ -81,7 +81,7 @@ function initCallProceduresTests() returns error? {
             text_type TEXT
         );
 
-        INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type) VALUES (1,'This is a varchar','This is a char','This is a long text');
+        INSERT INTO StringTypes (row_id, varchar_type, char_type, text_type) VALUES (1, 'This is a varchar', 'This is a char', 'This is a long text');
 
         INSERT INTO StringTypes (row_id) VALUES (3);
 
@@ -112,8 +112,8 @@ function initCallProceduresTests() returns error? {
             @smallint_in smallint,
             @int_in int,
             @bigint_in bigint,
-            @decimal_in decimal(5,2),
-            @numeric_in numeric(10,5),
+            @decimal_in decimal(5, 2),
+            @numeric_in numeric(10, 5),
             @tinyint_in tinyint
         AS
             SET NOCOUNT ON
@@ -171,8 +171,8 @@ function initCallProceduresTests() returns error? {
             @int_out int OUTPUT,
             @bigint_out bigint OUTPUT,
             @tinyint_out tinyint OUTPUT,
-            @decimal_out decimal(5,2) OUTPUT,
-            @numeric_out numeric(10,5) OUTPUT
+            @decimal_out decimal(5, 2) OUTPUT,
+            @numeric_out numeric(10, 5) OUTPUT
         )
         AS
             SET NOCOUNT ON
@@ -192,16 +192,18 @@ function initCallProceduresTests() returns error? {
     sql:ParameterizedQuery query7 = `
         CREATE PROCEDURE DateTimeOutProcedure
             @row_id_in int,
-            @dateTimeOffset_type_out  datetimeoffset OUTPUT
+            @dateTimeOffset_type_out datetimeoffset OUTPUT
         AS
             SET NOCOUNT OFF
             SELECT @dateTimeOffset_type_out = dateTimeOffset_type
-            FROM DateandTime
+            FROM DateAndTime
             WHERE row_id = @row_id_in;
     `;
 
-    // Data for timestamp retrieval test
-    sql:ParameterizedQuery query8 = `INSERT INTO DateandTime (row_id, dateTimeOffset_type) VALUES (2,  '2021-07-21 19:14:51.00 +01:30')`;
+    sql:ParameterizedQuery query8 = `
+        INSERT INTO DateAndTime (row_id, dateTimeOffset_type)
+        VALUES (2,  '2021-07-21 19:14:51.00 +01:30')
+    `;
 
     sql:ParameterizedQuery query9 = `
         CREATE PROCEDURE SelectStringTypesMultiple AS
