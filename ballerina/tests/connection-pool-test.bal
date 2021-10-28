@@ -84,13 +84,13 @@ Options options = {
 }
 function testLocalSharedConnectionPoolConfigSingleDestination() returns error? {
     sql:ConnectionPool pool = {maxOpenConnections: 5};
-    Client dbClient1 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
-    Client dbClient2 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
-    Client dbClient3 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
-    Client dbClient4 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
-    Client dbClient5 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
+    Client dbClient1 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
+    Client dbClient2 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
+    Client dbClient3 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
+    Client dbClient4 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
+    Client dbClient5 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
     
-    (stream<record{}, error?>)[] resultArray = [];
+    stream<record {}, error?>[] resultArray = [];
     resultArray[0] = dbClient1->query(`select count(*) as val from Customers where registrationID = 1`, Result);
     resultArray[1] = dbClient2->query(`select count(*) as val from Customers where registrationID = 1`, Result);
     resultArray[2] = dbClient3->query(`select count(*) as val from Customers where registrationID = 2`, Result);
@@ -116,7 +116,7 @@ function testLocalSharedConnectionPoolConfigSingleDestination() returns error? {
     // custom pool options. Since each select operation holds up one connection each, the last select
     // operation should return an error
     i = 0;
-    while(i < 5) {
+    while i < 5 {
         test:assertEquals(returnArray[i], 1);
         i = i + 1;
     }
@@ -129,13 +129,13 @@ function testLocalSharedConnectionPoolConfigSingleDestination() returns error? {
 function testLocalSharedConnectionPoolConfigMultipleDestinations() returns error? {
     sql:ConnectionPool pool1 = {maxOpenConnections: 3};
     sql:ConnectionPool pool2 = {maxOpenConnections: 4};
-    Client dbClient1 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool1);
-    Client dbClient2 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool1);
-    Client dbClient3 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool1);
-    Client dbClient4 = check new (host, user, password, poolDB_2, poolPort, options=options, connectionPool=pool2);
-    Client dbClient5 = check new (host, user, password, poolDB_2, poolPort, options=options, connectionPool=pool2);
-    Client dbClient6 = check new (host, user, password, poolDB_2, poolPort, options=options, connectionPool=pool2);
-    Client dbClient7 = check new (host, user, password, poolDB_2, poolPort, options=options, connectionPool=pool2);
+    Client dbClient1 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool1);
+    Client dbClient2 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool1);
+    Client dbClient3 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool1);
+    Client dbClient4 = check new(host, user, password, poolDB_2, poolPort, options = options, connectionPool = pool2);
+    Client dbClient5 = check new(host, user, password, poolDB_2, poolPort, options = options, connectionPool = pool2);
+    Client dbClient6 = check new(host, user, password, poolDB_2, poolPort, options = options, connectionPool = pool2);
+    Client dbClient7 = check new(host, user, password, poolDB_2, poolPort, options = options, connectionPool = pool2);
 
     stream<record {} , error?>[] resultArray = [];
     resultArray[0] = dbClient1->query(`select count(*) as val from Customers where registrationID = 1`, Result);
@@ -167,7 +167,7 @@ function testLocalSharedConnectionPoolConfigMultipleDestinations() returns error
 
     // Since max pool size is 3, the last select function call going through each pool should fail.
     i = 0;
-    while(i < 3) {
+    while i < 3 {
         test:assertEquals(returnArray[i], 1);
         test:assertEquals(returnArray[i + 4], 1);
         i = i + 1;
@@ -182,28 +182,28 @@ function testLocalSharedConnectionPoolConfigMultipleDestinations() returns error
 }
 function testLocalSharedConnectionPoolCreateClientAfterShutdown() returns error? {
     sql:ConnectionPool pool = {maxOpenConnections: 2};
-    Client dbClient1 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
-    Client dbClient2 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
+    Client dbClient1 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
+    Client dbClient2 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
 
-    var dt1 = dbClient1->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
-    var dt2 = dbClient2->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
-    int|error result1 = getReturnValue(dt1);
-    int|error result2 = getReturnValue(dt2);
+    stream<record {}, error?> dt1 = dbClient1->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
+    stream<record {}, error?> dt2 = dbClient2->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
+    int result1 = check getReturnValue(dt1);
+    int result2 = check getReturnValue(dt2);
 
     // Since both clients are stopped the pool is supposed to shutdown.
     check dbClient1.close();
     check dbClient2.close();
 
     // This call should return an error as pool is shutdown
-    var dt3 = dbClient1->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
+    stream<record {}, error?> dt3 = dbClient1->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
     int|error result3 = getReturnValue(dt3);
 
     // Now a new pool should be created
-    Client dbClient3 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
+    Client dbClient3 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
 
     // This call should be successful
-    var dt4 = dbClient3->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
-    int|error result4 = getReturnValue(dt4);
+    stream<record {}, error?> dt4 = dbClient3->query(`SELECT count(*) as val from Customers where registrationID = 1`, Result);
+    int result4 = check getReturnValue(dt4);
 
     check dbClient3.close();
 
@@ -227,13 +227,13 @@ function testLocalSharedConnectionPoolStopInitInterleave() returns error? {
     }
 
     check wait w1;
-    int|error result = wait w2;
+    int result = check wait w2;
     test:assertEquals(result, 1);
 }
 
 function testLocalSharedConnectionPoolStopInitInterleaveHelper1(sql:ConnectionPool pool, string database)
 returns error? {
-    Client dbClient = check new (host, user, password, database, poolPort, options=options, connectionPool=pool);
+    Client dbClient = check new(host, user, password, database, poolPort, options = options, connectionPool = pool);
     runtime:sleep(1);
     check dbClient.close();
 }
@@ -241,7 +241,7 @@ returns error? {
 function testLocalSharedConnectionPoolStopInitInterleaveHelper2(sql:ConnectionPool pool, string database)
 returns @tainted int|error {
     runtime:sleep(1);
-    Client dbClient = check new (host, user, password, database, poolPort, options=options, connectionPool=pool);
+    Client dbClient = check new(host, user, password, database, poolPort, options = options, connectionPool = pool);
     var dt = dbClient->query(`SELECT COUNT(*) as val from Customers where registrationID = 1`, Result);
     int|error count = getReturnValue(dt);
     check dbClient.close();
@@ -253,10 +253,10 @@ returns @tainted int|error {
 }
 function testShutDownUnsharedLocalConnectionPool() returns error? {
     sql:ConnectionPool pool = {maxOpenConnections: 2};
-    Client dbClient = check new (host, user, password, poolDB_1, options=options, connectionPool=pool);
+    Client dbClient = check new(host, user, password, poolDB_1, options = options, connectionPool = pool);
 
     var result = dbClient->query(`select count(*) as val from Customers where registrationID = 1`, Result);
-    int|error retVal1 = getReturnValue(result);
+    int retVal1 = check getReturnValue(result);
     // Pool should be shutdown as the only client using it is stopped.
     check dbClient.close();
     // This should result in an error return.
@@ -273,32 +273,32 @@ function testShutDownUnsharedLocalConnectionPool() returns error? {
 }
 function testShutDownSharedConnectionPool() returns error? {
     sql:ConnectionPool pool = {maxOpenConnections: 1};
-    Client dbClient1 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
-    Client dbClient2 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
+    Client dbClient1 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
+    Client dbClient2 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
 
-    var result1 = dbClient1->query(`select count(*) as val from Customers where registrationID = 1`, Result);
-    int|error retVal1 = getReturnValue(result1);
+    stream<record {}, error?> result1 = dbClient1->query(`select count(*) as val from Customers where registrationID = 1`, Result);
+    int retVal1 = check getReturnValue(result1);
 
     var result2 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
-    int|error retVal2 = getReturnValue(result2);
+    int retVal2 = check getReturnValue(result2);
 
     // Only one client is closed so pool should not shutdown.
     check dbClient1.close();
 
     // This should be successful as pool is still up.
-    var result3 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
+    stream<record {}, error?> result3 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
     int|error retVal3 = getReturnValue(result3);
 
     // This should fail because, even though the pool is up, this client was stopped
-    var result4 = dbClient1->query(`select count(*) as val from Customers where registrationID = 2`, Result);
+    stream<record {}, error?> result4 = dbClient1->query(`select count(*) as val from Customers where registrationID = 2`, Result);
     int|error retVal4 = getReturnValue(result4);
 
     // Now pool should be shutdown as the only remaining client is stopped.
     check dbClient2.close();
 
     // This should fail because this client is stopped.
-    var result5 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
-    int|error retVal5 = getReturnValue(result4);
+    stream<record {}, error?> result5 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
+    int|error retVal5 = getReturnValue(result5);
 
     test:assertEquals(retVal1, 1);
     test:assertEquals(retVal2, 1);
@@ -312,24 +312,24 @@ function testShutDownSharedConnectionPool() returns error? {
 }
 function testShutDownPoolCorrespondingToASharedPoolConfig() returns error? {
     sql:ConnectionPool pool = {maxOpenConnections: 1};
-    Client dbClient1 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
-    Client dbClient2 = check new (host, user, password, poolDB_1, poolPort, options=options, connectionPool=pool);
+    Client dbClient1 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
+    Client dbClient2 = check new(host, user, password, poolDB_1, poolPort, options = options, connectionPool = pool);
 
-    var result1 = dbClient1->query(`select count(*) as val from Customers where registrationID = 1`, Result);
-    int|error retVal1 = getReturnValue(result1);
+    stream<record {}, error?> result1 = dbClient1->query(`select count(*) as val from Customers where registrationID = 1`, Result);
+    int retVal1 = check getReturnValue(result1);
 
-    var result2 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
-    int|error retVal2 = getReturnValue(result2);
+    stream<record {}, error?> result2 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
+    int retVal2 = check getReturnValue(result2);
 
     // This should result in stopping the pool used by this client as it was the only client using that pool.
     check dbClient1.close();
 
     // This should be successful as the pool belonging to this client is up.
-    var result3 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
-    int|error retVal3 = getReturnValue(result3);
+    stream<record {}, error?> result3 = dbClient2->query(`select count(*) as val from Customers where registrationID = 2`, Result);
+    int retVal3 = check getReturnValue(result3);
 
     // This should fail because this client was stopped.
-    var result4 = dbClient1->query(`select count(*) as val from Customers where registrationID = 2`, Result);
+    stream<record {}, error?> result4 = dbClient1->query(`select count(*) as val from Customers where registrationID = 2`, Result);
     int|error retVal4 = getReturnValue(result4);
 
     check dbClient2.close();
@@ -345,16 +345,16 @@ function testShutDownPoolCorrespondingToASharedPoolConfig() returns error? {
 }
 function testStopClientUsingGlobalPool() returns error? {
     // This client doesn't have pool config specified therefore, global pool will be used.
-    Client dbClient = check new (host, user, password, poolDB_1, options=options);
+    Client dbClient = check new(host, user, password, poolDB_1, options = options);
 
-    var result1 = dbClient->query(`select count(*) as val from Customers where registrationID = 1`, Result);
-    int|error retVal1 = getReturnValue(result1);
+    stream<record {}, error?> result1 = dbClient->query(`select count(*) as val from Customers where registrationID = 1`, Result);
+    int retVal1 = check getReturnValue(result1);
 
     // This will merely stop this client and will not have any effect on the pool because it is the global pool.
     check dbClient.close();
 
     // This should fail because this client was stopped, even though the pool is up.
-    var result2 = dbClient->query(`select count(*) as val from Customers where registrationID = 1`, Result);
+    stream<record {}, error?> result2 = dbClient->query(`select count(*) as val from Customers where registrationID = 1`, Result);
     int|error retVal2 = getReturnValue(result2);
 
     test:assertEquals(retVal1, 1);
@@ -364,9 +364,9 @@ function testStopClientUsingGlobalPool() returns error? {
 isolated function getReturnValue(stream<record{}, error?> queryResult) returns int|error {
     int count = -1;
     record {|record {} value;|}? data = check queryResult.next();
-    if (data is record {|record {} value;|}) {
+    if data is record {|record {} value;|} {
         record {} value = data.value;
-        if (value is Result) {
+        if value is Result {
             count = value.val;
         }
     }
