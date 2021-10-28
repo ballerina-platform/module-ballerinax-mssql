@@ -20,7 +20,7 @@ import ballerina/sql;
 
 # Represents Point Datatype in MSSQL.
 #
-# + x - The x cordinate of the point
+# + x - The x coordinate of the point
 # + y - The y coordinate of the point
 public type Point record {
     decimal x;
