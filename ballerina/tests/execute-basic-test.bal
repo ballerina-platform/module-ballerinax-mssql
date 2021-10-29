@@ -229,7 +229,7 @@ function testInsertWithStringAndSelectTable() returns error? {
     test:assertExactEquals(result.affectedRowCount, 1, "Affected row count is different.");
 
     Client dbClient = check getMssqlClient(executeDb);
-    ExactNumericType queryResult = check dbClient->queryRow(`SELECT * from StringTypes where id = ${intIDVal}`);
+    StringData queryResult = check dbClient->queryRow(`SELECT * from StringTypes where id = ${intIDVal}`);
 
     StringData expectedInsertRow = {
         id: 25,

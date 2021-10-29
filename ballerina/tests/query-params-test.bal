@@ -44,7 +44,6 @@ function initQueryParamsTests() returns error? {
             money_type money
         );
 
-
         INSERT INTO ExactNumeric (row_id, bigint_type, numeric_type, bit_type, smallint_type, decimal_type, smallmoney_type, int_type, tinyint_type, money_type)
         VALUES(1, 9223372036854775807, 12.12000, 1, 32767, 123.41, 214748.3647, 2147483647, 255, 922337203685477.2807);
 
@@ -215,7 +214,7 @@ function queryCharParam() returns error? {
 }
 function queryIntAndStringParam() returns error? {
     string charVal = "This is a char";
-    int rowId =1;
+    int rowId = 1;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE char_type = ${charVal} AND row_id = ${rowId}`;
     validateStringTypeTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
@@ -242,12 +241,14 @@ function queryBitStringParam() returns error? {
     groups: ["query","query-simple-params"]
 }
 function queryBitInvalidIntParam() returns error? {
-    sql:BitValue typeVal = new (12);
+    sql:BitValue typeVal = new(12);
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM ExactNumeric WHERE bit_type = ${typeVal}`;
-    record{}|error? returnVal = trap queryMssqlClient(sqlQuery, database = simpleParamsDb);
-    test:assertTrue(returnVal is error);
-    error dbError = <error> returnVal;
-    test:assertEquals(dbError.message(), "Only 1 or 0 can be passed for BitValue SQL Type, but found :12");
+    record {}|error? returnVal = queryMssqlClient(sqlQuery, database = simpleParamsDb);
+    if returnVal is error {
+        test:assertEquals(returnVal.message(), "Only 1 or 0 can be passed for BitValue SQL Type, but found :12");
+    } else {
+        test:assertFail("Error expected.");
+    }
 }
 
 @test:Config {
@@ -256,8 +257,8 @@ function queryBitInvalidIntParam() returns error? {
 function queryDateValueParam() returns error? {
     int rowId = 1;
     time:Date dateValue = {year: 2017, month: 6, day: 26};
-    sql:DateValue dateValue1 = new (dateValue);
-    sql:DateValue dateValue2 = new ("2017-06-26");
+    sql:DateValue dateValue1 = new(dateValue);
+    sql:DateValue dateValue2 = new("2017-06-26");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE date_type = ${dateValue1} AND row_id = ${rowId}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM DateandTime WHERE date_type = ${dateValue2} AND row_id = ${rowId}`;
     validateDateTimeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
@@ -269,7 +270,7 @@ function queryDateValueParam() returns error? {
 }
 function queryDateTimeOffsetValueParam() returns error? {
     int rowId = 1;
-    time:Civil dateTimeOffsetValue = {year: 2020, month:1, day: 1, hour: 19, minute: 14, second:51, "utcOffset": {hours: 5, minutes: 30}};
+    time:Civil dateTimeOffsetValue = {year: 2020, month:1, day: 1, hour: 19, minute: 14, second: 51, "utcOffset": {hours: 5, minutes: 30}};
     sql:DateTimeValue dateTimeOffsetValue1 = new(dateTimeOffsetValue);
     sql:DateTimeValue dateTimeOffsetValue2 = new("2020-01-01 19:14:51.0000000 +05:30");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE dateTimeOffset_type = ${dateTimeOffsetValue1} AND row_id = ${rowId}`;
@@ -283,9 +284,9 @@ function queryDateTimeOffsetValueParam() returns error? {
 }
 function queryDateTime2ValueParam() returns error? {
     int rowId = 1;
-    time:Civil dateTimeValue = {year: 1900, month:1, day: 1, hour: 0, minute: 25, second:0.0021425};
-    sql:DateTimeValue dateTimeValue1 = new (dateTimeValue);
-    sql:DateTimeValue dateTimeValue2 = new ("1900-01-01 00:25:00.0021425");
+    time:Civil dateTimeValue = {year: 1900, month:1, day: 1, hour: 0, minute: 25, second: 0.0021425};
+    sql:DateTimeValue dateTimeValue1 = new(dateTimeValue);
+    sql:DateTimeValue dateTimeValue2 = new("1900-01-01 00:25:00.0021425");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE dateTime2_type = ${dateTimeValue1} AND row_id = ${rowId}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM DateandTime WHERE dateTime2_type = ${dateTimeValue2} AND row_id = ${rowId}`;
     validateDateTimeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
@@ -297,9 +298,9 @@ function queryDateTime2ValueParam() returns error? {
 }
 function querySmallDateTimeValueParam() returns error? {
     int rowId = 1;
-    time:Civil smallDateTimeValue = {year: 2007, month: 5, day: 10, hour: 10, minute: 0, second:0.0};
-    sql:DateTimeValue smallDateTimeValue1 = new (smallDateTimeValue);
-    sql:DateTimeValue smallDateTimeValue2 = new ("2007-05-10 10:00:00.0");
+    time:Civil smallDateTimeValue = {year: 2007, month: 5, day: 10, hour: 10, minute: 0, second: 0.0};
+    sql:DateTimeValue smallDateTimeValue1 = new(smallDateTimeValue);
+    sql:DateTimeValue smallDateTimeValue2 = new("2007-05-10 10:00:00.0");
     sql:ParameterizedQuery sqlQuery1 = `SELECT * FROM DateandTime WHERE smallDateTime_type = ${smallDateTimeValue1} AND row_id = ${rowId}`;
     sql:ParameterizedQuery sqlQuery2 = `SELECT * FROM DateandTime WHERE smallDateTime_type = ${smallDateTimeValue2} AND row_id = ${rowId}`;
     validateDateTimeTableResult(check queryMssqlClient(sqlQuery1, database = simpleParamsDb));
@@ -311,7 +312,7 @@ function querySmallDateTimeValueParam() returns error? {
 }
 function queryTimeValueParam() returns error? {
     int rowId = 1;
-    sql:TimeValue timeValue2 = new ("09:46:22");
+    sql:TimeValue timeValue2 = new("09:46:22");
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM DateandTime WHERE time_type = ${timeValue2} AND row_id = ${rowId}`;
     validateDateTimeTableResult(check queryMssqlClient(sqlQuery, database = simpleParamsDb));
 }
@@ -337,8 +338,7 @@ function queryRecordNegative() returns sql:Error? {
     Client dbClient = check new (host, user, password, simpleParamsDb, port);
     record {}|sql:Error queryResult = dbClient->queryRow(sqlQuery);
     check dbClient.close();
-    if queryResult is sql:Error {
-        test:assertTrue(queryResult is sql:NoRowsError);
+    if queryResult is sql:NoRowsError {
         test:assertTrue(queryResult.message().endsWith("Query did not retrieve any rows."), "Incorrect error message");
    } else {
        test:assertFail("Expected no rows error with empty query result.");
@@ -350,9 +350,9 @@ function queryRecordNegative() returns sql:Error? {
 }
 function queryRecordNegative2() returns error? {
     int rowId = 1;
-    Client dbClient = check new (host, user, password, simpleParamsDb, port);
+    Client dbClient = check new(host, user, password, simpleParamsDb, port);
     sql:ParameterizedQuery sqlQuery = `SELECT * from ExactNumeric WHERE row_id = ${rowId}`;
-    record{}|int|error queryResult = dbClient->queryRow(sqlQuery);
+    record {}|int|error queryResult = dbClient->queryRow(sqlQuery);
     check dbClient.close();
     if queryResult is error {
         test:assertEquals(queryResult.message(), "Return type cannot be a union of multiple types.");
@@ -368,7 +368,7 @@ function queryRecordNegative3() returns error? {
     int rowId = 1;
     Client dbClient = check new (host, user, password, simpleParamsDb, port);
     sql:ParameterizedQuery sqlQuery = `SELECT row_id, invalid_column_name from ExactNumeric WHERE row_id = ${rowId}`;
-    record{}|error queryResult = dbClient->queryRow(sqlQuery);
+    record {}|error queryResult = dbClient->queryRow(sqlQuery);
     check dbClient.close();
     if queryResult is error {
         test:assertTrue(queryResult.message().endsWith("Invalid column name 'invalid_column_name'.."),
@@ -397,11 +397,10 @@ function queryValueNegative1() returns error? {
     sql:ParameterizedQuery sqlQuery = `SELECT * from ExactNumeric WHERE row_id = ${rowId}`;
     int|error queryResult = dbClient->queryRow(sqlQuery);
     check dbClient.close();
-    if queryResult is error {
-        test:assertTrue(queryResult is sql:TypeMismatchError, "Incorrect error type");
+    if queryResult is sql:TypeMismatchError {
         test:assertEquals(queryResult.message(), "Expected type to be 'int' but found 'record{}'.");
     } else {
-        test:assertFail("Expected error when query result contains multiple columns.");
+        test:assertFail("Expected TypeMismatchError when query result contains multiple columns.");
     }
 }
 
@@ -416,16 +415,15 @@ function queryValueNegative2() returns error? {
     check dbClient.close();
     if queryResult is error {
         test:assertEquals(queryResult.message(),
-                        "SQL Type 'Retrieved SQL type' cannot be converted to ballerina type 'int'.",
-                        "Incorrect error message");
+                          "SQL Type 'Retrieved SQL type' cannot be converted to ballerina type 'int'.");
     } else {
         test:assertFail("Expected error when query returns unexpected result type.");
     }
 }
 
-isolated function validateExactNumericTableResult(record{}? returnData) {
+isolated function validateExactNumericTableResult(record {}? returnData) {
     decimal decimalVal = 123.41;
-    if (returnData is ()) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 1);
@@ -437,8 +435,8 @@ isolated function validateExactNumericTableResult(record{}? returnData) {
     } 
 }
 
-isolated function validateStringTypeTableResult(record{}? returnData) {
-    if (returnData is ()) {
+isolated function validateStringTypeTableResult(record {}? returnData) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 1);
@@ -448,10 +446,10 @@ isolated function validateStringTypeTableResult(record{}? returnData) {
     }
 }
 
-isolated function validateApproximateNumericTableResult(record{}? returnData) {
+isolated function validateApproximateNumericTableResult(record {}? returnData) {
     float floatVal = 1.79E+308;
     float realVal = -1.179999945774631E-38;
-    if (returnData is ()) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 1);
@@ -460,8 +458,8 @@ isolated function validateApproximateNumericTableResult(record{}? returnData) {
     }
 }
 
-isolated function validateDateTimeTableResult(record{}? returnData) {
-    if (returnData is ()) {
+isolated function validateDateTimeTableResult(record {}? returnData) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 1);
