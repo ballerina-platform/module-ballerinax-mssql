@@ -40,7 +40,7 @@ function testSSLConnection() returns error? {
             }
         }
     };
-    Client dbClient = check new (user = user, password = password, database = sslDb, port = port, options = options);
+    Client dbClient = check new(user = user, password = password, database = sslDb, port = port, options = options);
     test:assertEquals(dbClient.close(), ());
 }
 
@@ -61,7 +61,7 @@ function testSSLConnectionWithKeyStore() returns error? {
             }
         }
     };
-    Client dbClient = check new (user = user, password = password, database = sslDb, port = port, options = options);
+    Client dbClient = check new(user = user, password = password, database = sslDb, port = port, options = options);
     test:assertEquals(dbClient.close(), ());
 }
 

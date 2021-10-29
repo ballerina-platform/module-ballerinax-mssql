@@ -30,7 +30,7 @@ function initConnectionTests() returns error? {
     groups: ["connection", "connection-init"]
 }
 isolated function testConnectionWithNoFields() {
-    Client|sql:Error dbClient = new ();
+    Client|sql:Error dbClient = new();
     test:assertTrue(dbClient is sql:Error, "Initialising connection with no fields fails.");
 }
 
@@ -38,7 +38,7 @@ isolated function testConnectionWithNoFields() {
     groups: ["connection", "connection-init"]
 }
 function testWithURLParams() returns error? {
-    Client dbClient = check new (host = host, port = port, user = user, password = password, database = connectDB);
+    Client dbClient = check new(host = host, port = port, user = user, password = password, database = connectDB);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with params fails.");
 }
@@ -47,7 +47,7 @@ function testWithURLParams() returns error? {
     groups: ["connection", "connection-init"]
 }
 function testWithoutHost() returns error? {
-    Client dbClient = check new (port = port, user = user, password = password, database = connectDB);
+    Client dbClient = check new(port = port, user = user, password = password, database = connectDB);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection without host fails.");
 }
@@ -56,7 +56,7 @@ function testWithoutHost() returns error? {
     groups: ["connection", "connection-init"]
 }
 function testWithoutPort() returns error? {
-    Client dbClient = check new (host = host, user = user, password = password, database = connectDB);
+    Client dbClient = check new(host = host, user = user, password = password, database = connectDB);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection without port fails.");
 }
@@ -65,7 +65,7 @@ function testWithoutPort() returns error? {
     groups: ["connection", "connection-init"]
 }
 function testWithoutDB() returns error? {
-    Client dbClient = check new (user = user, password = password, port = port, host = host);
+    Client dbClient = check new(user = user, password = password, port = port, host = host);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection without database fails.");
 }
@@ -79,7 +79,7 @@ function testWithOptions() returns error? {
         socketTimeout: 60,
         loginTimeout: 60
     };
-    Client dbClient = check new (user = user, password = password, database = connectDB, port = port, options = options);
+    Client dbClient = check new(user = user, password = password, database = connectDB, port = port, options = options);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with options fails.");
 }
@@ -90,11 +90,11 @@ function testWithOptions() returns error? {
 function testWithConnectionPool() returns error? {
     sql:ConnectionPool connectionPool = {
         maxOpenConnections: 25,
-        maxConnectionLifeTime : 15,
-        minIdleConnections : 15
+        maxConnectionLifeTime: 15,
+        minIdleConnections: 15
     };
-    Client dbClient = check new (user = user, password = password, database = connectDB, port = port,
-                                 connectionPool = connectionPool);
+    Client dbClient = check new(user = user, password = password, database = connectDB, port = port,
+                                connectionPool = connectionPool);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with option max connection pool fails.");
     test:assertEquals(connectionPool.maxOpenConnections, 25, "Configured max connection config is wrong.");
@@ -108,16 +108,16 @@ function testWithConnectionPool() returns error? {
 function testWithConnectionParams1() returns error? {
     sql:ConnectionPool connectionPool = {
         maxOpenConnections: 25,
-        maxConnectionLifeTime : 15,
-        minIdleConnections : 15
+        maxConnectionLifeTime: 15,
+        minIdleConnections: 15
     };
     Options options = {
         queryTimeout: 50,
         socketTimeout: 60,
         loginTimeout: 60
     };
-    Client dbClient = check new (host = host, user = user, password = password, database = connectDB, port = port,
-                                 options = options, connectionPool = connectionPool);
+    Client dbClient = check new(host = host, user = user, password = password, database = connectDB, port = port,
+                                options = options, connectionPool = connectionPool);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
 }
@@ -132,8 +132,8 @@ function testWithConnectionParams2() returns error? {
         minIdleConnections : 15
     };
     Options options = {};
-    Client dbClient = check new (host = host, user = user, password = password, options = options,
-                                 connectionPool = connectionPool);
+    Client dbClient = check new(host = host, user = user, password = password, options = options,
+                                connectionPool = connectionPool);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
 }
@@ -144,8 +144,8 @@ function testWithConnectionParams2() returns error? {
 function testWithConnectionParams3() returns error? {
     sql:ConnectionPool? connectionPool = ();
     Options? options = ();
-    Client dbClient = check new (host = host, user = user, password = password, options = options,
-                                 connectionPool = connectionPool);
+    Client dbClient = check new(host = host, user = user, password = password, options = options,
+                                connectionPool = connectionPool);
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with connection params fails.");
 }

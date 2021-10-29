@@ -57,7 +57,7 @@ public isolated client class Client {
     #             column names of the query result set will be used for the record attributes
     # + return - Stream of records in the type of `rowType`
     remote isolated function query(sql:ParameterizedQuery sqlQuery, typedesc<record {}> rowType = <>)
-    returns stream <rowType, sql:Error?> = @java:Method {
+    returns stream<rowType, sql:Error?> = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.QueryProcessorUtils",
         name: "nativeQuery"
     } external;
@@ -97,7 +97,7 @@ public isolated client class Client {
     #            remaining commands in the batch after a failure. The summary of the executed queries in case of an error
     #            can be accessed as `(<sql:BatchExecuteError> result).detail()?.executionResults`
     remote isolated function batchExecute(sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[]|sql:Error {
-        if (sqlQueries.length() == 0) {
+        if sqlQueries.length() == 0 {
             return error sql:ApplicationError(" Parameter 'sqlQueries' cannot be empty array");
         }
         return nativeBatchExecute(self, sqlQueries);
@@ -118,11 +118,10 @@ public isolated client class Client {
     # Closes the SQL client.
     #
     # + return - Possible error when closing the client
-    public isolated function close() returns sql:Error?  = @java:Method {
+    public isolated function close() returns sql:Error? = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils",
         name: "close"
     } external;
-
 }
 
 # Client Configuration record for connection initialization
@@ -146,7 +145,7 @@ type ClientConfiguration record {|
     string? password;
     string? database;
     Options? options;
-    sql:ConnectionPool?  connectionPool;
+    sql:ConnectionPool? connectionPool;
 |};
 
 # MSSQL database options.

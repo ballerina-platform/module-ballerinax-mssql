@@ -46,7 +46,8 @@ returns sql:ExecutionResult|error {
     return result;
 }
 
-function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, string? database = ()) returns sql:ExecutionResult[] | error {
+function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, string? database = ())
+returns sql:ExecutionResult[]|error {
     Client dbClient = check getMssqlClient(database);
     sql:ExecutionResult[] result = check dbClient->batchExecute(sqlQueries);
     check dbClient.close();
@@ -54,7 +55,7 @@ function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, strin
 }
 
 function callProcedureMssqlClient(sql:ParameterizedCallQuery sqlQuery, string database, typedesc<record {}>[] rowTypes = [])
-returns sql:ProcedureCallResult | error {
+returns sql:ProcedureCallResult|error {
     Client dbClient = check getMssqlClient(database);
     sql:ProcedureCallResult result = check dbClient->call(sqlQuery, rowTypes);
     check dbClient.close();

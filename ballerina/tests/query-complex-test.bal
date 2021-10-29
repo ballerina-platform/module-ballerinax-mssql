@@ -33,9 +33,9 @@ function initQueryComplexTests() returns error? {
         CREATE TABLE ExactNumeric(
             row_id INT PRIMARY KEY,
             bigint_type  bigint,
-            numeric_type  numeric(10,5),
+            numeric_type  numeric(10, 5),
             smallint_type smallint,
-            decimal_type decimal(5,2),
+            decimal_type decimal(5, 2),
             int_type INT,
             tinyint_type tinyint,
         );
@@ -126,7 +126,7 @@ function testSelectFromExactNumericDataTable() returns error? {
 
 isolated function validateComplexExactNumericTableResult(record{}? returnData) {
     decimal decimalVal = 123.41;
-    if (returnData is ()) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 1);
@@ -149,7 +149,7 @@ function testSelectFromExactNumericDataTable2() returns error? {
 }
 
 isolated function validateExactNumericTableResult2(record{}? returnData) {
-    if (returnData is ()) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 2);
@@ -175,11 +175,11 @@ public type CharacterRecord record {
 function testSelectFromStringDataTable() returns error? {
     int rowId = 1;
     sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE row_id = ${rowId}`;
-        _ = validateComplexStringTableResult(check queryMssqlClient(sqlQuery, CharacterRecord, complexQueryDb));
+    _ = validateComplexStringTableResult(check queryMssqlClient(sqlQuery, CharacterRecord, complexQueryDb));
 }
 
 isolated function validateComplexStringTableResult(record{}? returnData) {
-    if (returnData is ()) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 1);
@@ -195,12 +195,12 @@ isolated function validateComplexStringTableResult(record{}? returnData) {
 }
 function testSelectFromStringDataTable2() returns error? {
     int rowId = 3;
-        sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE row_id = ${rowId}`;
+    sql:ParameterizedQuery sqlQuery = `SELECT * FROM StringTypes WHERE row_id = ${rowId}`;
     _ = validateComplexStringTableResult2(check queryMssqlClient(sqlQuery, CharacterRecord, complexQueryDb));
 }
 
 isolated function validateComplexStringTableResult2(record{}? returnData) {
-    if (returnData is ()) {
+    if returnData is () {
         test:assertFail("Empty row returned.");
     } else {
         test:assertEquals(returnData["row_id"], 3);

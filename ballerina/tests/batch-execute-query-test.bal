@@ -32,11 +32,11 @@ function initBatchExecuteTests() returns error? {
 
         CREATE TABLE ExactNumeric(
             row_id INT PRIMARY KEY,
-            bigint_type  bigint,
-            numeric_type  numeric(10,5),
-            bit_type  bit,
+            bigint_type bigint,
+            numeric_type numeric(10, 5),
+            bit_type bit,
             smallint_type smallint,
-            decimal_type decimal(5,2),
+            decimal_type decimal(5, 2),
             smallmoney_type smallmoney,
             int_type int,
             tinyint_type tinyint,
@@ -165,8 +165,8 @@ function batchUpdateStringTypesTable() returns error? {
     sql:ParameterizedQuery[] sqlQueries =
         from var row in data
         select `UPDATE StringTypes SET varchar_type = ${row.varcharValue}
-               WHERE row_id = ${row.row_id}`;
-       validateBatchExecutionResult(check batchExecuteQueryMssqlClient(sqlQueries, batchExecuteDB), [1, 1, 1]);
+                WHERE row_id = ${row.row_id}`;
+    validateBatchExecutionResult(check batchExecuteQueryMssqlClient(sqlQueries, batchExecuteDB), [1, 1, 1]);
 }
 
 @test:Config {
@@ -174,7 +174,7 @@ function batchUpdateStringTypesTable() returns error? {
 }
 function testBatchExecuteWithEmptyQueryList() returns error? {
     Client dbClient = check new (host, user, password, batchExecuteDB, port);
-    sql:ExecutionResult[] | sql:Error result = dbClient->batchExecute([]);
+    sql:ExecutionResult[]|sql:Error result = dbClient->batchExecute([]);
     if (result is sql:Error) {
         string expectedErrorMessage = " Parameter 'sqlQueries' cannot be empty array";
         test:assertTrue(result.message().startsWith(expectedErrorMessage),
@@ -186,9 +186,8 @@ function testBatchExecuteWithEmptyQueryList() returns error? {
 
 isolated function validateBatchExecutionResult(sql:ExecutionResult[] results, int[] rowCount) {
     test:assertEquals(results.length(), rowCount.length());
-
     int i = 0;
-    while (i < results.length()) {
+    while i < results.length() {
         test:assertEquals(results[i].affectedRowCount, rowCount[i]);
         i = i + 1;
     }
