@@ -129,7 +129,7 @@ function testInsertTableWithGeneratedKeys() returns error? {
     string|int? insertId = result.lastInsertId;
     if insertId is string {
         int id = check int:fromString(insertId);
-            test:assertTrue(id > 1, "Last Insert ID is nil.");
+        test:assertTrue(id > 1, "Last Insert ID is nil.");
     } else {
         test:assertFail("Insert ID is not string");
     }
