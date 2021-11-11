@@ -54,7 +54,7 @@ public function main() returns error? {
 
     io:println("Query Result :");
     // Iterates the `streamData`.
-    error? e3 = streamData.forEach(function(Customer customer) {
+    check streamData.forEach(function(Customer customer) {
         io:println(customer);
     });
 
@@ -74,8 +74,8 @@ function beforeExample() returns sql:Error? {
     mssql:Client dbClient = check new (user = dbUsername, password = dbPassword, database = dbName);
 
     // Creates a table in the database.
-    sql:ExecutionResult result = check dbClient->execute(`DROP TABLE IF EXISTS Customers`);
-    result = check dbClient->execute(`
+    _ = check dbClient->execute(`DROP TABLE IF EXISTS Customers`);
+    _ = check dbClient->execute(`
         CREATE TABLE Customers (
             customerId INT NOT NULL IDENTITY PRIMARY KEY,
             firstName VARCHAR(300),
@@ -87,10 +87,10 @@ function beforeExample() returns sql:Error? {
     `);
 
     // Adds the records to the newly-created table.
-    result = check dbClient->execute(`
+    _ = check dbClient->execute(`
         INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Dan','Stuart', 1, 5000.75, 'USA')`);
-    result = check dbClient->execute(`
+    _ = check dbClient->execute(`
         INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Dan', 'Brown', 2, 10000, 'UK')`);
 

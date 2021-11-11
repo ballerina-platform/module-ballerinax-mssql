@@ -63,15 +63,14 @@ public function main() returns error? {
                 ${data.registrationID}, ${data.creditLimit}, ${data.country})`;
 
     // Inserts the records with the auto-generated ID.
-    sql:ExecutionResult[] result =
-                            check dbClient->batchExecute(insertQueries);
+    _ = check dbClient->batchExecute(insertQueries);
 
     // Checks the data after the batch execution.
     stream<record{}, error?> resultStream =
         dbClient->query(`SELECT * FROM Customers`);
 
     io:println("Data in Customers table:");
-    error? e = resultStream.forEach(function(record {} result) {
+    check resultStream.forEach(function(record {} result) {
          io:println(result.toString());
     });
 
@@ -91,8 +90,8 @@ function beforeExample() returns sql:Error? {
     mssql:Client dbClient = check new (user = dbUsername, password = dbPassword, database = dbName);
 
     // Creates a table in the database.
-    sql:ExecutionResult result = check dbClient->execute(`DROP TABLE IF EXISTS Customers`);
-    result = check dbClient->execute(`
+    _ = check dbClient->execute(`DROP TABLE IF EXISTS Customers`);
+    _ = check dbClient->execute(`
         CREATE TABLE Customers (
             customerId INT NOT NULL IDENTITY PRIMARY KEY,
             firstName VARCHAR(300),
