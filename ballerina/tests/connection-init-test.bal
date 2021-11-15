@@ -98,7 +98,7 @@ function testWithConnectionPool() returns error? {
     sql:Error? closeResult = dbClient.close();
     test:assertExactEquals(closeResult, (), "Initialising connection with option max connection pool fails.");
     test:assertEquals(connectionPool.maxOpenConnections, 25, "Configured max connection config is wrong.");
-    test:assertEquals(connectionPool.maxConnectionLifeTime, <decimal>15, "Configured max connection life time second is wrong.");
+    test:assertEquals(connectionPool.maxConnectionLifeTime, <decimal>30, "Configured max connection life time second is wrong.");
     test:assertEquals(connectionPool.minIdleConnections, 15, "Configured min idle connection is wrong.");
 }
 
