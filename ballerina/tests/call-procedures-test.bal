@@ -242,7 +242,7 @@ function testStringProcedureCall() returns error? {
     string textValue = "This is a text3";
 
     sql:ParameterizedCallQuery sqlQuery = `exec StringProcedure ${rowId}, ${charValue}, ${varcharValue}, ${textValue};`;
-    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [StringProcedureRecord]);
+    _ = check callProcedureMssqlClient(sqlQuery, proceduresDb, [StringProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT row_id, char_type, varchar_type, text_type FROM StringTypes WHERE row_id = ${rowId}`;
 
@@ -281,7 +281,7 @@ function testExactNumericProcedureCall() returns error? {
     sql:ParameterizedCallQuery sqlQuery =
         `exec ExactNumericProcedure ${rowId}, ${smallintType}, ${intType}, ${bigintType}, ${decimalType},
                                 ${numericType}, ${tinyintType};`;
-    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [ExactNumericProcedureRecord]);
+    _ = check callProcedureMssqlClient(sqlQuery, proceduresDb, [ExactNumericProcedureRecord]);
 
     sql:ParameterizedQuery query =
         `SELECT row_id, smallint_type, int_type, bigint_type, decimal_type, numeric_type, tinyint_type
@@ -314,7 +314,7 @@ function testApproximateNumericProcedureCall() returns error? {
     float floatType = 1.79E+308;
     float realType = -1.179999945774631E-38;
     sql:ParameterizedCallQuery sqlQuery = `exec ApproximateNumericProcedure ${rowId}, ${floatType}, ${realType};`;
-    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [ApproximateNumericProcedureRecord]);
+    _ = check callProcedureMssqlClient(sqlQuery, proceduresDb, [ApproximateNumericProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT * FROM ApproximateNumeric WHERE row_id = ${rowId}`;
 
@@ -350,7 +350,7 @@ function testDatetimeProcedureCall() returns error? {
     sql:TimeValue time = new ("09:46:22");
     sql:ParameterizedCallQuery sqlQuery =
         `exec DatetimeProcedure ${rowId}, ${date}, ${date_time_offset}, ${date_time2}, ${small_date_time}, ${date_time}, ${time};`;
-    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
+    _ = check callProcedureMssqlClient(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT * FROM DateandTime WHERE row_id = ${rowId}`;
 
@@ -381,7 +381,7 @@ function testMoneyProcedureCall() returns error? {
     MoneyValue moneyType = new(2356.12);
     SmallMoneyValue smallMoneyType = new(123.45);
     sql:ParameterizedCallQuery sqlQuery = `exec MoneyProcedure ${rowId}, ${moneyType}, ${smallMoneyType};`;
-    sql:ProcedureCallResult result = check callProcedureMssqlClient(sqlQuery, proceduresDb, [MoneyProcedureRecord]);
+    _ = check callProcedureMssqlClient(sqlQuery, proceduresDb, [MoneyProcedureRecord]);
 
     sql:ParameterizedQuery query = `SELECT *
         from MoneyTypes where row_id = ${rowId}`;
