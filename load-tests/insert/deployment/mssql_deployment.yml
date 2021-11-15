@@ -76,6 +76,7 @@ spec:
         - name: data
           persistentVolumeClaim:
             claimName: mssql-data-pvc
+            defaultMode: 0755
 ---
 ## Service
 apiVersion: v1
