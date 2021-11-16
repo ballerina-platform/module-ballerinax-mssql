@@ -22,17 +22,18 @@ import ballerina/sql;
 configurable string host = ?;
 configurable string username = ?;
 configurable string password = ?;
+configurable string database = ?;
 configurable int port = ?;
 
 final string name = "Bella";
 final string category = "Cat";
 final int price = 3000;
 
-final mysql:Client dbClient = check new (host = host, user = username, password = password, port = port);
+final mysql:Client dbClient = check new (host = host, user = username, password = password, port = port, database = database);
 
 isolated service /db on new http:Listener(9092) {
     resource isolated function post .(http:Caller caller) returns error? {
-        sql:ParameterizedQuery query = `INSERT INTO petdb.pet (Name, Category, Price)
+        sql:ParameterizedQuery query = `INSERT INTO pet (Name, Category, Price)
         VALUES (${name}, ${category}, ${price})`;
         sql:ExecutionResult|error result = dbClient->execute(query);
         http:Response response = new;
