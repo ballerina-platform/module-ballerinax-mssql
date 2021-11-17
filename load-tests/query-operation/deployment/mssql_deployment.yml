@@ -39,7 +39,7 @@ spec:
             - containerPort: 1433
           volumeMounts:
             - name: data
-              mountPath: /var/lib/mysql
+              mountPath: /var/lib/mssql
       volumes:
         - name: data
           persistentVolumeClaim:

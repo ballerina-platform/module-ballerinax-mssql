@@ -38,11 +38,9 @@ type Customer record {
 final mssql:Client dbClient = check new(host = dbHost, user = dbUsername, password = dbPassword, database = dbName, port = dbPort);
 
 public function main() returns error? {
-    // Runs the prerequisite setup for the example.
     check beforeExample();
 }
 
-// Initializes the database as a prerequisite to the example.
 function beforeExample() returns sql:Error? {
     mssql:Client mssqlClient = check new(host = dbHost, user = dbUsername, password = dbPassword, port = dbPort);
     _ = check mssqlClient->execute(`DROP DATABASE IF EXISTS EXAMPLE_DB`);
