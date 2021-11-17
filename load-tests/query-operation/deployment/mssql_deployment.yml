@@ -61,7 +61,6 @@ spec:
   selector:
     app: mssql
 ---
-## TODO: remove
 apiVersion: v1
 kind: Service
 metadata:
