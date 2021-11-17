@@ -30,6 +30,10 @@ spec:
       containers:
         - name: mssql-server
           image: mcr.microsoft.com/mssql/server:2019-latest
+          lifecycle:
+            postStart:
+              exec:
+                command: [ "/bin/sh", "-c", "sleep 30; /opt/mssql-tools/bin/sqlcmd -l 30 -S localhost -U sa -P Test123# -e -Q 'CREATE DATABASE EXAMPLE_DB';"]
           env:
             - name: SA_PASSWORD
               value: Test123#

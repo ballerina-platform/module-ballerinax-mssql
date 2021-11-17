@@ -14,7 +14,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/sql;
 import ballerinax/mssql;
 import ballerinax/mssql.driver as _;
 import ballerina/http;
@@ -35,19 +34,9 @@ type Customer record {
     string country;
 };
 
-final mssql:Client dbClient = check new(host = dbHost, user = dbUsername, password = dbPassword, database = dbName, port = dbPort);
+final mssql:Client dbClient = check new(host = dbHost, user = dbUsername, password = dbPassword, port = dbPort, database = dbName);
 
 public function main() returns error? {
-    check beforeExample();
-}
-
-function beforeExample() returns sql:Error? {
-    mssql:Client mssqlClient = check new(host = dbHost, user = dbUsername, password = dbPassword, port = dbPort);
-    _ = check mssqlClient->execute(`DROP DATABASE IF EXISTS EXAMPLE_DB`);
-    _ = check mssqlClient->execute(`CREATE DATABASE EXAMPLE_DB`);
-    _ = check mssqlClient.close();
-
-    _ = check dbClient->execute(`DROP TABLE IF EXISTS Customers`);
     _ = check dbClient->execute(`
         CREATE TABLE Customers (
             customerId INT NOT NULL IDENTITY PRIMARY KEY,
@@ -60,31 +49,29 @@ function beforeExample() returns sql:Error? {
     `);
 
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Peter','Stuart', 1, 5000.75, 'USA')`);
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Dan', 'Brown', 2, 10000, 'UK')`);
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Peter','Stuart', 3, 5000.75, 'USA')`);
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Dan', 'Brown', 4, 10000, 'UK')`);
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Peter','Stuart', 5, 5000.75, 'USA')`);
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Dan', 'Brown', 6, 10000, 'UK')`);
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Peter','Stuart', 7, 5000.75, 'USA')`);
     _ = check dbClient->execute(`
-        INSERT INTO Customers (firstName, lastName, registrationID, creditLimit, country)
+        INSERT INTO Customers(firstName, lastName, registrationID, creditLimit, country)
         VALUES ('Dan', 'Brown', 8, 10000, 'UK')`);
-
-    check dbClient.close();
 }
 
 isolated service /customer on new http:Listener(9092) {
@@ -100,7 +87,5 @@ isolated service /customer on new http:Listener(9092) {
             response.setPayload(customer.toString());
         }
         _ = check caller->respond(response);
-
-        check dbClient.close();
     }
 }
