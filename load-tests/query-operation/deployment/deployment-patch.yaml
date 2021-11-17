@@ -9,5 +9,5 @@ spec:
         logs: "true"
     spec:
       containers:
-      - name: "mssql-insert-deployment"
+      - name: "query-operation-deployment"
         imagePullPolicy: Always

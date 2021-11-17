@@ -1,5 +1,0 @@
-host = "mssql-service"
-username = "sa"
-password = "Test123#"
-database = "petdb"
-port = 3306

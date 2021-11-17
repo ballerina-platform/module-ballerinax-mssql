@@ -1,7 +1,0 @@
-CREATE TABLE pet (
-  id INTEGER NOT NULL IDENTITY PRIMARY KEY,
-  name VARCHAR(300),
-  category VARCHAR(300),
-  price INTEGER,
-  PRIMARY KEY (id)
-);

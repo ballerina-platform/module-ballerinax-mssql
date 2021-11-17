@@ -22,8 +22,6 @@
         <stringProp name="ThreadGroup.ramp_time">${__P(rampUpPeriod,60)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(duration)}</stringProp>
-        <stringProp name="ThreadGroup.delay">10</stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
       </ThreadGroup>
       <hashTree>
@@ -35,10 +33,10 @@
           <stringProp name="HTTPSampler.port">${__P(port,9092)}</stringProp>
           <stringProp name="HTTPSampler.protocol">${__P(protocol,http)}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">${__P(path)}</stringProp>
-          <stringProp name="HTTPSampler.method">POST</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">true</boolProp>
+          <stringProp name="HTTPSampler.path">customer?id=${random}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
@@ -58,6 +56,14 @@
           </ResponseAssertion>
           <hashTree/>
         </hashTree>
+         <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable" enabled="true">
+            <stringProp name="maximumValue">8</stringProp>
+            <stringProp name="minimumValue">1</stringProp>
+            <stringProp name="outputFormat">000</stringProp>
+            <boolProp name="perThread">true</boolProp>
+            <stringProp name="randomSeed">1</stringProp>
+            <stringProp name="variableName">random</stringProp>
+        </RandomVariableConfig>
       </hashTree>
     </hashTree>
   </hashTree>
