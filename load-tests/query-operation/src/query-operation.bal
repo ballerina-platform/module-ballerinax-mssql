@@ -75,17 +75,8 @@ public function main() returns error? {
 }
 
 isolated service /customer on new http:Listener(9092) {
-    resource isolated function get .(http:Caller caller, int id) returns error? {
-        Customer|error customer = dbClient->queryRow(`SELECT * FROM Customers WHERE customerId = ${id}`);
-
-        http:Response response = new;
-        if customer is error {
-            response.statusCode = 500;
-            response.setPayload(customer.toString());
-        } else {
-            response.statusCode = 200;
-            response.setPayload(customer.toString());
-        }
-        _ = check caller->respond(response);
+    resource isolated function get .(int id) returns string|error {
+        Customer customer = check dbClient->queryRow(`SELECT * FROM Customers WHERE customerId = ${id}`);
+        return customer.toString();
     }
 }
