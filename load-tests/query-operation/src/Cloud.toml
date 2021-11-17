@@ -1,5 +1,5 @@
 [container.image]
-repository = "kaneeldias"
+repository = "ballerina"
 name = "query_operation"
 
 [cloud.deployment]
