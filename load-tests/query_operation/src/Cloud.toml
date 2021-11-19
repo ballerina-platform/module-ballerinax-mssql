@@ -1,6 +1,6 @@
 [container.image]
-repository = "ballerina"
-name = "execute_operation"
+repository = "kaneeldias"
+name = "query_operation"
 
 [cloud.deployment]
 min_memory = "256Mi"

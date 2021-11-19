@@ -1,0 +1,5 @@
+dbHost = "mssql-service"
+dbUsername = "sa"
+dbPassword = "Test123#"
+dbName = "EXAMPLE_DB"
+dbPort = 1433
