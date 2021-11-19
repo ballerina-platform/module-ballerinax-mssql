@@ -1,6 +1,6 @@
 [package]
 org = "wso2"
-name = "query_operation"
+name = "execute_operation"
 version = "0.0.1"
 
 [build-options]

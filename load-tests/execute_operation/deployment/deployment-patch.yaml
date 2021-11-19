@@ -9,5 +9,5 @@ spec:
         logs: "true"
     spec:
       containers:
-      - name: "query-operation-deployment"
+      - name: "execute-operation-deployment"
         imagePullPolicy: Always
