@@ -14,6 +14,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: query-operation-sv
+                name: query-operation
                 port:
                   number: 9092
