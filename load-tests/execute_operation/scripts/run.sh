@@ -18,5 +18,5 @@
 # ----------------------------------------------------------------------------
 set -e
 source base-scenario.sh
-jmeter -n -t "$scriptsDir/"http-post-request.jmx -l "$resultsDir/"original.jtl -Jusers="$concurrent_users" -Jduration=6 -Jhost=bal.perf.test -Jport=9092
+jmeter -n -t "$scriptsDir/"http-post-request.jmx -l "$resultsDir/"original.jtl -Jusers="$concurrent_users" -Jduration=600 -Jhost=bal.perf.test -Jport=9092
 tail "$resultsDir/"original.jtl
