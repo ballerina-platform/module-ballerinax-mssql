@@ -18,5 +18,12 @@ import ballerinax/mssql;
 
 public function main() returns error? {
     mssql:Client dbClient = check new();
+    _ = check dbClient->query(``);
+    _ = check dbClient->queryRow(``);
+    check invokeQuery(dbClient);
     check dbClient.close();
+}
+
+function invokeQuery(mssql:Client dbClient) returns error? {
+    _ = check dbClient->query(``);
 }
