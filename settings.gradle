@@ -15,12 +15,16 @@ rootProject.name = 'ballerina-mssql'
 
 include ':checkstyle'
 include ':mssql-native'
+include ':mssql-compiler-plugin'
 include ':mssql-ballerina'
+include ':mssql-compiler-plugin-tests'
 include ':mssql-examples'
 
 project(':checkstyle').projectDir = file("build-config${File.separator}checkstyle")
 project(':mssql-native').projectDir = file('native')
+project(':mssql-compiler-plugin').projectDir = file('compiler-plugin')
 project(':mssql-ballerina').projectDir = file('ballerina')
+project(':mssql-compiler-plugin-tests').projectDir = file('compiler-plugin-tests')
 project(':mssql-examples').projectDir = file('examples')
 
 gradleEnterprise {
