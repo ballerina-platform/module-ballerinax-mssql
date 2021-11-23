@@ -24,6 +24,7 @@ public class Constants {
     public static final String BALLERINAX = "ballerinax";
     public static final String MSSQL = "mssql";
     public static final String CONNECTION_POOL_PARM_NAME = "connectionPool";
+    public static final String OPTIONS_PARM_NAME = "options";
 
     /**
      * Constants related to Client object.
@@ -41,6 +42,16 @@ public class Constants {
         public static final String MAX_OPEN_CONNECTIONS = "maxOpenConnections";
         public static final String MAX_CONNECTION_LIFE_TIME = "maxConnectionLifeTime";
         public static final String MIN_IDLE_CONNECTIONS = "minIdleConnections";
+    }
+
+    /**
+     * Constants for fields in mssql:Options.
+     */
+    public static class Options {
+        public static final String NAME = "Options";
+        public static final String LOGIN_TIMEOUT = "loginTimeout";
+        public static final String SOCKET_TIMEOUT = "socketTimeout";
+        public static final String QUERY_TIMEOUT = "queryTimeout";
     }
 
     public static final String UNNECESSARY_CHARS_REGEX = "\"|\\n";

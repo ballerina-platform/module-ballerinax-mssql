@@ -32,8 +32,8 @@ import org.ballerinalang.util.diagnostic.DiagnosticErrorCode;
 import java.util.List;
 import java.util.Optional;
 
-import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.MSSQL_101;
-import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.MSSQL_102;
+import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.MSSQL_901;
+import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.MSSQL_902;
 import static org.ballerinalang.util.diagnostic.DiagnosticErrorCode.CANNOT_INFER_TYPE_FOR_PARAM;
 
 /**
@@ -72,12 +72,12 @@ public class RemoteMethodAnalyzer implements AnalysisTask<SyntaxNodeAnalysisCont
         switch (methodName.get()) {
             case Constants.Client.QUERY:
                 ctx.reportDiagnostic(DiagnosticFactory.createDiagnostic(
-                        new DiagnosticInfo(MSSQL_101.getCode(), MSSQL_101.getMessage(), MSSQL_101.getSeverity()),
+                        new DiagnosticInfo(MSSQL_901.getCode(), MSSQL_901.getMessage(), MSSQL_901.getSeverity()),
                         node.location()));
                 break;
             case Constants.Client.QUERY_ROW:
                 ctx.reportDiagnostic(DiagnosticFactory.createDiagnostic(
-                        new DiagnosticInfo(MSSQL_102.getCode(), MSSQL_102.getMessage(), MSSQL_102.getSeverity()),
+                        new DiagnosticInfo(MSSQL_902.getCode(), MSSQL_902.getMessage(), MSSQL_902.getSeverity()),
                         node.location()));
                 break;
             default:

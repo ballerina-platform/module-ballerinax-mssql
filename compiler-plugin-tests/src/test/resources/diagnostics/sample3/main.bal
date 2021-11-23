@@ -16,16 +16,27 @@
 
 import ballerinax/mssql;
 
-mssql:Client dbClient = check new mssql:Client("url", (), (), (), 120, "", { loginTimeout: -2 }, { maxOpenConnections: -1 });
+public function main() {
 
-public function main() returns error? {
+    int id = 5;
 
-    mssql:Client dbClient1 = check new("url", connectionPool = { maxOpenConnections: -1 });
-    check dbClient1.close();
+    int|mssql:Options pool1 = 5;
 
-    mssql:Client dbClient2 = check new("url", options = { loginTimeout: -2 });
-    check dbClient2.close();
+    int|mssql:Options pool2 = {
+        loginTimeout: -2,
+        socketTimeout: -3
+    };
 
-    mssql:Client dbClient3 = check new("url", (), (), (), 120, "", { loginTimeout: -2 });
-    check dbClient3.close();
+    mssql:Options|int pool3 = {
+        loginTimeout: -2,
+        socketTimeout: -3
+    };
+
+    mssql:Options pool4 = {
+        loginTimeout: -2,
+        socketTimeout: -3
+    };
+
+    mssql:Options pool5 = {
+    };
 }

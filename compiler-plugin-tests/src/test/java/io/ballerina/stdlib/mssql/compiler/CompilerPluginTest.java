@@ -36,7 +36,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.SQL_101;
+import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.MSSQL_101;
 
 /**
  * Tests the custom SQL compiler plugin.
@@ -75,16 +75,16 @@ public class CompilerPluginTest {
         Assert.assertEquals(availableHints, 3);
 
         DiagnosticInfo hint1 = diagnosticHints.get(0).diagnosticInfo();
-        Assert.assertEquals(hint1.code(), MSSQLDiagnosticsCode.MSSQL_101.getCode());
-        Assert.assertEquals(hint1.messageFormat(), MSSQLDiagnosticsCode.MSSQL_101.getMessage());
+        Assert.assertEquals(hint1.code(), MSSQLDiagnosticsCode.MSSQL_901.getCode());
+        Assert.assertEquals(hint1.messageFormat(), MSSQLDiagnosticsCode.MSSQL_901.getMessage());
 
         DiagnosticInfo hint2 = diagnosticHints.get(1).diagnosticInfo();
-        Assert.assertEquals(hint2.code(), MSSQLDiagnosticsCode.MSSQL_102.getCode());
-        Assert.assertEquals(hint2.messageFormat(), MSSQLDiagnosticsCode.MSSQL_102.getMessage());
+        Assert.assertEquals(hint2.code(), MSSQLDiagnosticsCode.MSSQL_902.getCode());
+        Assert.assertEquals(hint2.messageFormat(), MSSQLDiagnosticsCode.MSSQL_902.getMessage());
 
         DiagnosticInfo hint3 = diagnosticHints.get(2).diagnosticInfo();
-        Assert.assertEquals(hint3.code(), MSSQLDiagnosticsCode.MSSQL_101.getCode());
-        Assert.assertEquals(hint3.messageFormat(), MSSQLDiagnosticsCode.MSSQL_101.getMessage());
+        Assert.assertEquals(hint3.code(), MSSQLDiagnosticsCode.MSSQL_901.getCode());
+        Assert.assertEquals(hint3.messageFormat(), MSSQLDiagnosticsCode.MSSQL_901.getMessage());
     }
 
     @Test
@@ -97,11 +97,41 @@ public class CompilerPluginTest {
                 .collect(Collectors.toList());
         long availableErrors = diagnosticErrorStream.size();
 
-        Assert.assertEquals(availableErrors, 2);
+        Assert.assertEquals(availableErrors, 5);
+
+        for (int i = 0; i < diagnosticErrorStream.size(); i++) {
+            Diagnostic diagnostic = diagnosticErrorStream.get(i);
+            switch (i) {
+                case 0:
+                case 3:
+                case 4:
+                    Assert.assertEquals(diagnostic.diagnosticInfo().code(), MSSQL_101.getCode());
+                    Assert.assertEquals(diagnostic.diagnosticInfo().messageFormat(),
+                            MSSQL_101.getMessage());
+                    break;
+                default:
+                    Assert.assertEquals(diagnostic.diagnosticInfo().code(), MSSQLDiagnosticsCode.SQL_101.getCode());
+                    Assert.assertEquals(diagnostic.diagnosticInfo().messageFormat(),
+                            MSSQLDiagnosticsCode.SQL_101.getMessage());
+            }
+        }
+    }
+
+    @Test
+    public void testMSSQLOptionRecord() {
+        Package currentPackage = loadPackage("sample3");
+        PackageCompilation compilation = currentPackage.getCompilation();
+        DiagnosticResult diagnosticResult = compilation.diagnosticResult();
+        List<Diagnostic> diagnosticErrorStream = diagnosticResult.diagnostics().stream()
+                .filter(r -> r.diagnosticInfo().severity().equals(DiagnosticSeverity.ERROR))
+                .collect(Collectors.toList());
+        long availableErrors = diagnosticErrorStream.size();
+
+        Assert.assertEquals(availableErrors, 6);
 
         diagnosticErrorStream.forEach(diagnostic -> {
-            Assert.assertEquals(diagnostic.diagnosticInfo().code(), SQL_101.getCode());
-            Assert.assertEquals(diagnostic.diagnosticInfo().messageFormat(), SQL_101.getMessage());
+            Assert.assertEquals(diagnostic.diagnosticInfo().code(), MSSQL_101.getCode());
+            Assert.assertEquals(diagnostic.diagnosticInfo().messageFormat(), MSSQL_101.getMessage());
         });
     }
 
