@@ -28,6 +28,7 @@ def examples = ["query-operation", "execute-operation", "complex-queries-operati
 clean {
     examples.forEach { example ->
         delete "${projectDir}/${example}/target"
+        delete "${projectDir}/${example}/Dependencies.toml"
     }
 }
 

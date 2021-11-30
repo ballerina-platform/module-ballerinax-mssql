@@ -201,6 +201,3 @@ test.dependsOn ":${packageName}-native:build"
 build.dependsOn ":${packageName}-compiler-plugin:build"
 test.dependsOn ":${packageName}-compiler-plugin:build"
 test.dependsOn startTestDockerContainer
-
-publishToMavenLocal.dependsOn build
-publish.dependsOn build
