@@ -83,8 +83,9 @@ public isolated client class Client {
         name: "nativeExecute"
     } external;
 
-    # Executes the SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is returned (not results from the query).
-    # If one of the commands in the batch fails, the `sql:BatchExecuteError` will be returned with immediate effect.
+    # Executes the SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is
+    # returned (not results from the query). If one of the commands in the batch fails (except syntax error),
+    # the `sql:BatchExecuteError` will be differed until the rest of the commands are completed.
     #
     # + sqlQueries - The SQL query with multiple sets of parameters
     # + return - Metadata of the query execution as an `sql:ExecutionResult[]` or an `sql:Error`
