@@ -22,19 +22,17 @@ import ballerina/crypto;
 public isolated client class Client {
     *sql:Client;
 
-    # Initialize the Mssql client.
+    # Initialize the MSSQL client.
     #
-    # + host - Hostname of the MSSQL server to be connected
-    # + user - If the MSSQL server is secured, the username to be used to connect to the SQL server
-    # + password - The password associated with the username of the database
-    # + database - The name of the database to be connected
-    # + port - Port of the MSSQL server to be connected
-    # + instance - Instance name of the MSSQL server to be connected as MSSQL can have installations of multiple versions 
-    #              under a single server.
-    # + options - The database-specific JDBC client properties
-    # + connectionPool - The `sql:ConnectionPool` object to be used within the MSSQL client.
-    #                   If there is no `connectionPool` provided, the global connection pool will be used and it will
-    #                   be shared by other clients which have the same properties.
+    # + host - Hostname of the MSSQL server
+    # + user - If the MSSQL server is secured, the username
+    # + password - The password associated with the username
+    # + database - The name of the database
+    # + port - Port of the MSSQL server
+    # + instance - Instance name of the MSSQL server
+    # + options - MSSQL database conenction options
+    # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
+    #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
     public isolated function init(string host = "localhost", string? user = (), string? password = (), string? database = (),
         int port = 1433, string instance = "", Options? options = (), sql:ConnectionPool? connectionPool = ()) returns sql:Error? {
         ClientConfiguration clientConfig = {
@@ -50,52 +48,45 @@ public isolated client class Client {
         return createClient(self, clientConfig, sql:getGlobalConnectionPool());
     }
 
-    # Queries the database with the query provided by the user, and returns the result as a stream.
+    # Executes the query, which may return multiple results.
     #
-    # + sqlQuery - The query, which needs to be executed as an `sql:ParameterizedQuery`
-    # + rowType - The `typedesc` of the record that should be returned as a result. If this is not provided, the default
-    #             column names of the query result set will be used for the record attributes
-    # + return - Stream of records in the type of `rowType`
+    # + sqlQuery - The SQL query
+    # + rowType - The `typedesc` of the record to which the result needs to be returned
+    # + return - Stream of records in the `rowType` type
     remote isolated function query(sql:ParameterizedQuery sqlQuery, typedesc<record {}> rowType = <>)
     returns stream<rowType, sql:Error?> = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.QueryProcessorUtils",
         name: "nativeQuery"
     } external;
 
-    # Queries the database with the provided query and returns the first row as a record if the expected return type is
-    # a record. If the expected return type is not a record, then a single value is returned.
+    # Executes the query, which is expected to return at most one row of the result.
+    # If the query does not return any results, `sql:NoRowsError` is returned
     #
-    # + sqlQuery - The query to be executed as an `sql:ParameterizedQuery`, which returns only one result row
-    # + returnType - The `typedesc` of the record/type that should be returned as a result. If this is not provided, the
-    #                default column names/type of the query result set will be used
-    # + return - Result in the `returnType` type
+    # + sqlQuery - The SQL query
+    # + returnType - The `typedesc` of the record to which the result needs to be returned.
+    #                It can be a basic type if the query contains only one column
+    # + return - Result in the `returnType` type or an `sql:Error`
     remote isolated function queryRow(sql:ParameterizedQuery sqlQuery, typedesc<anydata> returnType = <>)
     returns returnType|sql:Error = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.QueryProcessorUtils",
         name: "nativeQueryRow"
     } external;
 
-    # Executes the provided DDL or DML SQL query and returns a summary of the execution.
+    # Executes the SQL query. Only the metadata of the execution is returned (not the results from the query).
     #
-    # + sqlQuery - The DDL or DML queries such as `INSERT`, `DELETE`, `UPDATE`, etc. as an `sql:ParameterizedQuery`
-    # + return - Summary of the SQL update query as an `sql:ExecutionResult` or an `sql:Error`
-    #            if any error occurred when executing the query
+    # + sqlQuery - The SQL query
+    # + return - Metadata of the query execution as an `sql:ExecutionResult` or an `sql:Error`
     remote isolated function execute(sql:ParameterizedQuery sqlQuery)
     returns sql:ExecutionResult|sql:Error = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.ExecuteProcessorUtils",
         name: "nativeExecute"
     } external;
 
-    # Executes a provided batch of parameterized DDL or DML SQL queries
-    # and returns the summary of the execution.
+    # Executes the SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is returned (not results from the query).
+    # If one of the commands in the batch fails, the `sql:BatchExecuteError` will be returned with immediate effect.
     #
-    # + sqlQueries - The DDL or DML queries such as `INSERT`, `DELETE`, `UPDATE`, etc. as an `sql:ParameterizedQuery`
-    #                with an array of values passed in
-    # + return - Summary of the executed SQL queries as an `sql:ExecutionResult[]`, which includes details such as
-    #            `affectedRowCount` and `lastInsertId`. If one of the commands in the batch fails, this function
-    #            will return an `sql:BatchExecuteError`. However, the MSSQL driver may or may not continue to process the
-    #            remaining commands in the batch after a failure. The summary of the executed queries in case of an error
-    #            can be accessed as `(<sql:BatchExecuteError> result).detail()?.executionResults`
+    # + sqlQueries - The SQL query with multiple sets of parameters
+    # + return - Metadata of the query execution as an `sql:ExecutionResult[]` or an `sql:Error`
     remote isolated function batchExecute(sql:ParameterizedQuery[] sqlQueries) returns sql:ExecutionResult[]|sql:Error {
         if sqlQueries.length() == 0 {
             return error sql:ApplicationError(" Parameter 'sqlQueries' cannot be empty array");
@@ -103,19 +94,18 @@ public isolated client class Client {
         return nativeBatchExecute(self, sqlQueries);
     }
 
-    # Executes a SQL stored procedure and returns the result as stream and execution summary.
+    # Executes a SQL query, which calls a stored procedure. This can return results or not.
     #
-    # + sqlQuery - The query to execute the SQL stored procedure as an `sql:ParameterizedQuery`
-    # + rowTypes - The array of `typedesc` of the records that should be returned as a result. If this is not provided,
-    #               the default column names of the query result set will be used for the record attributes
-    # + return - Summary of the execution is returned in an `sql:ProcedureCallResult`, or an `sql:Error`
+    # + sqlQuery - The SQL query
+    # + rowTypes - The array `typedesc` of the records to which the results needs to be returned
+    # + return - Summary of the execution and results are returned in an `sql:ProcedureCallResult`, or an `sql:Error`
     remote isolated function call(sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
     returns sql:ProcedureCallResult|sql:Error = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.CallProcessorUtils",
         name: "nativeCall"
     } external;
 
-    # Closes the SQL client.
+    # Closes the SQL client and shuts down the connection pool.
     #
     # + return - Possible error when closing the client
     public isolated function close() returns sql:Error? = @java:Method {
@@ -126,17 +116,15 @@ public isolated client class Client {
 
 # Client Configuration record for connection initialization
 #
-# + host - Hostname of the mssql server to be connected
-# + instance - Instance name of the server to be connected as mssql can have installations of multiple versions 
-#              under a single server
-# + port - Port number of the mssql server to be connected
+# + host - Hostname of the mssql server
+# + instance - Instance name of the server
+# + port - Port number of the mssql server
 # + database - Name of the database
 # + user - Username for the database connection
 # + password - Password for the database connection
 # + options - MSSQL database specific options
-# + connectionPool - The `sql:ConnectionPool` object to be used within 
-#         the jdbc client. If there is no connectionPool provided, 
-#         the global connection pool will be used
+# + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
+#                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
 type ClientConfiguration record {|
     string host;
     string? instance;
@@ -148,20 +136,15 @@ type ClientConfiguration record {|
     sql:ConnectionPool? connectionPool;
 |};
 
-# MSSQL database options.
+# Provides a set of configuration related to MSSQL database.
 #
 # + secureSocket - SSL Configuration to be used
-# + socketTimeout - The number of milliseconds to wait before a timeout occurs
-#                   on a socket read or accept. The default value is 0, which means 
-#                   infinite timeout
-# + queryTimeout - The number of seconds to wait before a timeout has occurred on a 
-#                  query. The default value is -1, which means infinite timeout.
-#                  Setting this to 0 also implies to wait indefinitely
-# + loginTimeout - The number of seconds the driver should wait before timing out a 
-#                  failed connection. A zero value indicates that the timeout is the
-#                  default system timeout, which is specified as 15 seconds by default.
-#                  A non-zero value is the number of seconds the driver should wait
-#                  before timing out a failed connection
+# + socketTimeout - Socket timeout (in seconds) during the read/write operations with the MSSQL server
+#                   (0 means no socket timeout)
+# + queryTimeout - Timeout (in seconds) to be used when executing a query.
+#                  (-1/0 means no query timeout)
+# + loginTimeout - Timeout (in seconds) when connecting to the MSSQL server and authentication.
+#                  (0 means 15s of login timeout which is the default behaviour of the driver)
 public type Options record {|
     SecureSocket secureSocket?;
     decimal socketTimeout?;
@@ -171,9 +154,9 @@ public type Options record {|
 
 # SSL configuration to be used when connecting to the MSSQL server
 #
-# + encrypt - Encryption for all the data sent between the client and the server if the server has a certificate
+# + encrypt - Encrypt all data sent between the client and the server if the server has a certificate
 #             installed
-# + trustServerCertificate - If "true", the SQL Server SSL certificate is automatically trusted when the communication
+# + trustServerCertificate - The SQL Server SSL certificate is automatically trusted when the communication
 #                            layer is encrypted using TLS
 # + cert - Keystore configuration of the trust certificates
 # + key - Keystore configuration of the client certificates

@@ -16,9 +16,7 @@
 
 import ballerina/sql;
 
-# MSSQL Geometric Data types.
-
-# Represents Point Datatype in MSSQL.
+# Represents MSSQL Point type parameter in `sql:ParameterizedQuery`.
 #
 # + x - The x coordinate of the point
 # + y - The y coordinate of the point
@@ -27,23 +25,23 @@ public type Point record {
     decimal y;
 };
 
-# Represents an element (LineString or Circular String) of a Compound Curve in MSSQL.
+# Represents an element (LineString or Circular String) of a MSSQL Compound Curve type.
 #
 public type CompoundCurveElement LineStringValue | CircularStringValue;
 
-# Represents a circular arc ring (LineString, Circular String or Compound Curve) in MSSQL.
+# Represents MSSQL circular arc ring (LineString, Circular String or Compound Curve) type.
 #
 public type CircularArcRing LineStringValue | CircularStringValue | CompoundCurveValue;
 
-# Represents an element of a Geometry Collection in MSSQL.
+# Represents an element of a MSSQL Geometry Collection type.
 #
 public type GeometryCollectionElement PointValue | LineStringValue | CircularStringValue | CompoundCurveValue |
                                       PolygonValue | CurvePolygonValue | MultiPointValue | MultiLineStringValue |
                                       MultiPolygonValue;
 
-## Represents Point MSSQL Field
+# Represents MSSQL Point type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class PointValue {
     *sql:TypedValue;
@@ -56,9 +54,9 @@ public distinct class PointValue {
     }
 }
 
-## Represents MultiPoint MSSQL Field
+# Represents MSSQL MultiPoint type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class MultiPointValue {
     *sql:TypedValue;
@@ -71,9 +69,9 @@ public distinct class MultiPointValue {
     }
 }
 
-## Represents LineString MSSQL Field
+# Represents MSSQL LineString type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class LineStringValue {
     *sql:TypedValue;
@@ -86,9 +84,9 @@ public distinct class LineStringValue {
     }
 }
 
-## Represents MultiLineString MSSQL Field
+# Represents MSSQL MultiLineString type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class MultiLineStringValue {
     *sql:TypedValue;
@@ -101,9 +99,9 @@ public distinct class MultiLineStringValue {
     }
 }
 
-## Represents CircularString MSSQL Field
+# Represents MSSQL CircularString type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class CircularStringValue {
     *sql:TypedValue;
@@ -116,9 +114,9 @@ public distinct class CircularStringValue {
     }
 }
 
-## Represents CompoundCurve MSSQL Field
+# Represents MSSQL CompoundCurve type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class CompoundCurveValue {
     *sql:TypedValue;
@@ -131,9 +129,9 @@ public distinct class CompoundCurveValue {
     }
 }
 
-## Represents Polygon MSSQL Field
+# Represents MSSQL Polygon type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class PolygonValue {
     *sql:TypedValue;
@@ -146,9 +144,9 @@ public distinct class PolygonValue {
     }
 }
 
-## Represents MultiPolygon MSSQL Field
+# Represents MSSQL MultiPolygon type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class MultiPolygonValue {
     *sql:TypedValue;
@@ -161,9 +159,9 @@ public distinct class MultiPolygonValue {
     }
 }
 
-## Represents CurvePolygon MSSQL Field
+# Represents MSSQL CurvePolygon type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class CurvePolygonValue {
     *sql:TypedValue;
@@ -176,9 +174,9 @@ public distinct class CurvePolygonValue {
     }
 }
 
-## Represents GeometryCollection MSSQL Field
+# Represents MSSQL GeometryCollection type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 # + srid - The spatial reference ID of the instance
 public distinct class GeometryCollectionValue {
     *sql:TypedValue;
@@ -191,11 +189,9 @@ public distinct class GeometryCollectionValue {
     }
 }
 
-# MSSQL Money Data types.
-
-# Represents Money MSSQL Field
+# Represents MSSQL Money type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 public distinct class MoneyValue {
     *sql:TypedValue;
     public decimal|float|string? value;
@@ -205,9 +201,9 @@ public distinct class MoneyValue {
     }  
 }
 
-# Represents Smallmoney MSSQL Field
+# Represents MSSQL Smallmoney type parameter in `sql:ParameterizedQuery`.
 #
-# + value - Value of parameter passed into the SQL statement
+# + value - Value of the parameter
 public distinct class SmallMoneyValue {
     *sql:TypedValue;
     public decimal|float|string? value;
