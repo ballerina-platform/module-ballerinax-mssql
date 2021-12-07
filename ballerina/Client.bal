@@ -145,8 +145,7 @@ type ClientConfiguration record {|
 #                   (0 means no socket timeout)
 # + queryTimeout - Timeout (in seconds) to be used when executing a query.
 #                  (-1/0 means no query timeout)
-# + loginTimeout - Timeout (in seconds) when connecting to the MSSQL server and authentication.
-#                  (0 means 15s of login timeout which is the default behaviour of the driver)
+# + loginTimeout - Timeout (in seconds) when connecting to the MSSQL server and authentication (Default is 15s).
 public type Options record {|
     SecureSocket secureSocket?;
     decimal socketTimeout?;
