@@ -6,7 +6,7 @@ authors = ["Ballerina"]
 keywords = ["database", "client", "network", "SQL", "RDBMS", "SQLServer", "MSSQL"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-mssql"
 license = ["Apache-2.0"]
-distribution = "slbeta3"
+distribution = "slbeta6"
 
 [[platform.java11.dependency]]
 path = "../native/build/libs/mssql-native-@project.version@.jar"
