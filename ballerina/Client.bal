@@ -30,7 +30,7 @@ public isolated client class Client {
     # + database - The name of the database
     # + port - Port of the MSSQL server
     # + instance - Instance name of the MSSQL server
-    # + options - MSSQL database conenction options
+    # + options - MSSQL database connection options
     # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
     #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
     # + return - An `sql:Error` if the client creation fails
