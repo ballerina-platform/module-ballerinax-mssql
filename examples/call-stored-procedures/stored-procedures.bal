@@ -56,10 +56,11 @@ public function main() returns error? {
     // Invokes the stored procedure `InsertCustomer` with the `IN` parameters.
     sql:ProcedureCallResult retCall = check dbClient->call(sqlQuery, [Customer]);
     stream<Customer, error?> resultStream = dbClient->query(`SELECT * FROM Customers`);
-    check resultStream.forEach(function(record {} result) {
-        io:println("Call stored procedure `InsertCustomer`." +
-                   "\nInserted data: ", result);
-    });
+    check from record{} result in resultStream
+        do {
+            io:println("Call stored procedure `InsertCustomer`." +
+                       "\nInserted data: ", result);
+        };
     check retCall.close();
 
     // Closes the MSSQL client.

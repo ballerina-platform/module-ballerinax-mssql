@@ -54,10 +54,10 @@ public function main() returns error? {
 
     io:println("Query Result :");
     // Iterates the `streamData`.
-    check streamData.forEach(function(Customer customer) {
-        io:println(customer);
-    });
-
+    check from Customer customer in streamData
+        do {
+            io:println(customer);
+        };
     // Closes the MSSQL client.
     check dbClient.close();
 }

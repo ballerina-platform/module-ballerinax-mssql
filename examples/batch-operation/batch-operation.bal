@@ -70,10 +70,10 @@ public function main() returns error? {
         dbClient->query(`SELECT * FROM Customers`);
 
     io:println("Data in Customers table:");
-    check resultStream.forEach(function(record {} result) {
-         io:println(result.toString());
-    });
-
+    check from record{} result in resultStream
+        do {
+             io:println(result.toString());
+        };
     // Closes the MSSQL client.
     check dbClient.close();
 }
