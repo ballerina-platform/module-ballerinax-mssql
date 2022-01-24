@@ -85,7 +85,7 @@ public isolated function init(string host = "localhost", string? user = (),
   #
   # + encrypt - Encrypt all data sent between the client and the server if the server has a certificate
   #             installed
-  # + trustServerCertificate - The MSSQL Server SSL certificate is automatically trusted when the communication
+  # + trustServerCertificate - The MSSQL server SSL certificate is automatically trusted when the communication
   #                            layer is encrypted using TLS
   # + cert - Keystore configuration of the trust certificates
   # + key - Keystore configuration of the client certificates
