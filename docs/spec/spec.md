@@ -8,8 +8,8 @@ _Issue_: [#2292](https://github.com/ballerina-platform/ballerina-standard-librar
 
 # Introduction
 
-This is the specification for MSSQL standard library, which provides the functionality that is required to access and 
-manipulate data stored in a MSSQL database in the [Ballerina programming language](https://ballerina.io/), 
+This is the specification for the MSSQL standard library, which provides the functionality that is required to access and 
+manipulate data stored in an MSSQL database in the [Ballerina programming language](https://ballerina.io/), 
 which is an open-source programming language for the cloud that makes it easier to use, combine, and create network 
 services.
 
@@ -24,7 +24,7 @@ services.
 
 # 1. Overview
 
-This specification elaborates on usage of MSSQL `Client` object to interface with an MSSQL database.
+This specification elaborates on usage of the MSSQL `Client` object to interface with an MSSQL database.
 
 `Client` supports five database operations as follows,
 1. Executes the query, which may return multiple results.
@@ -34,7 +34,7 @@ This specification elaborates on usage of MSSQL `Client` object to interface wit
 5. Executes a SQL query, which calls a stored procedure. This can either return results or nil.
 
 All the above operations make use of `sql:ParameterizedQuery` object, backtick surrounded string template to pass
-SQL statements to the database. `sql:ParameterizedQuery` supports passing of Ballerina basic types or Typed SQL Values
+SQL statements to the database. `sql:ParameterizedQuery` supports passing of Ballerina basic types or typed SQL values
 such as `sql:CharValue`, `sql:BigIntValue`, etc. to indicate parameter types in SQL statements.
 
 # 2. Client
@@ -48,14 +48,13 @@ lifetime of the client.
 #
 # + host - Hostname of the MSSQL server
 # + user - If the MSSQL server is secured, the username
-# + password - The password associated with the username
+# + password - The password of the MSSQL server for the provided username
 # + database - The name of the database
-# + port - Port of the MSSQL server
+# + port - Port number of the MSSQL server
 # + instance - Instance name of the MSSQL server
 # + options - MSSQL database connection options
 # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
-#                    `connectionPool` provided, the global connection pool (shared by all 
-#                    clients) will be used
+#                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
 # + return - An `sql:Error` if the client creation fails
 public isolated function init(string host = "localhost", string? user = (), 
         string? password = (), string? database = (), int port = 1433, string instance = "", 
@@ -65,15 +64,14 @@ public isolated function init(string host = "localhost", string? user = (),
 **Configurations available for initializing the MSSQL client:**
 * Connection properties:
   ```ballerina
-  # Provides a set of configuration related to MSSQL database.
+  # Provides a set of additional configurations related to the MSSQL database connection.
   #
-  # + secureSocket - SSL Configuration to be used
-  # + socketTimeout - Socket timeout (in seconds) during the read/write operations 
-  #                   with the MSSQL server (0 means no socket timeout)
+  # + secureSocket - SSL configurations to be used
+  # + socketTimeout - Socket timeout (in seconds) to be used during the read/write operations with the MSSQL server
+  #                   (0 means no socket timeout)
   # + queryTimeout - Timeout (in seconds) to be used when executing a query.
   #                  (-1/0 means no query timeout)
-  # + loginTimeout - Timeout (in seconds) when connecting to the MSSQL server and 
-  #                  authentication (Default is 15s).
+  # + loginTimeout - Timeout (in seconds) to be used when connecting to the MSSQL server and authentication (default is 15s).
   public type Options record {|
       SecureSocket secureSocket?;
       decimal socketTimeout?;
@@ -83,11 +81,11 @@ public isolated function init(string host = "localhost", string? user = (),
   ``` 
 * SSL Connection:
   ```
-  # SSL configuration to be used when connecting to the MSSQL server
+  # SSL configurations to be used when connecting to the MSSQL server
   #
   # + encrypt - Encrypt all data sent between the client and the server if the server has a certificate
   #             installed
-  # + trustServerCertificate - The SQL Server SSL certificate is automatically trusted when the communication
+  # + trustServerCertificate - The MSSQL Server SSL certificate is automatically trusted when the communication
   #                            layer is encrypted using TLS
   # + cert - Keystore configuration of the trust certificates
   # + key - Keystore configuration of the client certificates
@@ -151,4 +149,4 @@ In addition to `sql` Values, `mssql` package supports the following additional T
 4. Executes the SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is returned.
 5. Executes a SQL query, which calls a stored procedure. This can either return results or nil.
 
-For more information on Database Operations see the [SQL Specification](https://github.com/niveathika/module-ballerina-sql/blob/master/docs/spec/spec.md#4-database-operations)
+For more information on Database Operations see the [SQL Specification](https://github.com/ballerina-platform/module-ballerina-sql/blob/master/docs/spec/spec.md#4-database-operations)
