@@ -3,7 +3,7 @@
 _Owners_: @daneshk @niveathika  
 _Reviewers_: @daneshk  
 _Created_: 2022/01/14   
-_Updated_: 2022/01/14  
+_Updated_: 2022/01/25  
 _Issue_: [#2292](https://github.com/ballerina-platform/ballerina-standard-library/issues/2292)
 
 # Introduction
@@ -31,7 +31,7 @@ This specification elaborates on usage of the MSSQL `Client` object to interface
 2. Executes the query, which is expected to return at most one row of the result.
 3. Executes the SQL query. Only the metadata of the execution is returned.
 4. Executes the SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is returned.
-5. Executes a SQL query, which calls a stored procedure. This can either return results or nil.
+5. Executes an SQL query, which calls a stored procedure. This can either return results or nil.
 
 All the above operations make use of `sql:ParameterizedQuery` object, backtick surrounded string template to pass
 SQL statements to the database. `sql:ParameterizedQuery` supports passing of Ballerina basic types or typed SQL values
@@ -99,7 +99,7 @@ public isolated function init(string host = "localhost", string? user = (),
 
 ## 2.1. Connection Pool Handling
 
-Connection Pool Handling is generic and implemented through `sql` module. For more information, see the
+Connection pool handling is generic and implemented through `sql` module. For more information, see the
 [SQL Specification](https://github.com/ballerina-platform/module-ballerina-sql/blob/master/docs/spec/spec.md#21-connection-pool-handling)
 
 ## 2.2. Closing the Client
@@ -108,18 +108,18 @@ Once all the database operations are performed, the client can be closed by invo
 operation. This will close the corresponding connection pool if it is not shared by any other database clients.
 
    ```ballerina
-    # Closes the MSSQL client and shuts down the connection pool.
-    #
-    # + return - Possible error when closing the client
-    public isolated function close() returns Error?;
+   # Closes the MSSQL client and shuts down the connection pool.
+   #
+   # + return - Possible error when closing the client
+   public isolated function close() returns Error?;
    ```
 
 # 3. Queries and Values
 
-All the generic `sql` Queries and Values are supported. For more information, see the
+All the generic `sql` queries and values are supported. For more information, see the
 [SQL Specification](https://github.com/ballerina-platform/module-ballerina-sql/blob/master/docs/spec/spec.md#3-queries-and-values)
 
-In addition to `sql` Values, `mssql` package supports the following additional Typed Values for MSSQL Geometric and Money Types,
+In addition to `sql` values, the `mssql` package supports the following additional typed values for MSSQL Geometric and Money Types,
 1. CompoundCurveElement
    * LineStringValue
    * CircularStringValue
@@ -147,6 +147,6 @@ In addition to `sql` Values, `mssql` package supports the following additional T
 2. Executes the query, which is expected to return at most one row of the result.
 3. Executes the SQL query. Only the metadata of the execution is returned.
 4. Executes the SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is returned.
-5. Executes a SQL query, which calls a stored procedure. This can either return results or nil.
+5. Executes an SQL query, which calls a stored procedure. This can either return results or nil.
 
-For more information on Database Operations see the [SQL Specification](https://github.com/ballerina-platform/module-ballerina-sql/blob/master/docs/spec/spec.md#4-database-operations)
+For more information on database operations see the [SQL Specification](https://github.com/ballerina-platform/module-ballerina-sql/blob/master/docs/spec/spec.md#4-database-operations)

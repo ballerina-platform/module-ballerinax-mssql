@@ -116,7 +116,7 @@ public isolated client class Client {
     } external;
 }
 
-# Provides a set of configurations for the MSSQL client to be passed internally within the module.
+# Provides an additional set of configurations for the MSSQL client to be passed internally within the module.
 #
 # + host - Hostname of the MSSQL server
 # + instance - Instance name of the MSSQL server
