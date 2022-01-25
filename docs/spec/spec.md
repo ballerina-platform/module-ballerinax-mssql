@@ -9,8 +9,8 @@ _Issue_: [#2292](https://github.com/ballerina-platform/ballerina-standard-librar
 # Introduction
 
 This is the specification for the MSSQL standard library, which provides the functionality that is required to access and 
-manipulate data stored in an MSSQL database in the [Ballerina programming language](https://ballerina.io/), 
-which is an open-source programming language for the cloud that makes it easier to use, combine, and create network 
+manipulate data stored in an MSSQL database in the [Ballerina programming language](https://ballerina.io/). 
+Ballerina is an open-source programming language for the cloud that makes it easier to use, combine, and create network 
 services.
 
 # Contents
@@ -24,7 +24,7 @@ services.
 
 # 1. Overview
 
-This specification elaborates on usage of the MSSQL `Client` object to interface with an MSSQL database.
+This specification elaborates on the usage of the MSSQL `Client` object to interface with an MSSQL database.
 
 `Client` supports five database operations as follows,
 1. Executes the query, which may return multiple results.
@@ -34,7 +34,7 @@ This specification elaborates on usage of the MSSQL `Client` object to interface
 5. Executes an SQL query, which calls a stored procedure. This can either return results or nil.
 
 All the above operations make use of `sql:ParameterizedQuery` object, backtick surrounded string template to pass
-SQL statements to the database. `sql:ParameterizedQuery` supports passing of Ballerina basic types or typed SQL values
+SQL statements to the database. The `sql:ParameterizedQuery` supports passing of Ballerina basic types or typed SQL values
 such as `sql:CharValue`, `sql:BigIntValue`, etc. to indicate parameter types in SQL statements.
 
 # 2. Client

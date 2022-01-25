@@ -46,7 +46,7 @@ mssql:Client|sql:Error dbClient = new(
 );
 ```
 
-The sample below shows as `mssql:Clinet` using named parameters to pass the attributes since some parameters are skipped in the constructor.
+The sample below shows an `mssql:Client`, which uses named parameters to pass the attributes since some parameters are skipped in the constructor.
 Further, the [`mssql:Options`](https://docs.central.ballerina.io/ballerinax/mssql/latest/records/Options)
 property is passed to configure the SSL and login timeout properties in the MSSQL client.
 
@@ -67,7 +67,7 @@ mssql:Client|sql:Error dbClient = new(
 );
 ```
 
-Similarly in the sample below, the `mssql:Client` uses named parameters and it provides an unshared connection pool of the
+Similarly, in the sample below, the `mssql:Client` uses named parameters, and it provides an unshared connection pool of the
 [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool)
 type to be used within the client.
 For more details about connection pooling, see the [`sql` Module](https://docs.central.ballerina.io/ballerina/sql/latest).
@@ -208,7 +208,7 @@ sql:ParameterizedQuery query1 = ` WHERE id < ${id} AND age > ${age}`;
 sql:ParameterizedQuery sqlQuery = sql:queryConcat(query, query1);
 ```
 
-A query with the `IN` operator can be created using the `sql:ParameterizedQuery` as shown below. Here you need to flatten the array and pass each element separated by a comma.
+A query with the `IN` operator can be created using the `sql:ParameterizedQuery` as shown below. Here, you need to flatten the array and pass each element separated by a comma.
 
 ```ballerina
 int[] ids = [1, 2, 3];
@@ -216,7 +216,7 @@ sql:ParameterizedQuery query = `SELECT count(*) as total FROM DataTable
                                 WHERE row_id IN (${ids[0]}, ${ids[1]}, ${ids[2]})`;
 ```
 
-The util function `sql:arrayFlattenQuery()` is used to make the array flattening easier. It makes the inclusion of varying array elements into the query easier by flattening the array to return a parameterized query. You can construct the complex dynamic query with the `IN` operator by using both functions as shown below.
+The `sql:arrayFlattenQuery()` util function is used to make the array flattening easier. It makes the inclusion of varying array elements into the query easier by flattening the array to return a parameterized query. You can construct the complex dynamic query with the `IN` operator by using both functions as shown below.
 
 ```ballerina
 int[] ids = [1, 2];
@@ -227,8 +227,8 @@ sql:ParameterizedQuery sqlQuery =
 
 #### Creating Tables
 
-This sample creates a table with three columns. The first column is a primary key of type `int`,
-while the second column is of type `int`, and the other is of type `varchar`.
+This sample creates a table with three columns. The first column is a primary key of type `int`
+while the second column is of type `int` and the other is of type `varchar`.
 The `CREATE` statement is executed via the `execute` remote function of the client.
 
 ```ballerina
