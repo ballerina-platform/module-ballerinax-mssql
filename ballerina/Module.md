@@ -1,13 +1,13 @@
 ## Overview
 
-This module provides the functionality required to access and manipulate data stored in a MSSQL database.
+This module provides the functionality required to access and manipulate data stored in an MSSQL database.
 
 ### Prerequisite
 Add the MSSQL driver JAR as a native library dependency in your Ballerina project's `Ballerina.toml` file.
 It is recommended to use a MSSQL driver version greater than 9.2.0 as this module uses the database properties
 from the MSSQL driver version 9.2.0 onwards.
 
-Follow one of the following ways to add the JAR in the file:
+Follow one of the following methods to add the JAR in the file:
 
 * Download the JAR and update the path.
     ```
@@ -24,21 +24,21 @@ Follow one of the following ways to add the JAR in the file:
     ```
 
 ### Client
-To access a database, you must first create a
+To access a database, you must first create an
 [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) object.
-The examples for creating a MSSQL client can be found below.
+The examples for creating an MSSQL client can be found below.
 
 #### Creating a Client
-This example shows the different ways of creating the `mssql:Client`.
+These examples show the different methods of creating an `mssql:Client`.
 
-The client can be created with an empty constructor, and thereby, the client will be initialized with the default properties.
+The client can be created with an empty constructor, and thereby, will be initialized with the default properties.
 
 ```ballerina
 mssql:Client|sql:Error dbClient = new();
 ```
 
-The `dbClient` receives the host, username, and password. Since the properties are passed in the same order as they are defined
-in the `mssql:Client`, you can pass them without named params.
+The `mssql:Client` receives the host, username, and password. Since the properties are passed in the same order as they are defined
+in the `mssql:Client`, you can pass them without named parameters.
 
 ```ballerina
 mssql:Client|sql:Error dbClient = new(
@@ -46,9 +46,9 @@ mssql:Client|sql:Error dbClient = new(
 );
 ```
 
-The `dbClient` uses the named params to pass the attributes since it is skipping some params in the constructor.
+The sample below shows an `mssql:Client`, which uses named parameters to pass the attributes since some parameters are skipped in the constructor.
 Further, the [`mssql:Options`](https://docs.central.ballerina.io/ballerinax/mssql/latest/records/Options)
-property is passed to configure the SSL and login timeout in the MSSQL client.
+property is passed to configure the SSL and login timeout properties in the MSSQL client.
 
 ```ballerina
 mssql:Options mssqlOptions = {
@@ -67,7 +67,7 @@ mssql:Client|sql:Error dbClient = new(
 );
 ```
 
-Similarly, the `dbClient` uses the named params and it provides an unshared connection pool of the
+Similarly, in the sample below, the `mssql:Client` uses named parameters, and it provides an unshared connection pool of the
 [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool)
 type to be used within the client.
 For more details about connection pooling, see the [`sql` Module](https://docs.central.ballerina.io/ballerina/sql/latest).
@@ -80,14 +80,14 @@ mssql:Client|sql:Error dbClient = new(
 ```
 
 #### Using SSL
-To connect to the MSSQL database using an SSL connection, you must add the SSL configurations to the `mssql:Options` when creating the `dbClient`.
+To connect to the MSSQL database using an SSL connection, you must add the SSL configurations to the `mssql:Options` when creating the `mssql:Client`.
 The value of `encrypt` must be set to `true`.
 If `trustServerCertificate` is set to `true`, the client will not validate the server TLS/SSL certificate (used for testing in local environments).
-For the key and cert files, you must provide the files in the `.p12` format.
+The key and cert files must be provided in the `.p12` format.
 
 ```ballerina
 string clientStorePath = "/path/to/keystore.p12";
-string turstStorePath = "/path/to/truststore.p12";
+string trustStorePath = "/path/to/truststore.p12";
 
 mssql:Options mssqlOptions = {
   secureSocket: {
@@ -98,7 +98,7 @@ mssql:Options mssqlOptions = {
         password: "password"
     },
     cert: {
-        path: turstStorePath,
+        path: trustStorePath,
         password: "password"
     }
   }
@@ -107,11 +107,11 @@ mssql:Options mssqlOptions = {
 #### Connection Pool Handling
 
 All database modules share the same connection pooling concept and there are three possible scenarios for
-connection pool handling.  For its properties and possible values, see the [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool).
+connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool).
 
 1. Global, shareable, default connection pool
 
-   If you do not provide the `poolOptions` field when creating the database client, a globally-shareable pool will be
+   If you do not provide the `connectionPool` field when creating the database client, a globally-shareable pool will be
    created for your database unless a connection pool matching with the properties you provided already exists.
 
     ```ballerina
@@ -120,7 +120,7 @@ connection pool handling.  For its properties and possible values, see the [`sql
 
 2. Client-owned, unsharable connection pool
 
-   If you define the `connectionPool` field inline when creating the database client with the `sql:ConnectionPool` type,
+   If you define the `connectionPool` field inline when creating the client with the `sql:ConnectionPool` type,
    an unsharable connection pool will be created.
 
     ```ballerina
@@ -156,7 +156,7 @@ defined by the `sql:Client` will be supported by the `mssql:Client` as well.
 
 #### Closing the Client
 
-Once all the database operations are performed, you can close the database client you have created by invoking the `close()`
+Once all the database operations are performed, you can close the client you have created by invoking the `close()`
 operation. This will close the corresponding connection pool if it is not shared by any other database clients.
 
 ```ballerina
@@ -170,7 +170,7 @@ check dbClient.close();
 ### Database Operations
 
 Once the client is created, database operations can be executed through that client. This module defines the interface
-and common properties that are shared among multiple database clients.  It also supports querying, inserting, deleting,
+and common properties that are shared among multiple database clients. It also supports querying, inserting, deleting,
 updating, and batch updating data.
 
 #### Parameterized Query
@@ -197,7 +197,7 @@ sql:ParameterizedQuery query = `SELECT * FROM students
 Moreover, the SQL package has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
 to create a dynamic/constant complex query.
 
-The `sql:queryConcat()` is used to create a parameterized query by concatenating a set of parameterized queries.
+The `sql:queryConcat()` is used to create a single parameterized query by concatenating a set of parameterized queries.
 The sample below shows how to concatenate queries.
 
 ```ballerina
@@ -208,15 +208,15 @@ sql:ParameterizedQuery query1 = ` WHERE id < ${id} AND age > ${age}`;
 sql:ParameterizedQuery sqlQuery = sql:queryConcat(query, query1);
 ```
 
-The query with the `IN` operator can be created using the `sql:ParameterizedQuery` like below. Here you need to flatten the array and pass each element separated by a comma.
+A query with the `IN` operator can be created using the `sql:ParameterizedQuery` as shown below. Here, you need to flatten the array and pass each element separated by a comma.
 
 ```ballerina
 int[] ids = [1, 2, 3];
 sql:ParameterizedQuery query = `SELECT count(*) as total FROM DataTable 
-                                WHERE row_id in (${ids[0]}, ${ids[1]}, ${ids[2]})`;
+                                WHERE row_id IN (${ids[0]}, ${ids[1]}, ${ids[2]})`;
 ```
 
-The util function `sql:arrayFlattenQuery()` is introduced to make the array flatten easier. It makes the inclusion of varying array elements into the query easier by flattening the array to return a parameterized query. You can construct the complex dynamic query with the `IN` operator by using both functions like below.
+The `sql:arrayFlattenQuery()` util function is used to make the array flattening easier. It makes the inclusion of varying array elements into the query easier by flattening the array to return a parameterized query. You can construct the complex dynamic query with the `IN` operator by using both functions as shown below.
 
 ```ballerina
 int[] ids = [1, 2];
@@ -227,11 +227,12 @@ sql:ParameterizedQuery sqlQuery =
 
 #### Creating Tables
 
-This sample creates a table with two columns. One column is of type `int` and the other is of type `varchar`.
+This sample creates a table with three columns. The first column is a primary key of type `int`
+while the second column is of type `int` and the other is of type `varchar`.
 The `CREATE` statement is executed via the `execute` remote function of the client.
 
 ```ballerina
-// Create the ‘Students’ table with the  ‘id’, 'name', and ‘age’ fields.
+// Create the ‘Students’ table with the ‘id’, ’age’, and ’name’ fields.
 sql:ExecutionResult result = 
                 check dbClient->execute(`CREATE TABLE student (
                                            id INT AUTO_INCREMENT,
@@ -239,7 +240,7 @@ sql:ExecutionResult result =
                                            name VARCHAR(255), 
                                            PRIMARY KEY (id)
                                          )`);
-//A value of the sql:ExecutionResult type is returned for 'result'. 
+// A value of the sql:ExecutionResult type is returned for 'result'. 
 ```
 
 #### Inserting Data
@@ -255,10 +256,10 @@ sql:ExecutionResult result = check dbClient->execute(`INSERT INTO student(age, n
                                                         VALUES (23, 'john')`);
 ```
 
-In this sample, the parameter values, which are in local variables are used to parameterize the SQL query in
-the `execute` remote function. This type of a parameterized SQL query can be used with any primitive Ballerina type
-like `string`, `int`, `float`, or `boolean` and in that case, the corresponding SQL type of the parameter is derived
-from the type of the Ballerina variable that is passed in.
+In this sample, the parameter values, which are assigned to local variables are used to parameterize the SQL query in
+the `execute` remote function. This type of parameterized SQL query can be used with any primitive Ballerina type
+such as `string`, `int`, `float`, or `boolean` and in that case, the corresponding SQL type of the parameter is derived
+from the type of the Ballerina variable that is passed.
 
 ```ballerina
 string name = "Anne";
@@ -269,7 +270,7 @@ sql:ParameterizedQuery query = `INSERT INTO student(age, name)
 sql:ExecutionResult result = check dbClient->execute(query);
 ```
 
-In this sample, the parameter values are passed as a `sql:TypedValue` to the `execute` remote function. Use the
+In this sample, the parameter values are passed as an `sql:TypedValue` to the `execute` remote function. Use the
 corresponding subtype of the `sql:TypedValue` such as `sql:VarcharValue`, `sql:CharValue`, `sql:IntegerValue`, etc., when you need to
 provide more details such as the exact SQL type of the parameter.
 
@@ -294,9 +295,11 @@ string name = "Kate";
 sql:ParameterizedQuery query = `INSERT INTO student(age, name)
                                   VALUES (${age}, ${name})`;
 sql:ExecutionResult result = check dbClient->execute(query);
-//Number of rows affected by the execution of the query.
+
+// Number of rows affected by the execution of the query.
 int? count = result.affectedRowCount;
-//The integer or string generated by the database in response to a query execution.
+
+// The integer or string generated by the database in response to a query execution.
 string|int? generatedKey = result.lastInsertId;
 ```
 
@@ -316,8 +319,8 @@ in the record and additional database columns fetched by the SQL query, which ar
 > defined fields in the record are returned or gives an error when additional columns are present in the SQL query. 
 
 Next, the `SELECT` query is executed via the `query` remote function of the client. Once the query is executed, each data record 
-can be retrieved by looping the result set. The `stream` returned by the `SELECT` operation holds a pointer to the
-actual data in the database and it loads data from the table only when it is accessed. This stream can be iterated only
+can be retrieved by iterating through the result set. The `stream` returned by the `SELECT` operation holds a pointer to the
+actual data in the database, and it loads data from the table only when it is accessed. This stream can be iterated only
 once.
 
 ```ballerina
@@ -338,12 +341,13 @@ sql:ParameterizedQuery query = `SELECT * FROM students
 stream<Student, sql:Error?> resultStream = dbClient->query(query);
 
 // Iterating the returned table.
-error? e = resultStream.forEach(function(Student student) {
-   //Can perform operations using the record 'student' of type `Student`.
-});
+check from Student student in resultStream
+   do {
+       // Can perform operations using the record 'student' of type `Student`.
+   };
 ```
 
-Defining the return type is optional and you can query the database without providing the result type. Hence,
+Defining the return type is optional, and you can query the database without providing the result type. Hence,
 the above sample can be modified as follows with an open record type as the return type. The property name in the open record
 type will be the same as how the column is defined in the database.
 
@@ -358,14 +362,15 @@ sql:ParameterizedQuery query = `SELECT * FROM students
 stream<record{}, sql:Error?> resultStream = dbClient->query(query);
 
 // Iterating the returned table.
-error? e = resultStream.forEach(function(record{} student) {
-    // Can perform operations using the record 'student'.
-    io:println("Student name: ", student.value["name"]);
-});
+check from record{} student in resultStream
+   do {
+      // Can perform operations using the record 'student'.
+      io:println("Student name: ", student.value["name"]);
+   };
 ```
 
 There are situations in which you may not want to iterate through the database and in that case, you may decide
-to use the `sql:queryRow()` operation. If the provided return type is a record, this method returns only the first row
+to use the `queryRow()` operation. If the provided return type is a record, this method returns only the first row
 retrieved by the query as a record.
 
 ```ballerina
@@ -374,7 +379,7 @@ sql:ParameterizedQuery query = `SELECT * FROM students WHERE id = ${id}`;
 Student retrievedStudent = check dbClient->queryRow(query);
 ```
 
-The `sql:queryRow()` operation can also be used to retrieve a single value from the database (e.g., when querying using
+The `queryRow()` operation can also be used to retrieve a single value from the database (e.g., when querying using
 `COUNT()` and other SQL aggregation functions). If the provided return type is not a record (i.e., a primitive data type)
 , this operation will return the value of the first column of the first row retrieved by the query.
 
@@ -415,7 +420,7 @@ parameterized SQL query as same as the above `execute` operations.
 ```ballerina
 // Create the table with the records that need to be inserted.
 var data = [
-  { name: "John", age: 25  },
+  { name: "John", age: 25 },
   { name: "Peter", age: 24 },
   { name: "jane", age: 22 }
 ];
@@ -440,9 +445,10 @@ sql:ProcedureCallResult result =
                          check dbClient->call(`call InsertPerson(${uid}, ${insertId})`);
 stream<record{}, sql:Error?>? resultStr = result.queryResult;
 if resultStr is stream<record{}, sql:Error?> {
-    sql:Error? e = resultStr.forEach(function(record{} result) {
-      // Can perform operations using the record 'result'.
-    });
+   check from record{} result in resultStr
+      do {
+         // Can perform operations using the record 'result'.
+      };
 }
 check result.close();
 ```
