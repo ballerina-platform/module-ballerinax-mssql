@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [Fix Compiler plugin crash when variable is passed for `sql:ConnectionPool` and `mssql:Options`](https://github.com/ballerina-platform/ballerina-standard-library/issues/2536)
 
-## [1.2.1] - 2021-02-03
+## [1.2.1] - 2022-02-03
 
 ### Changed
 - [Fix Compiler plugin crash when variable is passed for `sql:ConnectionPool` and `mssql:Options`](https://github.com/ballerina-platform/ballerina-standard-library/issues/2536)
