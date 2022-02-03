@@ -18,7 +18,7 @@ import ballerina/jballerina.java;
 import ballerina/sql;
 import ballerina/crypto;
 
-# Represents a MSSQL database client.
+# Represents an MSSQL database client.
 public isolated client class Client {
     *sql:Client;
 
@@ -26,11 +26,11 @@ public isolated client class Client {
     #
     # + host - Hostname of the MSSQL server
     # + user - If the MSSQL server is secured, the username
-    # + password - The password associated with the username
+    # + password - The password of the MSSQL server for the provided username
     # + database - The name of the database
-    # + port - Port of the MSSQL server
+    # + port - Port number of the MSSQL server
     # + instance - Instance name of the MSSQL server
-    # + options - MSSQL database conenction options
+    # + options - MSSQL database connection options
     # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
     #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
     # + return - An `sql:Error` if the client creation fails
@@ -61,11 +61,11 @@ public isolated client class Client {
     } external;
 
     # Executes the query, which is expected to return at most one row of the result.
-    # If the query does not return any results, `sql:NoRowsError` is returned
+    # If the query does not return any results, an `sql:NoRowsError` is returned.
     #
     # + sqlQuery - The SQL query
     # + returnType - The `typedesc` of the record to which the result needs to be returned.
-    #                It can be a basic type if the query contains only one column
+    #                It can be a basic type if the query result contains only one column
     # + return - Result in the `returnType` type or an `sql:Error`
     remote isolated function queryRow(sql:ParameterizedQuery sqlQuery, typedesc<anydata> returnType = <>)
     returns returnType|sql:Error = @java:Method {
@@ -83,9 +83,9 @@ public isolated client class Client {
         name: "nativeExecute"
     } external;
 
-    # Executes the SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is
+    # Executes an SQL query with multiple sets of parameters in a batch. Only the metadata of the execution is
     # returned (not results from the query). If one of the commands in the batch fails (except syntax error),
-    # the `sql:BatchExecuteError` will be deferred until the rest of the commands are completed.
+    # the `sql:BatchExecuteError` will be deferred until the remaining commands are completed.
     #
     # + sqlQueries - The SQL query with multiple sets of parameters
     # + return - Metadata of the query execution as an `sql:ExecutionResult[]` or an `sql:Error`
@@ -96,10 +96,10 @@ public isolated client class Client {
         return nativeBatchExecute(self, sqlQueries);
     }
 
-    # Executes a SQL query, which calls a stored procedure. This can return results or not.
+    # Executes an SQL query, which calls a stored procedure. This may or may not return results.
     #
     # + sqlQuery - The SQL query
-    # + rowTypes - The array `typedesc` of the records to which the results needs to be returned
+    # + rowTypes - `typedesc` array of the records to which the results need to be returned
     # + return - Summary of the execution and results are returned in an `sql:ProcedureCallResult`, or an `sql:Error`
     remote isolated function call(sql:ParameterizedCallQuery sqlQuery, typedesc<record {}>[] rowTypes = [])
     returns sql:ProcedureCallResult|sql:Error = @java:Method {
@@ -107,23 +107,23 @@ public isolated client class Client {
         name: "nativeCall"
     } external;
 
-    # Closes the SQL client and shuts down the connection pool.
+    # Closes the MSSQL client and shuts down the connection pool.
     #
-    # + return - Possible error when closing the client
+    # + return - `()` or an `sql:Error`
     public isolated function close() returns sql:Error? = @java:Method {
         'class: "io.ballerina.stdlib.mssql.nativeimpl.ClientProcessorUtils",
         name: "close"
     } external;
 }
 
-# Client Configuration record for connection initialization
+# Provides an additional set of configurations for the MSSQL client to be passed internally within the module.
 #
-# + host - Hostname of the mssql server
-# + instance - Instance name of the server
-# + port - Port number of the mssql server
+# + host - Hostname of the MSSQL server
+# + instance - Instance name of the MSSQL server
+# + port - Port number of the MSSQL server
 # + database - Name of the database
-# + user - Username for the database connection
-# + password - Password for the database connection
+# + user - If the MSSQL server is secured, the username
+# + password - The password of the MSSQL server for the provided username
 # + options - MSSQL database specific options
 # + connectionPool - The `sql:ConnectionPool` to be used for the connection. If there is no
 #                    `connectionPool` provided, the global connection pool (shared by all clients) will be used
@@ -138,14 +138,14 @@ type ClientConfiguration record {|
     sql:ConnectionPool? connectionPool;
 |};
 
-# Provides a set of configuration related to MSSQL database.
+# Provides a set of additional configurations related to the MSSQL database connection.
 #
-# + secureSocket - SSL Configuration to be used
-# + socketTimeout - Socket timeout (in seconds) during the read/write operations with the MSSQL server
+# + secureSocket - SSL configurations to be used
+# + socketTimeout - Socket timeout (in seconds) to be used during the read/write operations with the MSSQL server
 #                   (0 means no socket timeout)
 # + queryTimeout - Timeout (in seconds) to be used when executing a query.
 #                  (-1/0 means no query timeout)
-# + loginTimeout - Timeout (in seconds) when connecting to the MSSQL server and authentication (Default is 15s).
+# + loginTimeout - Timeout (in seconds) to be used when connecting to the MSSQL server and authentication (default is 15s).
 public type Options record {|
     SecureSocket secureSocket?;
     decimal socketTimeout?;
@@ -153,11 +153,11 @@ public type Options record {|
     decimal loginTimeout?;
 |};
 
-# SSL configuration to be used when connecting to the MSSQL server
+# SSL configurations to be used when connecting to the MSSQL server
 #
 # + encrypt - Encrypt all data sent between the client and the server if the server has a certificate
 #             installed
-# + trustServerCertificate - The SQL Server SSL certificate is automatically trusted when the communication
+# + trustServerCertificate - The MSSQL server SSL certificate is automatically trusted when the communication
 #                            layer is encrypted using TLS
 # + cert - Keystore configuration of the trust certificates
 # + key - Keystore configuration of the client certificates
