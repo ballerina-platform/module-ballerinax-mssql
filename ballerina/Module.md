@@ -1,10 +1,10 @@
 ## Overview
 
-This module provides the functionality required to access and manipulate data stored in an MSSQL database.
+This package provides the functionality required to access and manipulate data stored in an MSSQL database.
 
 ### Prerequisite
 Add the MSSQL driver JAR as a native library dependency in your Ballerina project's `Ballerina.toml` file.
-It is recommended to use a MSSQL driver version greater than 9.2.0 as this module uses the database properties
+It is recommended to use a MSSQL driver version greater than 9.2.0 as this package uses the database properties
 from the MSSQL driver version 9.2.0 onwards.
 
 Follow one of the following methods to add the JAR in the file:
@@ -70,7 +70,7 @@ mssql:Client|sql:Error dbClient = new(
 Similarly, in the sample below, the `mssql:Client` uses named parameters, and it provides an unshared connection pool of the
 [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool)
 type to be used within the client.
-For more details about connection pooling, see the [`sql` Module](https://docs.central.ballerina.io/ballerina/sql/latest).
+For more details about connection pooling, see the [`sql` Package](https://docs.central.ballerina.io/ballerina/sql/latest).
 
 ```ballerina
 mssql:Client|sql:Error dbClient = new(
@@ -106,7 +106,7 @@ mssql:Options mssqlOptions = {
 ```
 #### Connection Pool Handling
 
-All database modules share the same connection pooling concept and there are three possible scenarios for
+All database packages share the same connection pooling concept and there are three possible scenarios for
 connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool).
 
 1. Global, shareable, default connection pool
@@ -169,7 +169,7 @@ check dbClient.close();
 
 ### Database Operations
 
-Once the client is created, database operations can be executed through that client. This module defines the interface
+Once the client is created, database operations can be executed through that client. This package defines the interface
 and common properties that are shared among multiple database clients. It also supports querying, inserting, deleting,
 updating, and batch updating data.
 
