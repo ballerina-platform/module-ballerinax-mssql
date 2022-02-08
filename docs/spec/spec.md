@@ -4,14 +4,18 @@ _Owners_: @daneshk @niveathika
 _Reviewers_: @daneshk  
 _Created_: 2022/01/14   
 _Updated_: 2022/01/25  
+_Edition_: Swan Lake
 _Issue_: [#2292](https://github.com/ballerina-platform/ballerina-standard-library/issues/2292)
 
 # Introduction
 
-This is the specification for the MSSQL standard library, which provides the functionality that is required to access and 
-manipulate data stored in an MSSQL database in the [Ballerina programming language](https://ballerina.io/). 
-Ballerina is an open-source programming language for the cloud that makes it easier to use, combine, and create network 
-services.
+This is the specification for the MSSQL standard library of [Ballerina language](https://ballerina.io/), which provides the functionality that is required to access and manipulate data stored in an SQL Server database.
+
+The MSSQL library specification has evolved and may continue to evolve in the future. Released versions of the specification can be found under the relevant Github tag.
+
+If you have any feedback or suggestions about the library, start a discussion via a [Github issue](https://github.com/ballerina-platform/ballerina-standard-library/issues) or in the [Slack channel](https://ballerina.io/community/). Based on the outcome of the discussion, specification and implementation can be updated. Community feedback is always welcome. Any accepted proposal which affects the specification is stored under `/docs/proposals`. Proposals under discussion can be found with the label `type/proposal` in Github.
+
+Conforming implementation of the specification is released to Ballerina central. Any deviation from the specification is considered a bug.
 
 # Contents
 
