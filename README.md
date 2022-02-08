@@ -6,7 +6,7 @@
 [![Github issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-standard-library/module/mssql.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-standard-library/labels/module%2Fmssql)
 [![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql)
 
-This package provides the functionality required to access and manipulate data stored in an MSSQL database.
+This library provides the functionality required to access and manipulate data stored in an MSSQL database.
 
 ### Prerequisite
 Add the MSSQL driver JAR as a native library dependency in your Ballerina project's `Ballerina.toml` file.
