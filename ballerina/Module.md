@@ -70,7 +70,7 @@ mssql:Client|sql:Error dbClient = new(
 Similarly, in the sample below, the `mssql:Client` uses named parameters, and it provides an unshared connection pool of the
 [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool)
 type to be used within the client.
-For more details about connection pooling, see the [`sql` Module](https://docs.central.ballerina.io/ballerina/sql/latest).
+For more details about connection pooling, see the [`sql` module](https://docs.central.ballerina.io/ballerina/sql/latest).
 
 ```ballerina
 mssql:Client|sql:Error dbClient = new(
@@ -194,7 +194,7 @@ sql:ParameterizedQuery query = `SELECT * FROM students
                                 WHERE id < ${ids[0]} AND age > ${age}`;
 ```
 
-Moreover, the SQL package has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
+Moreover, the SQL module has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
 to create a dynamic/constant complex query.
 
 The `sql:queryConcat()` is used to create a single parameterized query by concatenating a set of parameterized queries.
