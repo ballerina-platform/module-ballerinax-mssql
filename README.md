@@ -10,7 +10,7 @@ This library provides the functionality required to access and manipulate data s
 
 ### Prerequisite
 Add the MSSQL driver JAR as a native library dependency in your Ballerina project's `Ballerina.toml` file.
-It is recommended to use a MSSQL driver version greater than 9.2.0 as this package uses the database properties
+It is recommended to use a MSSQL driver version greater than 9.2.0 as this library uses the database properties
 from the MSSQL driver version 9.2.0 onwards.
 
 Follow one of the following methods to add the JAR in the file:
@@ -76,7 +76,7 @@ mssql:Client|sql:Error dbClient = new(
 Similarly, in the sample below, the `mssql:Client` uses named parameters, and it provides an unshared connection pool of the
 [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool)
 type to be used within the client.
-For more details about connection pooling, see the [`sql` Package](https://docs.central.ballerina.io/ballerina/sql/latest).
+For more details about connection pooling, see the [`sql` library](https://docs.central.ballerina.io/ballerina/sql/latest).
 
 ```ballerina
 mssql:Client|sql:Error dbClient = new(
@@ -112,7 +112,7 @@ mssql:Options mssqlOptions = {
 ```
 #### Connection Pool Handling
 
-All database packages share the same connection pooling concept and there are three possible scenarios for
+All database libraries share the same connection pooling concept and there are three possible scenarios for
 connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool).
 
 1. Global, shareable, default connection pool
@@ -175,7 +175,7 @@ check dbClient.close();
 
 ### Database Operations
 
-Once the client is created, database operations can be executed through that client. This package defines the interface
+Once the client is created, database operations can be executed through that client. This library defines the interface
 and common properties that are shared among multiple database clients. It also supports querying, inserting, deleting,
 updating, and batch updating data.
 
@@ -200,7 +200,7 @@ sql:ParameterizedQuery query = `SELECT * FROM students
                                 WHERE id < ${ids[0]} AND age > ${age}`;
 ```
 
-Moreover, the SQL package has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
+Moreover, the SQL library has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
 to create a dynamic/constant complex query.
 
 The `sql:queryConcat()` is used to create a single parameterized query by concatenating a set of parameterized queries.
