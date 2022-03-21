@@ -34,7 +34,7 @@ To access a database, you must first create an
 [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) object.
 The examples for creating an MSSQL client can be found below.
 
-#### Creating a Client
+#### Create a client
 These examples show the different methods of creating an `mssql:Client`.
 
 The client can be created with an empty constructor, and thereby, will be initialized with the default properties.
@@ -85,7 +85,7 @@ mssql:Client|sql:Error dbClient = new(
 );
 ```
 
-#### Using SSL
+#### SSL usage
 To connect to the MSSQL database using an SSL connection, you must add the SSL configurations to the `mssql:Options` when creating the `mssql:Client`.
 The value of `encrypt` must be set to `true`.
 If `trustServerCertificate` is set to `true`, the client will not validate the server TLS/SSL certificate (used for testing in local environments).
@@ -110,7 +110,7 @@ mssql:Options mssqlOptions = {
   }
 };
 ```
-#### Connection Pool Handling
+#### Handle connection pools
 
 All database libraries share the same connection pooling concept and there are three possible scenarios for
 connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool).
@@ -160,7 +160,7 @@ The [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/c
 [`sql:Client`](https://docs.central.ballerina.io/ballerina/sql/latest/clients/Client) and all the operations
 defined by the `sql:Client` will be supported by the `mssql:Client` as well.
 
-#### Closing the Client
+#### Close the client
 
 Once all the database operations are performed, you can close the client you have created by invoking the `close()`
 operation. This will close the corresponding connection pool if it is not shared by any other database clients.
@@ -173,13 +173,13 @@ Or
 check dbClient.close();
 ```
 
-### Database Operations
+### Database operations
 
 Once the client is created, database operations can be executed through that client. This library defines the interface
 and common properties that are shared among multiple database clients. It also supports querying, inserting, deleting,
 updating, and batch updating data.
 
-#### Parameterized Query
+#### Parameterized query
 
 The `sql:ParameterizedQuery` is used to construct the SQL query to be executed by the client.
 You can create a query with constant or dynamic input data as follows.
@@ -231,7 +231,7 @@ sql:ParameterizedQuery sqlQuery =
                                           sql:arrayFlattenQuery(ids), `)`);
 ```
 
-#### Creating Tables
+#### Create tables
 
 This sample creates a table with three columns. The first column is a primary key of type `int`
 while the second column is of type `int` and the other is of type `varchar`.
@@ -249,7 +249,7 @@ sql:ExecutionResult result =
 // A value of the sql:ExecutionResult type is returned for 'result'. 
 ```
 
-#### Inserting Data
+#### Insert data
 
 These samples show the data insertion by executing an `INSERT` statement using the `execute` remote function
 of the client.
@@ -289,7 +289,7 @@ sql:ParameterizedQuery query = `INSERT INTO student(age, name)
 sql:ExecutionResult result = check dbClient->execute(query);
 ```
 
-#### Inserting Data With Auto-generated Keys
+#### Insert data with auto-generated keys
 
 This sample demonstrates inserting data while returning the auto-generated keys. It achieves this by using the
 `execute` remote function to execute the `INSERT` statement.
@@ -309,7 +309,7 @@ int? count = result.affectedRowCount;
 string|int? generatedKey = result.lastInsertId;
 ```
 
-#### Querying Data
+#### Query data
 
 These samples show how to demonstrate the different usages of the `query` operation to query the
 database table and obtain the results.
@@ -395,7 +395,7 @@ sql:ParameterizedQuery query = `SELECT COUNT(*) FROM students WHERE age < ${age}
 int youngStudents = check dbClient->queryRow(query);
 ```
 
-#### Updating Data
+#### Update data
 
 This sample demonstrates modifying data by executing an `UPDATE` statement via the `execute` remote function of
 the client.
@@ -406,7 +406,7 @@ sql:ParameterizedQuery query = `UPDATE students SET name = 'John' WHERE age = ${
 sql:ExecutionResult result = check dbClient->execute(query);
 ```
 
-#### Deleting Data
+#### Delete data
 
 This sample demonstrates deleting data by executing a `DELETE` statement via the `execute` remote function of
 the client.
@@ -417,7 +417,7 @@ sql:ParameterizedQuery query = `DELETE from students WHERE name = ${name}`;
 sql:ExecutionResult result = check dbClient->execute(query);
 ```
 
-#### Batch Updating Data
+#### Batch update data
 
 This sample demonstrates how to insert multiple records with a single `INSERT` statement that is executed via the
 `batchExecute` remote function of the client. This is done by creating a `table` with multiple records and
@@ -438,7 +438,7 @@ sql:ParameterizedQuery[] batch = from var row in data
 sql:ExecutionResult[] result = check dbClient->batchExecute(batch);
 ```
 
-#### Execute SQL Stored Procedures
+#### Execute SQL stored procedures
 
 This sample demonstrates how to execute a stored procedure with a single `INSERT` statement that is executed via the
 `call` remote function of the client.
@@ -462,15 +462,15 @@ Note that you have to invoke the close operation explicitly on the `sql:Procedur
 
 >**Note:** The default thread pool size used in Ballerina is: `the number of processors available * 2`. You can configure the thread pool size by using the `BALLERINA_MAX_POOL_SIZE` environment variable.
 
-## Issues and Projects 
+## Issues and projects 
 
-Issues and Projects tabs are disabled for this repository as this is part of the Ballerina Standard Library. To report bugs, request new features, start new discussions, view project boards, etc.,visit the Ballerina Standard Library [parent repository](https://github.com/ballerina-platform/ballerina-standard-library). 
+Issues and projects tabs are disabled for this repository as this is part of the Ballerina Standard Library. To report bugs, request new features, start new discussions, view project boards, etc.,visit the Ballerina Standard Library [parent repository](https://github.com/ballerina-platform/ballerina-standard-library). 
 
 This repository only contains the source code for the package.
 
-## Building from the Source
+## Build from the source
 
-### Setting Up the Prerequisites
+### Set up the prerequisites
 
 1. Download and install Java SE Development Kit (JDK) version 11 (from one of the following locations).
    * [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
@@ -478,12 +478,12 @@ This repository only contains the source code for the package.
 
 2. Download and install [Docker](https://www.docker.com/get-started).
    
-3. Export your Github Personal access token with the read package permissions as follows.
+3. Export your GitHub personal access token with the read package permissions as follows.
         
         export packageUser=<Username>
         export packagePAT=<Personal access token>
 
-### Building the Source
+### Build the source
 
 Execute the commands below to build from the source.
 
@@ -505,7 +505,7 @@ Execute the commands below to build from the source.
 
    **Tip:** The following groups of test cases are available.
 
-   Groups | Test Cases
+   Groups | Test cases
    ---| ---
    connection | connection-init<br> ssl
    pool | pool
@@ -538,17 +538,17 @@ Execute the commands below to build from the source.
 
         ./gradlew clean build -PpublishToCentral=true   
 
-## Contributing to Ballerina
+## Contribute to Ballerina
 
 As an open-source project, Ballerina welcomes contributions from the community. 
 
 For more information, go to the [contribution guidelines](https://github.com/ballerina-platform/ballerina-lang/blob/master/CONTRIBUTING.md).
 
-## Code of Conduct
+## Code of conduct
 
-All contributors are encouraged to read the [Ballerina Code of Conduct](https://ballerina.io/code-of-conduct).
+All contributors are encouraged to read the [Ballerina code of conduct](https://ballerina.io/code-of-conduct).
 
-## Useful Links
+## Useful links
 
 * For more information go to the [`MSSQL` library](https://lib.ballerina.io/ballerinax/mssql/latest).
 * Chat live with us via our [Slack channel](https://ballerina.io/community/slack/).
