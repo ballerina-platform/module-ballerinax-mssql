@@ -58,7 +58,7 @@ function testWithoutHost() returns error? {
 function testWithoutUser() returns error? {
     Client dbClient = check new(host = host, port = port, password = password, database = connectDB);
     sql:Error? closeResult = dbClient.close();
-    test:assertExactEquals(closeResult, (), "Initialising connection without host fails.");
+    test:assertExactEquals(closeResult, (), "Initialising connection without user fails.");
 }
 
 @test:Config {
