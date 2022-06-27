@@ -444,7 +444,10 @@ function testMultipleSelectProcedureCall() returns error? {
         record {|record {} value;|}? data = check qResult.next();
         record {}? result1 = data?.value;
         record {} expectedDataRow = {
-            "varchar_type": "This is a varchar"
+            "row_id": 0,
+            "char_type": (),
+            "varchar_type": "This is a varchar",
+            "text_type": ()
         };
         test:assertEquals(result1, expectedDataRow, "Call procedure second select did not match.");
     }
