@@ -11,12 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [Change default username for client initialization to `sa`](https://github.com/ballerina-platform/ballerina-standard-library/issues/2397)
 
-
-## [1.4.0] - 2022-05-30
-
-### Added
+## [1.4.1] - 2022-06-27
 
 ### Changed
+- [Fix NullPointerException when retrieving record with default value](https://github.com/ballerina-platform/ballerina-standard-library/issues/2985)
 
 ## [1.4.0] - 2022-05-20
 
