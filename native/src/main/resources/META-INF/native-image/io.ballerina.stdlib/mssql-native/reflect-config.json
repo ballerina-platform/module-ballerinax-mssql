@@ -1,14 +1,5 @@
 [
   {
-    "name": "apple.security.AppleProvider",
-    "methods": [
-      {
-        "name": "<init>",
-        "parameterTypes": [ ]
-      }
-    ]
-  },
-  {
     "name": "com.microsoft.sqlserver.jdbc.SQLServerDataSource",
     "queryAllPublicMethods": true,
     "methods": [
