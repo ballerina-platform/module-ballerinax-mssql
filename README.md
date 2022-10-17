@@ -551,5 +551,5 @@ All contributors are encouraged to read the [Ballerina code of conduct](https://
 ## Useful links
 
 * For more information go to the [`MSSQL` library](https://lib.ballerina.io/ballerinax/mssql/latest).
-* Chat live with us via our [Slack channel](https://ballerina.io/community/slack/).
+* Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
 * Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.
