@@ -1,6 +1,6 @@
-// Copyright (c) 2020 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2022, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
 //
-// WSO2 Inc. licenses this file to you under the Apache License,
+// WSO2 LLC. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
 // in compliance with the License.
 // You may obtain a copy of the License at
@@ -25,13 +25,13 @@ type XAResultCount record {
 };
 
 @test:BeforeGroups {
-    value: ["transaction"]
+    value: ["xa-transaction"]
 }
 function initXaTransactionTests() returns error? {
-    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS XA_TRANSACTION_DB1`);
-    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS XA_TRANSACTION_DB2`);
-    _ = check executeQueryMssqlClient(`CREATE DATABASE XA_TRANSACTION_DB1`);
-    _ = check executeQueryMssqlClient(`CREATE DATABASE XA_TRANSACTION_DB2`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS xa_transaction_1`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS xa_transaction_2`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_1`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_2`);
 
     sql:ParameterizedQuery query = `
 
@@ -110,11 +110,11 @@ function testXATransactionSuccess() returns error? {
 }
 function testXATransactionFailureWithDataSource() returns error? {
     Client dbClient1 = check new (host, user, password, XA_TRANSACTION_DB1, port,
-                                  connectionPool = {maxOpenConnections: 1},
-                                  options = {useXADatasource: true});
+                                connectionPool = {maxOpenConnections: 1},
+                                options = {useXADatasource: true});
     Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, port,
-                                  connectionPool = {maxOpenConnections: 1},
-                                  options = {useXADatasource: true});
+                                connectionPool = {maxOpenConnections: 1},
+                                options = {useXADatasource: true});
 
     transaction {
         // Intentionally fail first statement
@@ -140,13 +140,13 @@ function testXATransactionFailureWithDataSource() returns error? {
 }
 function testXATransactionPartialSuccessWithDataSource() returns error? {
     Client dbClient1 = check new (host, user, password, XA_TRANSACTION_DB1, port,
-                                  connectionPool = {maxOpenConnections: 1},
-                                  options = {useXADatasource: true}
-                                  );
-    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB1, port,
-                                  connectionPool = {maxOpenConnections: 1},
-                                  options = {useXADatasource: true}
-                                  );
+                                connectionPool = {maxOpenConnections: 1},
+                                options = {useXADatasource: true}
+                                );
+    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, port,
+                                connectionPool = {maxOpenConnections: 1},
+                                options = {useXADatasource: true}
+                                );
 
     transaction {
         _ = check dbClient1->execute(`insert into Customers (customerId, name, creditLimit, country)
