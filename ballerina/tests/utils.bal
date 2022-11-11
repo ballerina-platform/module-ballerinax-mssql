@@ -46,9 +46,9 @@ returns sql:ExecutionResult|error {
     return result;
 }
 
-function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, string? database = ())
+function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, string? database = (), int port = 1433)
 returns sql:ExecutionResult[]|error {
-    Client dbClient = check getMssqlClient(database);
+    Client dbClient = check getMssqlClient(database, port);
     sql:ExecutionResult[] result = check dbClient->batchExecute(sqlQueries);
     check dbClient.close();
     return result;

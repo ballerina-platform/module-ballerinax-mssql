@@ -76,7 +76,7 @@ function initXaTransactionTests() returns error? {
 
         INSERT INTO SalaryTrx VALUES (20, 30000);
     `;
-    _ = check executeQueryMssqlClient(query, XA_TRANSACTION_DB2);
+    _ = check executeQueryMssqlClient(query, XA_TRANSACTION_DB2, trx_port);
 }
 
 @test:Config {
