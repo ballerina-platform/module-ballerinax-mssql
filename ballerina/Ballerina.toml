@@ -22,5 +22,5 @@ version = "1.7.0"
 path = "./lib/sql-native-1.7.0-SNAPSHOT.jar"
 
 [[platform.java11.dependency]]
-path = "./lib/mssql-jdbc-9.2.0.jre11.jar"
+path = "./lib/mssql-jdbc-11.2.0.jre11.jar"
 scope = "testOnly"
