@@ -19,6 +19,7 @@ import ballerina/sql;
 
 string XA_TRANSACTION_DB1 = "xa_transaction_1";
 string XA_TRANSACTION_DB2 = "xa_transaction_2";
+int trx_port = 1432;
 
 type XAResultCount record {
     int COUNTVAL;
@@ -29,9 +30,9 @@ type XAResultCount record {
 }
 function initXaTransactionTests() returns error? {
     _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS xa_transaction_1`);
-    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS xa_transaction_2`);
+    _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS xa_transaction_2`, port = trx_port);
     _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_1`);
-    _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_2`);
+    _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_2`, port = trx_port);
 
     sql:ParameterizedQuery query = `
 
@@ -84,7 +85,7 @@ function initXaTransactionTests() returns error? {
 function testXATransactionSuccess() returns error? {
     Client dbClient1 = check new (host, user, password, XA_TRANSACTION_DB1, port,
                                 connectionPool = {maxOpenConnections: 1}, options = {useXADatasource: true});
-    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, port,
+    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, trx_port,
                                 connectionPool = {maxOpenConnections: 1}, options = {useXADatasource: true});
 
     transaction {
@@ -112,7 +113,7 @@ function testXATransactionFailureWithDataSource() returns error? {
     Client dbClient1 = check new (host, user, password, XA_TRANSACTION_DB1, port,
                                 connectionPool = {maxOpenConnections: 1},
                                 options = {useXADatasource: true});
-    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, port,
+    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, trx_port,
                                 connectionPool = {maxOpenConnections: 1},
                                 options = {useXADatasource: true});
 
@@ -143,7 +144,7 @@ function testXATransactionPartialSuccessWithDataSource() returns error? {
                                 connectionPool = {maxOpenConnections: 1},
                                 options = {useXADatasource: true}
                                 );
-    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, port,
+    Client dbClient2 = check new (host, user, password, XA_TRANSACTION_DB2, trx_port,
                                 connectionPool = {maxOpenConnections: 1},
                                 options = {useXADatasource: true}
                                 );
