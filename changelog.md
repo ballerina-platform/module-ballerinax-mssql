@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-
+- [Support for XA transaction](https://github.com/ballerina-platform/ballerina-standard-library/issues/3598)
+- 
 ### Changed
 - [Updated API docs](https://github.com/ballerina-platform/ballerina-standard-library/issues/3463)
 

@@ -17,7 +17,7 @@
 import ballerina/sql;
 
 
-function getMssqlClient(string? database = ()) returns Client|error {
+function getMssqlClient(string? database = (), int port = 1433) returns Client|error {
     Client dbClient = check new (host, user, password, database, port);
     return dbClient;
 }
@@ -38,17 +38,17 @@ returns record {}|error? {
     return value;
 }
 
-function executeQueryMssqlClient(sql:ParameterizedQuery sqlQuery, string? database = ())
+function executeQueryMssqlClient(sql:ParameterizedQuery sqlQuery, string? database = (), int port = 1433)
 returns sql:ExecutionResult|error {
-    Client dbClient = check getMssqlClient(database);
+    Client dbClient = check getMssqlClient(database, port);
     sql:ExecutionResult result = check dbClient->execute(sqlQuery);
     check dbClient.close();
     return result;
 }
 
-function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, string? database = ())
+function batchExecuteQueryMssqlClient(sql:ParameterizedQuery[] sqlQueries, string? database = (), int port = 1433)
 returns sql:ExecutionResult[]|error {
-    Client dbClient = check getMssqlClient(database);
+    Client dbClient = check getMssqlClient(database, port);
     sql:ExecutionResult[] result = check dbClient->batchExecute(sqlQueries);
     check dbClient.close();
     return result;
