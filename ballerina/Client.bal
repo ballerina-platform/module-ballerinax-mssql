@@ -146,11 +146,13 @@ type ClientConfiguration record {|
 # + queryTimeout - Timeout (in seconds) to be used when executing a query.
 #                  (-1/0 means no query timeout)
 # + loginTimeout - Timeout (in seconds) to be used when connecting to the MSSQL server and authentication (default is 15s).
+# + useXADatasource - Flag to enable or disable XADatasource
 public type Options record {|
     SecureSocket secureSocket?;
     decimal socketTimeout?;
     decimal queryTimeout?;
     decimal loginTimeout?;
+    boolean useXADatasource = false;
 |};
 
 # SSL configurations to be used when connecting to the MSSQL server
