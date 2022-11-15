@@ -119,6 +119,7 @@ publishing {
 }
 
 def testContainerName = "ballerina-mssql-testContainer"
+def testXaTrxContainerName = "ballerina-mssql-trxtestContainer"
 
 task createTestDockerImage(type: Exec) {
     if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -179,6 +180,27 @@ task startTestDockerContainer(type: Exec) {
     }
 }
 
+task startTestDockerTrxContainer(type: Exec) {
+    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+        def standardOutput = new ByteArrayOutputStream()
+        commandLine 'sh', '-c',
+                "docker run --rm -d --name ${testXaTrxContainerName} -e ACCEPT_EULA=Y -e SA_PASSWORD=Test123# -p 1432:1433 -d ballerina-mssql"
+        def healthCheck = 1;
+        def counter = 0;
+        doLast {
+            checkExecResult(execResult, 'Error', standardOutput)
+            while (healthCheck != 0 && counter < 12) {
+                sleep(5 * 1000)
+                healthCheck = checkTestDockerContainerStatus(testXaTrxContainerName)
+                counter = counter + 1;
+            }
+            if (healthCheck != 0) {
+                throw new GradleException("Docker container '${testXaTrxContainerName}' health test exceeded timeout!")
+            }
+        }
+    }
+}
+
 task stopTestDockerContainer() {
     doLast {
         if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -195,13 +217,33 @@ task stopTestDockerContainer() {
     }
 }
 
+task stopTestDockerTrxContainer() {
+    doLast {
+        if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+            try {
+                def stdOut = new ByteArrayOutputStream()
+                exec {
+                    commandLine 'sh', '-c', "docker stop ${testXaTrxContainerName}"
+                    standardOutput = stdOut
+                }
+            } catch (all) {
+                println("Process can safely ignore stopTestDockerContainer task")
+            }
+        }
+    }
+}
 
 updateTomlFiles.dependsOn copyStdlibs
 startTestDockerContainer.dependsOn createTestDockerImage
 
 build.dependsOn "generatePomFileForMavenPublication"
 build.dependsOn ":${packageName}-native:build"
-test.dependsOn ":${packageName}-native:build"
 build.dependsOn ":${packageName}-compiler-plugin:build"
+build.finalizedBy stopTestDockerContainer
+build.finalizedBy stopTestDockerTrxContainer
+
+test.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-compiler-plugin:build"
 test.dependsOn startTestDockerContainer
+test.dependsOn startTestDockerTrxContainer
+test.dependsOn ":${packageName}-native:build"

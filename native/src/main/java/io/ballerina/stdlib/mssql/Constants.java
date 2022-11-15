@@ -85,6 +85,7 @@ public final class Constants {
         public static final BString QUERY_TIMEOUT = StringUtils.fromString("queryTimeout");
         public static final BString SOCKET_TIMEOUT = StringUtils.fromString("socketTimeout");
         public static final BString LOGIN_TIMEOUT = StringUtils.fromString("loginTimeout");
+        public static final BString USE_XA_DATASOURCE = StringUtils.fromString("useXADatasource");
 
         //SSL properties
         public static final BString ENCRYPT = StringUtils.fromString("encrypt");
@@ -133,5 +134,6 @@ public final class Constants {
     }
 
     public static final String MSSQL_DATASOURCE_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDataSource";
+    public static final String MSSQL_XA_DATASOURCE_NAME = "com.microsoft.sqlserver.jdbc.SQLServerXADataSource";
     public static final String POOL_CONNECT_TIMEOUT = "ConnectionTimeout";
 }
