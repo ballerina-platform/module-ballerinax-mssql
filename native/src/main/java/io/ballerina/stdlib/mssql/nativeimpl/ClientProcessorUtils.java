@@ -58,6 +58,7 @@ public class ClientProcessorUtils {
             url += ";database=" + database;
         }
         BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
+        String datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         BMap properties = null;
         Properties poolProperties = null;
         if (options != null) {
@@ -67,10 +68,12 @@ public class ClientProcessorUtils {
                 poolProperties = new Properties();
                 poolProperties.setProperty(Constants.POOL_CONNECT_TIMEOUT, queryTimeout.toString());
             }
+            if (options.getBooleanValue(Constants.DatabaseProps.USE_XA_DATASOURCE)) {
+                datasourceName = Constants.MSSQL_XA_DATASOURCE_NAME;
+            }
         }
        
         BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
-        String datasourceName = Constants.MSSQL_DATASOURCE_NAME;
         
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
                 .setUrl(url)
