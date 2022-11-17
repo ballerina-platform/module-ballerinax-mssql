@@ -40,7 +40,7 @@ function initXaTransactionTests() returns error? {
     _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_1`);
     _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_2`, port = trx_port);
 
-    sql:ParameterizedQuery query = `
+    query = `
 
         DROP TABLE IF EXISTS Customers;
 
