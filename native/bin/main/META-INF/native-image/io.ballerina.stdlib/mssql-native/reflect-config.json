@@ -1,0 +1,90 @@
+[
+  {
+    "name": "com.microsoft.sqlserver.jdbc.SQLServerDataSource",
+    "queryAllPublicMethods": true,
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [ ]
+      },
+      {
+        "name": "setEncrypt",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "setKeyStoreAuthentication",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setKeyStoreLocation",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setKeyStoreSecret",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setLoginTimeout",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "setPassword",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setQueryTimeout",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "setSocketTimeout",
+        "parameterTypes": [
+          "int"
+        ]
+      },
+      {
+        "name": "setTrustServerCertificate",
+        "parameterTypes": [
+          "boolean"
+        ]
+      },
+      {
+        "name": "setTrustStore",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setTrustStorePassword",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setURL",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      },
+      {
+        "name": "setUser",
+        "parameterTypes": [
+          "java.lang.String"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "bundles": [
+    {
+      "name": "com.microsoft.sqlserver.jdbc.SQLServerResource",
+      "locales": [
+        "",
+        "en-LK"
+      ],
+      "classNames": [
+        "com.microsoft.sqlserver.jdbc.SQLServerResource"
+      ]
+    }
+  ]
+}
