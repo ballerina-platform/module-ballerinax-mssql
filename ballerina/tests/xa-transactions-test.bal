@@ -19,7 +19,7 @@ import ballerina/sql;
 
 string XA_TRANSACTION_DB1 = "xa_transaction_1";
 string XA_TRANSACTION_DB2 = "xa_transaction_2";
-int trx_port = 1432;
+int trx_port = 51432;
 
 type XAResultCount record {
     int COUNTVAL;

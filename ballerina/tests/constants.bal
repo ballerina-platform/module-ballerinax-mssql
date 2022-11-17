@@ -21,5 +21,5 @@ string resourcePath = check file:getAbsolutePath("tests/resources");
 string host = "localhost";
 string user = "sa";
 string password = "Test123#";
-int port = 1433;
-int poolPort = 1433;
+int port = 51433;
+int poolPort = 51433;
