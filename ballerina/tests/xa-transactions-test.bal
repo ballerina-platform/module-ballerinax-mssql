@@ -29,6 +29,12 @@ type XAResultCount record {
     value: ["xa-transaction"]
 }
 function initXaTransactionTests() returns error? {
+    sql:ParameterizedQuery query =`USE master
+                        GO
+                        EXEC sp_grantdbaccess 'shelly', 'shelly'
+                        GO
+                        EXEC sp_addrolemember [SqlJDBCXAUser], 'shelly'`;
+    _ = check executeQueryMssqlClient(query);
     _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS xa_transaction_1`);
     _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS xa_transaction_2`, port = trx_port);
     _ = check executeQueryMssqlClient(`CREATE DATABASE xa_transaction_1`);
