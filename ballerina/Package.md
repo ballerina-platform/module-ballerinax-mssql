@@ -3,7 +3,7 @@
 This package provides the functionality required to access and manipulate data stored in an MSSQL database.
 
 ### Prerequisite
-It is required to import the MSSQL driver dependency in order to connect to a MSQL database. The `ballerinax/mssql.driver`
+It is required to import the MSSQL driver dependency in order to connect to an MSSQL database. The `ballerinax/mssql.driver`
 package bundles the latest MSSQL driver so that the mssql connector can be used in Ballerina projects easily.
 
 ```ballerina
