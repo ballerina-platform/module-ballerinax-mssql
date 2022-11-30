@@ -17,6 +17,7 @@
 import ballerina/io;
 import ballerinax/mssql;
 import ballerina/sql;
+import ballerinax/mssql.driver as _;
 
 // The username , password and name of the MSSQL database
 configurable string dbUsername = "sa";
