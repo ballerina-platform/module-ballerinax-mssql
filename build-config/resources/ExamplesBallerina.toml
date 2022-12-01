@@ -2,6 +2,3 @@
 org = "mssql"
 name = "@example.name@"
 version = "0.1.0"
-
-[[platform.java11.dependency]]
-path = "../../ballerina/lib/mssql-jdbc-@driver.version@.jar"

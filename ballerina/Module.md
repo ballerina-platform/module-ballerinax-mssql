@@ -3,11 +3,21 @@
 This module provides the functionality required to access and manipulate data stored in an MSSQL database.
 
 ### Prerequisite
-Add the MSSQL driver JAR as a native library dependency in your Ballerina project's `Ballerina.toml` file.
-It is recommended to use a MSSQL driver version greater than 9.2.0 as this module uses the database properties
-from the MSSQL driver version 9.2.0 onwards.
+Add the MSSQL driver as a dependency to the Ballerina project.
 
-Follow one of the following methods to add the JAR in the file:
+>**Note:** `ballerinax/mssql` supports MSSQL driver versions above 9.20.
+
+You can achieve this by importing the `ballerinax/mssql.driver` module,
+ ```ballerina
+ import ballerinax/mssql.driver as _;
+ ```
+
+`ballerinax/mssql.driver` package bundles the latest MSSQL driver JAR.
+
+>**Tip:** GraalVM native build is supported when `ballerinax/mssql` is used along with the `ballerinax/mssql.driver`
+
+If you want to add a MSSQL driver of a specific version, you can add it as a dependency in Ballerina.toml.
+Follow one of the following ways to add the JAR in the file:
 
 * Download the JAR and update the path.
     ```
