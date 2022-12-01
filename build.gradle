@@ -95,10 +95,7 @@ subprojects {
         ballerinaStdLibs "io.ballerina.stdlib:url-ballerina:${stdlibUrlVersion}"
         ballerinaStdLibs "io.ballerina.stdlib:observe-ballerina:${observeVersion}"
         ballerinaStdLibs "io.ballerina:observe-ballerina:${observeInternalVersion}"
-
-        externalJars (group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: "${msSQLDriverVersion}") {
-            transitive = false
-        }
+        ballerinaStdLibs "io.ballerina.stdlib:mssql.driver-ballerina:${stdlibMssqlDriverVersion}"
     }
 }
 

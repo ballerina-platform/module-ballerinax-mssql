@@ -3,9 +3,16 @@
 This package provides the functionality required to access and manipulate data stored in an MSSQL database.
 
 ### Prerequisite
-Add the MSSQL driver JAR as a native library dependency in your Ballerina project's `Ballerina.toml` file.
-It is recommended to use a MSSQL driver version greater than 9.2.0 as this package uses the database properties
-from the MSSQL driver version 9.2.0 onwards.
+It is required to import the MSSQL driver dependency in order to connect to an MSSQL database. The `ballerinax/mssql.driver`
+package bundles the latest MSSQL driver so that the mssql connector can be used in Ballerina projects easily.
+
+```ballerina
+import ballerinax/mssql.driver as _;
+```
+
+If it is required to use a specific MSSQL driver JAR, it can be added as a native library dependency in your Ballerina
+project's `Ballerina.toml` file. It is recommended to use a MSSQL driver version greater than 9.2.0 as this library uses
+the database properties from the MSSQL driver version 9.2.0 onwards.
 
 Follow one of the following methods to add the JAR in the file:
 
