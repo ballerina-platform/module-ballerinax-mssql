@@ -294,7 +294,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "sql"
-version = "1.6.0"
+version = "1.7.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "jballerina.java"},
@@ -385,7 +385,7 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "mssql"
-version = "1.6.1"
+version = "1.7.0"
 dependencies = [
 	{org = "ballerina", name = "crypto"},
 	{org = "ballerina", name = "file"},
