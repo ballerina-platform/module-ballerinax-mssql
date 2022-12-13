@@ -49,8 +49,6 @@ function initSchemaClientTests() returns error? {
     `;
 
     sql:ParameterizedQuery query1 = `
-        USE metadataDB;
-
         CREATE PROCEDURE getEmpsName( @EMPNUMBER INT, @FNAME VARCHAR(20) OUT)
         AS
             SELECT @FNAME = FIRSTNAME
@@ -59,8 +57,6 @@ function initSchemaClientTests() returns error? {
     `;
 
     sql:ParameterizedQuery query2 = `
-        USE metadataDB;
-
         CREATE PROCEDURE getEmpsEmail( @EMPNUMBER INT, @EMPEMAIL VARCHAR(20) OUT)
         AS
             SELECT @EMPEMAIL = EMAIL
@@ -80,7 +76,7 @@ function testListTables() returns error? {
     SchemaClient client1 = check new(host, user, password, "metadataDB", port);
     string[] tableList = check client1->listTables();
     check client1.close();
-    test:assertEquals(tableList, ["EMPLOYEES", "OFFICES"]);
+    test:assertEquals(tableList, ["OFFICES", "EMPLOYEES"]);
 }
 
 @test:Config {
@@ -202,7 +198,7 @@ function testGetRoutineInfo() returns error? {
 }
 function testGetRoutineInfoNegative() returns error? {
     SchemaClient client1 = check new(host, user, password, "metadataDB", port);
-    sql:RoutineDefinition|sql:Error routine = client1->getRoutineInfo("getEmpsName");
+    sql:RoutineDefinition|sql:Error routine = client1->getRoutineInfo("getEmpsNames");
     check client1.close();
     if routine is sql:Error {
         test:assertEquals(routine.message(), "Selected routine does not exist in the database, or the user does not have required privilege level to view it.");
