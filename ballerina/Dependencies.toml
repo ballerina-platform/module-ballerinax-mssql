@@ -9,7 +9,7 @@ dependencies-toml-version = "2"
 [[package]]
 org = "ballerina"
 name = "auth"
-version = "2.5.1"
+version = "2.5.0"
 scope = "testOnly"
 dependencies = [
 	{org = "ballerina", name = "crypto"},
@@ -73,7 +73,7 @@ modules = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.5.0"
+version = "2.5.1"
 scope = "testOnly"
 dependencies = [
 	{org = "ballerina", name = "auth"},
