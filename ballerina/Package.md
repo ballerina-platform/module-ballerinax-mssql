@@ -121,7 +121,7 @@ mssql:Options mssqlOptions = {
 All database packages share the same connection pooling concept and there are three possible scenarios for
 connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool).
 
->**Tip**: Connection pooling is used to optimize opening and closing connections to the database. However, the pool comes with an overhead. It is best to configure the connection pool properties as per the application need to get the best performance.
+>**Note**: Connection pooling is used to optimize opening and closing connections to the database. However, the pool comes with an overhead. It is best to configure the connection pool properties as per the application need to get the best performance.
 
 1. Global, shareable, default connection pool
 
@@ -173,7 +173,7 @@ defined by the `sql:Client` will be supported by the `mssql:Client` as well.
 Once all the database operations are performed, you can close the client you have created by invoking the `close()`
 operation. This will close the corresponding connection pool if it is not shared by any other database clients.
 
-> **Tip** : The client must be closed only at the end of the application lifetime (or closed for graceful stops in a service).
+> **Note** : The client must be closed only at the end of the application lifetime (or closed for graceful stops in a service).
 
 ```ballerina
 error? e = dbClient.close();
@@ -322,19 +322,16 @@ string|int? generatedKey = result.lastInsertId;
 #### Query data
 
 These samples show how to demonstrate the different usages of the `query` operation to query the
-database table and obtain the results.
+database table and obtain the results as a stream.
 
->**Tip**: When processing the stream, make sure to consume all fetched data or close the stream.
+>**Note**: When processing the stream, make sure to consume all fetched data or close the stream.
 
 This sample demonstrates querying data from a table in a database.
 First, a type is created to represent the returned result set. This record can be defined as an open or a closed record
 according to the requirement. If an open record is defined, the returned stream type will include both defined fields
 in the record and additional database columns fetched by the SQL query, which are not defined in the record.
 
->**Note:** the mapping of the database column to the returned record's property is case-insensitive if it is defined in
-> the record(i.e., the `ID` column in the result can be mapped to the `id` property in the record). Additional column
-> names are added to the returned record as in the SQL query. If the record is defined as a closed record, only the
-> defined fields in the record are returned or gives an error when additional columns are present in the SQL query.
+>**Note:** the mapping of the database column to the returned record's property is case-insensitive if it is defined in the record(i.e., the `ID` column in the result can be mapped to the `id` property in the record). Additional column names are added to the returned record as in the SQL query. If the record is defined as a closed record, only the defined fields in the record are returned or gives an error when additional columns are present in the SQL query.
 
 Next, the `SELECT` query is executed via the `query` remote function of the client. Once the query is executed, each data record
 can be retrieved by iterating through the result set. The `stream` returned by the `SELECT` operation holds a pointer to the
@@ -387,7 +384,7 @@ check from record{} student in resultStream
    };
 ```
 
-There are situations in which you may not want to iterate through the database and in that case, you may decide
+There are situations in which you may not want to iterate through the database, and in that case, you may decide
 to use the `queryRow()` operation. If the provided return type is a record, this method returns only the first row
 retrieved by the query as a record.
 
@@ -471,9 +468,9 @@ if resultStr is stream<record{}, sql:Error?> {
 check result.close();
 ```
 
->**Note**: Once the results are processed, invoke the `close` method on the `sql:ProcedureCallResult` to release the connection resources and avoid a connection leak as shown above.
+>**Note**: Once the results are processed, the `close` method on the `sql:ProcedureCallResult` must be called.
 
->**Note:** The default thread pool size used in Ballerina is: `the number of processors available * 2`. You can configure the thread pool size by using the `BALLERINA_MAX_POOL_SIZE` environment variable.
+>**Note**: The default thread pool size used in Ballerina is: `the number of processors available * 2`. You can configure the thread pool size by using the `BALLERINA_MAX_POOL_SIZE` environment variable.
 
 ## Report issues
 
