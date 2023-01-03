@@ -22,8 +22,7 @@ import ballerina/crypto;
 public isolated client class Client {
     *sql:Client;
 
-    # Initializes the MSSQL Client. It should be kept open throughout the entirety of the application
-    # to perform the operations.
+    # Initializes the MSSQL Client. The client must be kept open throughout the application lifetime.
     #
     # + host - Hostname of the MSSQL server
     # + user - If the MSSQL server is secured, the username

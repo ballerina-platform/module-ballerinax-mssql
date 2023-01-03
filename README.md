@@ -45,10 +45,10 @@ To access a database, you must first create an
 [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) object.
 The examples for creating an MSSQL client can be found below.
 
+> **Tip**: The client should be used throughout the application lifetime.
+
 #### Create a client
 These examples show the different methods of creating an `mssql:Client`.
-
-> **Tip**: The client should be used throughout the application lifetime.
 
 The client can be created with an empty constructor, and thereby, will be initialized with the default properties.
 
@@ -332,7 +332,7 @@ string|int? generatedKey = result.lastInsertId;
 These samples show how to demonstrate the different usages of the `query` operation to query the
 database table and obtain the results.
 
->**Tip**: When processing the stream, make sure to consume all fetched data or close the stream.
+>**Note**: When processing the stream, make sure to consume all fetched data or close the stream.
 
 This sample demonstrates querying data from a table in a database.
 First, a type is created to represent the returned result set. This record can be defined as an open or a closed record
