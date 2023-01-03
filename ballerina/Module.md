@@ -5,7 +5,7 @@ This module provides the functionality required to access and manipulate data st
 ### Prerequisite
 Add the MSSQL driver as a dependency to the Ballerina project.
 
->**Note:** `ballerinax/mssql` supports MSSQL driver versions above 9.20.
+>**Note**: `ballerinax/mssql` supports MSSQL driver versions above 9.20.
 
 You can achieve this by importing the `ballerinax/mssql.driver` module,
  ```ballerina
@@ -14,7 +14,7 @@ You can achieve this by importing the `ballerinax/mssql.driver` module,
 
 `ballerinax/mssql.driver` package bundles the latest MSSQL driver JAR.
 
->**Tip:** GraalVM native build is supported when `ballerinax/mssql` is used along with the `ballerinax/mssql.driver`
+>**Tip**: GraalVM native build is supported when `ballerinax/mssql` is used along with the `ballerinax/mssql.driver`
 
 If you want to add a MSSQL driver of a specific version, you can add it as a dependency in Ballerina.toml.
 Follow one of the following ways to add the JAR in the file:
@@ -41,7 +41,7 @@ The examples for creating an MSSQL client can be found below.
 #### Create a client
 These examples show the different methods of creating an `mssql:Client`.
 
-> **Tip** : The client should be used throughout the application lifetime.
+> **Tip**: The client should be used throughout the application lifetime.
 
 The client can be created with an empty constructor, and thereby, will be initialized with the default properties.
 
