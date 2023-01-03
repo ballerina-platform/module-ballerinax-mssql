@@ -22,7 +22,7 @@ import ballerina/crypto;
 public isolated client class Client {
     *sql:Client;
 
-    # Initializes the MySQL Client. It should be kept open throughout the entirety of the application
+    # Initializes the MSSQL Client. It should be kept open throughout the entirety of the application
     # to perform the operations.
     #
     # + host - Hostname of the MSSQL server
@@ -110,7 +110,7 @@ public isolated client class Client {
         name: "nativeCall"
     } external;
 
-    # Closes the SQL client and shuts down the connection pool. The client must be closed only at the end of the
+    # Closes the MSSQL client and shuts down the connection pool. The client must be closed only at the end of the
     # application lifetime (or closed for graceful stops in a service).
     #
     # + return - `()` or an `sql:Error`
