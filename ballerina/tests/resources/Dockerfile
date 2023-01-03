@@ -25,8 +25,6 @@ RUN /opt/mssql/bin/mssql-conf set network.tlscert /etc/ssl/certs/mssql.pem
 RUN /opt/mssql/bin/mssql-conf set network.tlskey /etc/ssl/private/mssql.key
 RUN /opt/mssql/bin/mssql-conf set network.tlsprotocols 1.2
 RUN /opt/mssql/bin/mssql-conf set network.forceencryption 1
-COPY sqljdbc_xa.dll /opt/mssql/bin/
-COPY xa_install.sql /docker-entrypoint-initdb.d/
 
 ENV ACCEPT_EULA=Y
 ENV SA_PASSWORD=DefaultPassword123
