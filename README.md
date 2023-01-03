@@ -44,10 +44,10 @@ To access a database, you must first create an
 [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) object.
 The examples for creating an MSSQL client can be found below.
 
+> **Tip**: The client should be used throughout the application lifetime.
+
 #### Create a client
 These examples show the different methods of creating an `mssql:Client`.
-
-> **Tip**: The client should be used throughout the application lifetime.
 
 The client can be created with an empty constructor, and thereby, will be initialized with the default properties.
 
