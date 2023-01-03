@@ -86,6 +86,7 @@ public final class Constants {
         public static final BString USE_XA_DATASOURCE = StringUtils.fromString("useXADatasource");
         public static final BString SOCKET_TIMEOUT = StringUtils.fromString("socketTimeout");
         public static final BString LOGIN_TIMEOUT = StringUtils.fromString("loginTimeout");
+        public static final BString USE_XA_DATASOURCE = StringUtils.fromString("useXADatasource");
 
         //SSL properties
         public static final BString ENCRYPT = StringUtils.fromString("encrypt");

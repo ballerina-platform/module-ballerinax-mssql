@@ -74,7 +74,7 @@ public class ClientProcessorUtils {
         }
        
         BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
-
+        
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
                 .setUrl(url)
                 .setUser(user)

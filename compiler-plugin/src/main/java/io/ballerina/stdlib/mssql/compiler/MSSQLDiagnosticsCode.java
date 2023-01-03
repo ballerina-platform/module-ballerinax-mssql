@@ -20,7 +20,6 @@ package io.ballerina.stdlib.mssql.compiler;
 import io.ballerina.tools.diagnostics.DiagnosticSeverity;
 
 import static io.ballerina.tools.diagnostics.DiagnosticSeverity.ERROR;
-import static io.ballerina.tools.diagnostics.DiagnosticSeverity.HINT;
 
 /**
  * Enum class to hold MSSQL module diagnostic codes.
@@ -34,10 +33,7 @@ public enum MSSQLDiagnosticsCode {
     SQL_103("SQL_103", "invalid value: expected value is greater than or equal to 30", ERROR),
 
     MSSQL_101("MSSQL_101", "invalid value: expected value is greater than or equal to zero", ERROR),
-    MSSQL_102("MSSQL_102", "invalid value: expected value is greater than or equal to -1", ERROR),
-
-    MSSQL_901("MSSQL_901", "parameter 'rowType' should be explicitly passed when the return data is ignored", HINT),
-    MSSQL_902("MSSQL_902", "parameter 'returnType' should be explicitly passed when the return data is ignored", HINT);
+    MSSQL_102("MSSQL_102", "invalid value: expected value is greater than or equal to -1", ERROR);
 
     private final String code;
     private final String message;
