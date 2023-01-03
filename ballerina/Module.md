@@ -5,7 +5,7 @@ This module provides the functionality required to access and manipulate data st
 ### Prerequisite
 Add the MSSQL driver as a dependency to the Ballerina project.
 
->**Note:** `ballerinax/mssql` supports MSSQL driver versions above 9.20.
+>**Note**: `ballerinax/mssql` supports MSSQL driver versions above 9.20.
 
 You can achieve this by importing the `ballerinax/mssql.driver` module,
  ```ballerina
@@ -14,7 +14,7 @@ You can achieve this by importing the `ballerinax/mssql.driver` module,
 
 `ballerinax/mssql.driver` package bundles the latest MSSQL driver JAR.
 
->**Tip:** GraalVM native build is supported when `ballerinax/mssql` is used along with the `ballerinax/mssql.driver`
+>**Tip**: GraalVM native build is supported when `ballerinax/mssql` is used along with the `ballerinax/mssql.driver`
 
 If you want to add a MSSQL driver of a specific version, you can add it as a dependency in Ballerina.toml.
 Follow one of the following ways to add the JAR in the file:
@@ -41,7 +41,7 @@ The examples for creating an MSSQL client can be found below.
 #### Create a client
 These examples show the different methods of creating an `mssql:Client`.
 
-> **Tip** : The client should be used throughout the application lifetime.
+> **Tip**: The client should be used throughout the application lifetime.
 
 The client can be created with an empty constructor, and thereby, will be initialized with the default properties.
 
@@ -173,7 +173,7 @@ defined by the `sql:Client` will be supported by the `mssql:Client` as well.
 Once all the database operations are performed, you can close the client you have created by invoking the `close()`
 operation. This will close the corresponding connection pool if it is not shared by any other database clients.
 
-> **Note** : The client must be closed only at the end of the application lifetime (or closed for graceful stops in a service).
+>**Note**: The client must be closed only at the end of the application lifetime (or closed for graceful stops in a service).
 
 ```ballerina
 error? e = dbClient.close();
@@ -331,10 +331,7 @@ First, a type is created to represent the returned result set. This record can b
 according to the requirement. If an open record is defined, the returned stream type will include both defined fields
 in the record and additional database columns fetched by the SQL query, which are not defined in the record.
 
->**Note:** the mapping of the database column to the returned record's property is case-insensitive if it is defined in 
-> the record(i.e., the `ID` column in the result can be mapped to the `id` property in the record). Additional column
-> names are added to the returned record as in the SQL query. If the record is defined as a closed record, only the 
-> defined fields in the record are returned or gives an error when additional columns are present in the SQL query. 
+>**Note**: the mapping of the database column to the returned record's property is case-insensitive if it is defined in the record (i.e., the `ID` column in the result can be mapped to the `id` property in the record). Additional column names are added to the returned record as in the SQL query. If the record is defined as a closed record, only the defined fields in the record are returned or gives an error when additional columns are present in the SQL query. 
 
 Next, the `SELECT` query is executed via the `query` remote function of the client. Once the query is executed, each data record 
 can be retrieved by iterating through the result set. The `stream` returned by the `SELECT` operation holds a pointer to the
