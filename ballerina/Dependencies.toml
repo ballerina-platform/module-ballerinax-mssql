@@ -405,10 +405,9 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "mssql.driver"
-version = "1.4.0"
+version = "1.4.1"
 scope = "testOnly"
 modules = [
 	{org = "ballerinax", packageName = "mssql.driver", moduleName = "mssql.driver"}
 ]
-
 
