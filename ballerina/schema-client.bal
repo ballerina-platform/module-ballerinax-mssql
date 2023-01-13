@@ -238,13 +238,12 @@ isolated client class SchemaClient {
             return error sql:Error(string `Error while reading referential constraints in the ${tableName} table, in the ${self.database} database.`, cause = e);
         }
 
-        _ = checkpanic from sql:ColumnDefinition col in <sql:ColumnDefinition[]>tableDef.columns
-            do {
-                sql:ReferentialConstraint[]? refConst = refConstMap[col.name];
-                if refConst is sql:ReferentialConstraint[] && refConst.length() != 0 {
-                    col.referentialConstraints = refConst;
-                }
-            };
+        foreach sql:ColumnDefinition col in <sql:ColumnDefinition[]>tableDef.columns {
+            sql:ReferentialConstraint[]? refConst = refConstMap[col.name];
+            if refConst is sql:ReferentialConstraint[] && refConst.length() != 0 {
+                col.referentialConstraints = refConst;
+            }
+        }
 
         check refResults.close();
 
