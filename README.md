@@ -1,4 +1,4 @@
-# Ballerina MSSQL Library
+# Ballerina MSSQL Librar
 
 [![Build](https://github.com/ballerina-platform/module-ballerinax-mssql/workflows/Build/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-mssql/actions?query=workflow%3ABuild)
 [![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql)
