@@ -47,6 +47,9 @@ import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.MSSQL_102;
  */
 public class Utils {
 
+    private Utils() {
+    }
+
     public static boolean hasCompilationErrors(SyntaxNodeAnalysisContext ctx) {
         for (Diagnostic diagnostic : ctx.compilation().diagnosticResult().diagnostics()) {
             if (diagnostic.diagnosticInfo().severity() == DiagnosticSeverity.ERROR) {
