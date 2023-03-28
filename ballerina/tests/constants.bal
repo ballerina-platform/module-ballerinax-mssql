@@ -18,7 +18,7 @@ import ballerina/file;
 
 string resourcePath = check file:getAbsolutePath("tests/resources");
 
-string host = "192.168.1.5";
+string host = "localhost";
 string user = "sa";
 string password = "Test123#";
 int port = 1433;

@@ -233,16 +233,16 @@ task stopTestDockerTrxContainer() {
 }
 
 updateTomlFiles.dependsOn copyStdlibs
-//startTestDockerContainer.dependsOn createTestDockerImage
+startTestDockerContainer.dependsOn createTestDockerImage
 
 build.dependsOn "generatePomFileForMavenPublication"
 build.dependsOn ":${packageName}-native:build"
 build.dependsOn ":${packageName}-compiler-plugin:build"
-//build.finalizedBy stopTestDockerContainer
-//build.finalizedBy stopTestDockerTrxContainer
+build.finalizedBy stopTestDockerContainer
+build.finalizedBy stopTestDockerTrxContainer
 
 test.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-compiler-plugin:build"
-//test.dependsOn startTestDockerContainer
-//test.dependsOn startTestDockerTrxContainer
+test.dependsOn startTestDockerContainer
+test.dependsOn startTestDockerTrxContainer
 test.dependsOn ":${packageName}-native:build"
