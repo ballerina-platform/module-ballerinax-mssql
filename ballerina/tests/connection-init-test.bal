@@ -15,11 +15,13 @@
 
 import ballerina/sql;
 import ballerina/test;
+import ballerina/io;
+import ballerina/lang.runtime;
 
 string connectDB = "CONNECT_DB";
 
 @test:BeforeGroups {
-    value: ["connection-init"]
+    value: ["connection-init", "connectionx"]
 }
 function initConnectionTests() returns error? {
     _ = check executeQueryMssqlClient(`DROP DATABASE IF EXISTS CONNECT_DB`);
@@ -174,4 +176,17 @@ function testWithClosedClient1() returns error? {
     } else {
         test:assertFail("Error expected");
     }
+}
+
+@test:Config {
+    groups: ["connectionx", "connection-init"]
+}
+function connectionRecoveryTest() returns error? {
+    Client dbClient = check new (host = host, user = user, password = password);
+    string x = check dbClient->queryRow(`SELECT 1`);
+    io:println(x);
+    runtime:sleep(10);
+    io:println("2nd query");
+    x = check dbClient->queryRow(`SELECT 1`);
+    io:println(x);
 }
