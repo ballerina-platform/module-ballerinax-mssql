@@ -130,7 +130,7 @@ public class ConversionHelperUtils {
                 continue;
             }
 
-            throw new TypeMismatchError("CompoundCurve", Utils.getBTypeName(element.getType()),
+            throw new TypeMismatchError("CompoundCurve", Utils.getBTypeName(TypeUtils.getType(element)),
                     new String[]{Constants.CustomTypeNames.LINESTRING, Constants.CustomTypeNames.CIRCULARSTRING});
 
         }
@@ -167,7 +167,7 @@ public class ConversionHelperUtils {
                 continue;
             }
 
-            throw new TypeMismatchError("Compound Curve", Utils.getBTypeName(element.getType()),
+            throw new TypeMismatchError("Compound Curve", Utils.getBTypeName(TypeUtils.getType(element)),
                     new String[]{Constants.CustomTypeNames.LINESTRING, Constants.CustomTypeNames.CIRCULARSTRING,
                             Constants.CustomTypeNames.COMPOUNDCURVE});
         }
@@ -191,7 +191,7 @@ public class ConversionHelperUtils {
                 continue;
             }
 
-            throw new TypeMismatchError("Polygon", Utils.getBTypeName(element.getType()),
+            throw new TypeMismatchError("Polygon", Utils.getBTypeName(TypeUtils.getType(element)),
                     Constants.CustomTypeNames.LINESTRING);
         }
         return String.join(", ", stringElements);
@@ -227,7 +227,7 @@ public class ConversionHelperUtils {
                 stringElements[i] = String.format("(%s)", lineStringText);
                 continue;
             }
-            throw new TypeMismatchError("Compound Curve", Utils.getBTypeName(element.getType()),
+            throw new TypeMismatchError("Compound Curve", Utils.getBTypeName(TypeUtils.getType(element)),
                     Constants.CustomTypeNames.LINESTRING);
         }
         // Combine all lines into a multi-line
@@ -252,7 +252,7 @@ public class ConversionHelperUtils {
                 stringElements[i] = String.format("(%s)", polygonText);
                 continue;
             }
-            throw new TypeMismatchError("MultiPloygon", Utils.getBTypeName(element.getType()),
+            throw new TypeMismatchError("MultiPloygon", Utils.getBTypeName(TypeUtils.getType(element)),
                     Constants.CustomTypeNames.POLYGON);
         }
         // Combine all polygons into a multi-polygon
