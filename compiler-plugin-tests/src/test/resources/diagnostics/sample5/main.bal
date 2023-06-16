@@ -1,29 +1,43 @@
-// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com). All Rights Reserved.
 //
-// WSO2 LLC. licenses this file to you under the Apache License,
-// Version 2.0 (the "License"); you may not use this file except
-// in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing,
-// software distributed under the License is distributed on an
-// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-// KIND, either express or implied.  See the License for the
-// specific language governing permissions and limitations
-// under the License.
+// This software is the property of WSO2 LLC. and its suppliers, if any.
+// Dissemination of any information or reproduction of any material contained
+// herein in any form is strictly forbidden, unless permitted by WSO2 expressly.
+// You may not alter or remove any copyright or other notice from copies of this content.
 
 import ballerinax/mssql;
+import ballerinax/mssql.driver as _;
 
-public function main() returns error? {
-    mssql:Client dbClient = check new();
-    _ = check dbClient->query(``);
-    _ = check dbClient->queryRow(``);
-    check invokeQuery(dbClient);
-    check dbClient.close();
-}
+type SqlConnectionPoolConfig record {|
+    int maxOpenConnections = 10;
+    decimal maxConnectionLifeTime = 180;
+    int minIdleConnections = 5;
+|};
 
-function invokeQuery(mssql:Client dbClient) returns error? {
-    _ = check dbClient->query(``);
-}
+type MssqlOptionsConfig record {|
+    decimal connectTimeout = 10;
+|};
+
+type AllocationDatabase record {|
+    SqlConnectionPoolConfig connectionPool;
+    MssqlOptionsConfig mssqlOptions;
+|};
+
+configurable AllocationDatabase allocationDatabase = ?;
+
+final mssql:Client allocationDbClient = check new (
+    host = "localhost",
+    user = "test",
+    password = "test",
+    port = 3306,
+    database = "test",
+    connectionPool = {
+        ...allocationDatabase.connectionPool
+    },
+    options = {
+        ssl: {
+            mode: mssql:SSL_PREFERRED
+        },
+        connectTimeout: allocationDatabase.mssqlOptions.connectTimeout
+    }
+);
