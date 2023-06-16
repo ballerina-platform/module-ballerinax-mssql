@@ -48,7 +48,6 @@ import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.SQL_101;
 import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.SQL_102;
 import static io.ballerina.stdlib.mssql.compiler.MSSQLDiagnosticsCode.SQL_103;
 import static io.ballerina.stdlib.mssql.compiler.Utils.getTerminalNodeValue;
-import static io.ballerina.stdlib.mssql.compiler.Utils.validateOptions;
 
 /**
  * Validate fields of sql:Connection pool fields.
