@@ -69,6 +69,8 @@ public class CompilerPluginTest {
                 .filter(r -> r.diagnosticInfo().severity().equals(DiagnosticSeverity.ERROR))
                 .collect(Collectors.toList());
         long availableErrors = diagnosticErrorStream.size();
+        PrintStream asd = System.out;
+        asd.println(Arrays.toString(diagnosticErrorStream.toArray()));
 
         Assert.assertEquals(availableErrors, 5);
 
@@ -130,8 +132,6 @@ public class CompilerPluginTest {
                 .filter(r -> r.diagnosticInfo().severity().equals(DiagnosticSeverity.ERROR))
                 .collect(Collectors.toList());
         long availableErrors = diagnosticErrorStream.size();
-        PrintStream asd = System.out;
-        asd.println(Arrays.toString(diagnosticErrorStream.toArray()));
         Assert.assertEquals(availableErrors, 3);
         Assert.assertEquals(diagnosticErrorStream.get(0).diagnosticInfo().messageFormat(),
                 "invalid value: expected value is greater than one");
