@@ -88,11 +88,11 @@ public class InitializerParamAnalyzer implements AnalysisTask<SyntaxNodeAnalysis
                     connectionPool = node.expression();
                 }
             }
+        } else if (arguments.size() == 8) {
+            options = ((PositionalArgumentNode) arguments.get(6)).expression();
+            connectionPool = ((PositionalArgumentNode) arguments.get(7)).expression();
         } else if (arguments.size() == 7) {
-            options = ((PositionalArgumentNode) arguments.get(5)).expression();
-            connectionPool = ((PositionalArgumentNode) arguments.get(6)).expression();
-        } else if (arguments.size() == 6) {
-            options = ((PositionalArgumentNode) arguments.get(5)).expression();
+            options = ((PositionalArgumentNode) arguments.get(6)).expression();
         } else {
             return;
         }
