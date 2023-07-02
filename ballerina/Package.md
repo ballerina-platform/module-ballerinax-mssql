@@ -21,13 +21,13 @@ Follow one of the following ways to add the JAR in the file:
 
 * Download the JAR and update the path.
     ```
-    [[platform.java11.dependency]]
+    [[platform.java17.dependency]]
     path = "PATH"
     ```
 
 * Add JAR with the maven dependency params.
     ```
-    [[platform.java11.dependency]]
+    [[platform.java17.dependency]]
     groupId = "com.microsoft.sqlserver"
     artifactId = "mssql-jdbc"
     version = "9.2.0.jre11"

@@ -11,13 +11,13 @@ The `complex-queries-operation` project demonstrates how to use the MSSQL client
 * Follow one of the following ways to add MSSQL database driver JAR in the `Ballerina.toml` file:
     * Download the JAR and update the path
         ```
-        [[platform.java11.dependency]]
+        [[platform.java17.dependency]]
         path = "PATH"
         ```
 
     * Replace the above path with a maven dependency parameter
         ```
-        [[platform.java11.dependency]]
+        [[platform.java17.dependency]]
         groupId = "com.microsoft.sqlserver"
         artifactId = "mssql-jdbc"
         version = "9.2.0.jre11"
