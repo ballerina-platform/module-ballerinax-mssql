@@ -37,7 +37,7 @@ Follow one of the following ways to add the JAR in the file:
     [[platform.java17.dependency]]
     groupId = "com.microsoft.sqlserver"
     artifactId = "mssql-jdbc"
-    version = "9.2.0.jre11"
+    version = "10.2.0.jre17"
     ```
 
 ### Client

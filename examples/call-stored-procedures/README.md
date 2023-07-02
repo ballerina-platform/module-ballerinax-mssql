@@ -20,7 +20,7 @@ The `call-stored-procedures` project demonstrates how to use the MSSQL client to
         [[platform.java17.dependency]]
         groupId = "com.microsoft.sqlserver"
         artifactId = "mssql-jdbc"
-        version = "9.2.0.jre11"
+        version = "10.2.0.jre17"
         ```
 # Run the example
 
