@@ -16,4 +16,8 @@
   ~ under the License.
   -->
 <FindBugsFilter>
+    <Match>
+        <Class name="io.ballerina.stdlib.mssql.parameterprocessor.MssqlStatementParameterProcessor"/>
+        <Bug pattern="MS_EXPOSE_REP" />
+    </Match>
 </FindBugsFilter>
