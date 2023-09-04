@@ -6,28 +6,14 @@ The `execute-operation` project demonstrates how to use the MSSQL client to exec
 
 * Install the MSSQL server and create a database
 
-* Add required configurations in the `config.toml` file
+* Add required configurations in the `Config.toml` file
 
-* Follow one of the following ways to add MSSQL database driver JAR in the `Ballerina.toml` file:
-    * Download the JAR and update the path
-        ```
-        [[platform.java11.dependency]]
-        path = "PATH"
-        ```
-
-    * Replace the above path with a maven dependency parameter
-        ```
-        [[platform.java11.dependency]]
-        groupId = "com.microsoft.sqlserver"
-        artifactId = "mssql-jdbc"
-        version = "9.2.0.jre11"
-        ```
 # Run the example
 
 To run the example, move into the `execute-operation` project and execute the command below.
 
-```
-$bal run
+```shell
+bal run
 ```
 It will build the `execute-operation` Ballerina project and then run it.
 
@@ -35,7 +21,7 @@ It will build the `execute-operation` Ballerina project and then run it.
 
 This gives the following output when running this project.
 
-```ballerina
+```shell
 Updated Row count: 1
 Deleted Row count: 1
 ```
