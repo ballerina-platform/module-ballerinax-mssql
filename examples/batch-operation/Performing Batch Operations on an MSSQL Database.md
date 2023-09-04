@@ -1,6 +1,6 @@
 # Overview
 
-The `batch-operation` project demonstrates how to use the MSSQL client to execute a stored procedure.
+The `batch-operation` project demonstrates how to use the MSSQL client to perform batch operations.
 
 # Prerequisite
 

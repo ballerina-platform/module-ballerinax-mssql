@@ -1,6 +1,6 @@
 # Overview
 
-The `query-operation` project demonstrates how to use the MSSQL client to execute a stored procedure.
+The `query-operation` project demonstrates how to use the MSSQL client to perform a query.
 
 # Prerequisite
 
