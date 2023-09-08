@@ -12,8 +12,8 @@ The `complex-queries-operation` project demonstrates how to use the MSSQL client
 
 To run the example, move into the `complex-queries-operation` project and execute the command below.
 
-```
-$bal run
+```shell
+bal run
 ```
 It will build the `complex-queries-operation` Ballerina project and then run it.
 
@@ -21,7 +21,7 @@ It will build the `complex-queries-operation` Ballerina project and then run it.
 
 This gives the following output when running this project.
 
-```ballerina
+```shell
 Query Result :
 {"customerId":2,"firstName":"Dan","lastName":"Brown","registrationId":2,"creditLimit":10000.0,"country":"UK"}
 ```

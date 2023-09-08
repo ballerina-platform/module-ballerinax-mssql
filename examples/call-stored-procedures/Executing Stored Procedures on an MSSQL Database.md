@@ -12,8 +12,8 @@ The `call-stored-procedures` project demonstrates how to use the MSSQL client to
 
 To run the example, move into the `call-stored-procedures` project and execute the command below.
 
-```
-$bal run
+```shell
+bal run
 ```
 It will build the `call-stored-procedures` Ballerina project and then run it.
 
@@ -21,7 +21,7 @@ It will build the `call-stored-procedures` Ballerina project and then run it.
 
 This gives the following output when running this project.
 
-```ballerina
+```shell
 Call stored procedure `InsertCustomer`.
 Inserted data: {"customerId":3,"firstName":"Bill","lastName":"John","registrationId":3,"creditLimit":5000.0,"country":"United Kingdom"}
 ```

@@ -12,8 +12,8 @@ The `batch-operation` project demonstrates how to use the MSSQL client to perfor
 
 To run the example, move into the `batch-operation` project and execute the command below.
 
-```
-$bal run
+```shell
+bal run
 ```
 It will build the `batch-operation` Ballerina project and then run it.
 
@@ -21,7 +21,7 @@ It will build the `batch-operation` Ballerina project and then run it.
 
 This gives the following output when running this project.
 
-```ballerina
+```shell
 Data in Customers table:
 {"customerId":3,"firstName":"Peter","lastName":"Stuart","registrationID":1,"creditLimit":5000.75,"country":"USA"}
 {"customerId":4,"firstName":"Stephanie","lastName":"Mike","registrationID":2,"creditLimit":8000.0,"country":"USA"}

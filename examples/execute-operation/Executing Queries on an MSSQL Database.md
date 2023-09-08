@@ -12,8 +12,8 @@ The `execute-operation` project demonstrates how to use the MSSQL client to exec
 
 To run the example, move into the `execute-operation` project and execute the command below.
 
-```
-$bal run
+```shell
+bal run
 ```
 It will build the `execute-operation` Ballerina project and then run it.
 
@@ -21,7 +21,7 @@ It will build the `execute-operation` Ballerina project and then run it.
 
 This gives the following output when running this project.
 
-```ballerina
+```shell
 Updated Row count: 1
 Deleted Row count: 1
 ```
