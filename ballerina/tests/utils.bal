@@ -18,7 +18,7 @@ import ballerina/sql;
 import ballerinax/mssql.driver as _;
 
 function getMssqlClient(string? database = (), int port = 1433) returns Client|error {
-    Client dbClient = check new (host, user, password, database, port, options = {secureSocket: {encrypt:false}});
+    Client dbClient = check new (host, user, password, database, port);
     return dbClient;
 }
 
