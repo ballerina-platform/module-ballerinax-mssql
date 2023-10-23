@@ -63,7 +63,7 @@ public class ClientProcessorUtils {
 
         BMap properties = ValueCreator.createMapValue();
         properties.put(Constants.DatabaseProps.ENCRYPT, false);
-        properties.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, false);
+        properties.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, true);
 
         Properties poolProperties = null;
 

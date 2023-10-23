@@ -83,8 +83,8 @@ public class Utils {
             }
             
             int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
-            if (trustServerCertificate == 1) {
-                options.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, true);
+            if (trustServerCertificate == 0) {
+                options.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, false);
             }
 
             BMap trustCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_CERT);
