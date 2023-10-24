@@ -17,7 +17,6 @@
  */
 package io.ballerina.stdlib.mssql.utils;
 
-import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BString;
@@ -30,9 +29,9 @@ import io.ballerina.stdlib.mssql.Constants;
  */
 public class Utils {
 
-    public static BMap generateOptionsMap(BMap mssqlOptions) {
+    public static BMap populateProperties(BMap options, BMap mssqlOptions) {
+
         if (mssqlOptions != null) {
-            BMap<BString, Object> options = ValueCreator.createMapValue();    
             addSSLOptions(mssqlOptions.getMapValue(Constants.Options.SECURE_SOCKET), options);
 
             long queryTimeout = getTimeout(mssqlOptions.get(Constants.Options.QUERY_TIMEOUT_SECONDS));
@@ -84,8 +83,8 @@ public class Utils {
             }
             
             int trustServerCertificate = getBooleanValue(sslConfig.get(Constants.SSLConfig.TRUST_SERVER_CERTIFICATE));
-            if (trustServerCertificate == 1) {
-                options.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, true);
+            if (trustServerCertificate == 0) {
+                options.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, false);
             }
 
             BMap trustCertKeystore = sslConfig.getMapValue(Constants.SSLConfig.CLIENT_CERT);

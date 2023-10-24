@@ -18,6 +18,7 @@
 
 package io.ballerina.stdlib.mssql.nativeimpl;
 
+import io.ballerina.runtime.api.creators.ValueCreator;
 import io.ballerina.runtime.api.values.BMap;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.runtime.api.values.BString;
@@ -59,10 +60,15 @@ public class ClientProcessorUtils {
         }
         BMap options = clientConfig.getMapValue(Constants.ClientConfiguration.OPTIONS);
         String datasourceName = Constants.MSSQL_DATASOURCE_NAME;
-        BMap properties = null;
+
+        BMap properties = ValueCreator.createMapValue();
+        properties.put(Constants.DatabaseProps.ENCRYPT, false);
+        properties.put(Constants.DatabaseProps.TRUST_SERVER_CERTIFICATE, true);
+
         Properties poolProperties = null;
+
         if (options != null) {
-            properties = Utils.generateOptionsMap(options);
+            properties = Utils.populateProperties(properties, options);
             Object queryTimeout = properties.get(Constants.DatabaseProps.QUERY_TIMEOUT);
             if (queryTimeout != null) {
                 poolProperties = new Properties();
