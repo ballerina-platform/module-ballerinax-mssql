@@ -3,7 +3,7 @@
 [![Build](https://github.com/ballerina-platform/module-ballerinax-mssql/workflows/Build/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-mssql/actions?query=workflow%3ABuild)
 [![codecov](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql/branch/main/graph/badge.svg)](https://codecov.io/gh/ballerina-platform/module-ballerinax-mssql)
 [![Trivy](https://github.com/ballerina-platform/module-ballerinax-mssql/actions/workflows/trivy-scan.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-mssql/actions/workflows/trivy-scan.yml)
-[![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-mssql/actions/workflows/build-with-bal-test-native.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-mssql/actions/workflows/build-with-bal-test-native.yml)
+[![GraalVM Check](https://github.com/ballerina-platform/module-ballerinax-mssql/actions/workflows/build-with-bal-test-graalvm.yml/badge.svg)](https://github.com/ballerina-platform/module-ballerinax-mssql/actions/workflows/build-with-bal-test-graalvm.yml)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ballerina-platform/module-ballerinax-mssql.svg)](https://github.com/ballerina-platform/module-ballerinax-mssql/commits/main)
 [![Github issues](https://img.shields.io/github/issues/ballerina-platform/ballerina-standard-library/module/mssql.svg?label=Open%20Issues)](https://github.com/ballerina-platform/ballerina-standard-library/labels/module%2Fmssql)
 
@@ -28,16 +28,16 @@ Follow one of the following ways to add the JAR in the file:
 
 * Download the JAR and update the path.
     ```
-    [[platform.java11.dependency]]
+    [[platform.java17.dependency]]
     path = "PATH"
     ```
 
 * Add JAR with the maven dependency params.
     ```
-    [[platform.java11.dependency]]
+    [[platform.java17.dependency]]
     groupId = "com.microsoft.sqlserver"
     artifactId = "mssql-jdbc"
-    version = "9.2.0.jre11"
+    version = "10.2.0.jre17"
     ```
 
 ### Client
@@ -490,8 +490,8 @@ This repository only contains the source code for the package.
 
 ### Set up the prerequisites
 
-1. Download and install Java SE Development Kit (JDK) version 11 (from one of the following locations).
-   * [Oracle](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
+1. Download and install Java SE Development Kit (JDK) version 17 (from one of the following locations).
+   * [Oracle](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
    * [OpenJDK](https://adoptium.net/)
 
 2. Download and install [Docker](https://www.docker.com/get-started).

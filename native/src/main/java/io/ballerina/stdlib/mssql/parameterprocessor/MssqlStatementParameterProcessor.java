@@ -20,6 +20,7 @@ package io.ballerina.stdlib.mssql.parameterprocessor;
 
 import com.microsoft.sqlserver.jdbc.Geometry;
 import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
+import io.ballerina.runtime.api.utils.TypeUtils;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.stdlib.mssql.Constants;
 import io.ballerina.stdlib.mssql.utils.ConverterUtils;
@@ -53,7 +54,7 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     protected void setCustomSqlTypedParam(Connection connection, PreparedStatement preparedStatement,
                                           int index, BObject typedValue)
             throws SQLException, DataError {
-        String sqlType = typedValue.getType().getName();
+        String sqlType = TypeUtils.getType(typedValue).getName();
         Object value = typedValue.get(io.ballerina.stdlib.sql.Constants.TypedValueFields.VALUE);
         switch (sqlType) {
             case Constants.CustomTypeNames.POINT:

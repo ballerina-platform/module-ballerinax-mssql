@@ -37,7 +37,7 @@ import java.util.Optional;
 
 import static io.ballerina.stdlib.mssql.compiler.Constants.BALLERINAX;
 import static io.ballerina.stdlib.mssql.compiler.Constants.MSSQL;
-import static io.ballerina.stdlib.mssql.compiler.Utils.validateOptions;
+import static io.ballerina.stdlib.mssql.compiler.Utils.validateOptionConfig;
 
 /**
  * Analyser for validation mssql:Options.
@@ -58,7 +58,7 @@ public class RecordAnalyzer implements AnalysisTask<SyntaxNodeAnalysisContext> {
                 if (recordNode.isEmpty()) {
                     return;
                 }
-                validateOptions(ctx, recordNode.get());
+                validateOptionConfig(ctx, recordNode.get());
             }
         }
     }
