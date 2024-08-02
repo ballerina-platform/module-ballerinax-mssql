@@ -150,7 +150,7 @@ def checkTestDockerContainerStatus(containerName) {
         try {
             return exec {
                 commandLine 'sh', '-c',
-                        "docker exec ${containerName} /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Test123#"
+                        "docker exec ${containerName} /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Test123#"
             }.exitValue
         } catch (all) {
             return 1;
