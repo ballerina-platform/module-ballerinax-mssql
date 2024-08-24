@@ -42,7 +42,7 @@ Follow one of the following ways to add the JAR in the file:
 
 ### Client
 To access a database, you must first create an
-[`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) object.
+[`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest#Client) object.
 The examples for creating an MSSQL client can be found below.
 
 > **Tip**: The client should be used throughout the application lifetime.
@@ -66,7 +66,7 @@ mssql:Client|sql:Error dbClient = new(
 ```
 
 The sample below shows an `mssql:Client`, which uses named parameters to pass the attributes since some parameters are skipped in the constructor.
-Further, the [`mssql:Options`](https://docs.central.ballerina.io/ballerinax/mssql/latest/records/Options)
+Further, the [`mssql:Options`](https://docs.central.ballerina.io/ballerinax/mssql/latest#Options)
 property is passed to configure the SSL and login timeout properties in the MSSQL client.
 
 ```ballerina
@@ -87,7 +87,7 @@ mssql:Client|sql:Error dbClient = new(
 ```
 
 Similarly, in the sample below, the `mssql:Client` uses named parameters, and it provides an unshared connection pool of the
-[`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool)
+[`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest#ConnectionPool)
 type to be used within the client.
 For more details about connection pooling, see the [`sql` library](https://docs.central.ballerina.io/ballerina/sql/latest).
 
@@ -127,7 +127,7 @@ mssql:Options mssqlOptions = {
 #### Handle connection pools
 
 All database libraries share the same connection pooling concept and there are three possible scenarios for
-connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest/records/ConnectionPool).
+connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest#ConnectionPool).
 
 >**Note**: Connection pooling is used to optimize opening and closing connections to the database. However, the pool comes with an overhead. It is best to configure the connection pool properties as per the application need to get the best performance.
 
@@ -170,10 +170,10 @@ connection pool handling. For its properties and possible values, see [`sql:Conn
     );
     ```
 
-For more details about each property, see the [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) constructor.
+For more details about each property, see the [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest#Client) constructor.
 
-The [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest/clients/Client) references
-[`sql:Client`](https://docs.central.ballerina.io/ballerina/sql/latest/clients/Client) and all the operations
+The [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest#Client) references
+[`sql:Client`](https://docs.central.ballerina.io/ballerina/sql/latest#Client) and all the operations
 defined by the `sql:Client` will be supported by the `mssql:Client` as well.
 
 #### Close the client
