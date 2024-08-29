@@ -1,7 +1,7 @@
 [package]
 org = "ballerinax"
 name = "mssql"
-version = "1.13.0"
+version = "1.13.1"
 authors = ["Ballerina"]
 keywords = ["database", "client", "network", "SQL", "RDBMS", "SQLServer", "MSSQL"]
 repository = "https://github.com/ballerina-platform/module-ballerinax-mssql"
@@ -15,8 +15,8 @@ graalvmCompatible = true
 [[platform.java17.dependency]]
 groupId = "io.ballerina.stdlib"
 artifactId = "mssql-native"
-version = "1.13.0"
-path = "../native/build/libs/mssql-native-1.13.0.jar"
+version = "1.13.1"
+path = "../native/build/libs/mssql-native-1.13.1.jar"
 
 [[platform.java17.dependency]]
 groupId = "io.ballerina.stdlib"
