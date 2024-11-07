@@ -5,7 +5,7 @@
 
 [ballerina]
 dependencies-toml-version = "2"
-distribution-version = "2201.10.0"
+distribution-version = "2201.10.0-20241025-103700-5c9e6a27"
 
 [[package]]
 org = "ballerina"
@@ -71,7 +71,7 @@ modules = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.12.0"
+version = "2.13.0"
 scope = "testOnly"
 dependencies = [
 	{org = "ballerina", name = "auth"},
