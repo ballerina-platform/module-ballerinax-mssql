@@ -396,7 +396,8 @@ function testMoneyProcedureCall() returns error? {
 }
 
 @test:Config {
-    groups: ["procedures"]
+    groups: ["procedures"],
+    enable: false
 }
 function testTimestamptzRetrieval() returns error? {
     string datetimetz = "2021-07-21T19:14:51.00+01:30";

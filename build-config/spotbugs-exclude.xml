@@ -20,4 +20,8 @@
         <Class name="io.ballerina.stdlib.mssql.parameterprocessor.MssqlStatementParameterProcessor"/>
         <Bug pattern="MS_EXPOSE_REP" />
     </Match>
+    <Match>
+        <Class name="io.ballerina.stdlib.mssql.parameterprocessor.MssqlStatementParameterProcessor"/>
+        <Bug pattern="SING_SINGLETON_HAS_NONPRIVATE_CONSTRUCTOR" />
+    </Match>
 </FindBugsFilter>

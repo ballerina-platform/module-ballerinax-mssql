@@ -28,16 +28,16 @@ Follow one of the following ways to add the JAR in the file:
 
 * Download the JAR and update the path.
     ```
-    [[platform.java17.dependency]]
+    [[platform.java21.dependency]]
     path = "PATH"
     ```
 
 * Add JAR with the maven dependency params.
     ```
-    [[platform.java17.dependency]]
+    [[platform.java21.dependency]]
     groupId = "com.microsoft.sqlserver"
     artifactId = "mssql-jdbc"
-    version = "10.2.0.jre17"
+    version = "12.8.1.jre11"
     ```
 
 ### Client
@@ -490,8 +490,8 @@ This repository only contains the source code for the package.
 
 ### Set up the prerequisites
 
-1. Download and install Java SE Development Kit (JDK) version 17 (from one of the following locations).
-   * [Oracle](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+1. Download and install Java SE Development Kit (JDK) version 21 (from one of the following locations).
+   * [Oracle](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
    * [OpenJDK](https://adoptium.net/)
 
 2. Download and install [Docker](https://www.docker.com/get-started).
