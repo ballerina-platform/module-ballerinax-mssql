@@ -21,16 +21,16 @@ Follow one of the following ways to add the JAR in the file:
 
 * Download the JAR and update the path.
     ```
-    [[platform.java17.dependency]]
+    [[platform.java21.dependency]]
     path = "PATH"
     ```
 
 * Add JAR with the maven dependency params.
     ```
-    [[platform.java17.dependency]]
+    [[platform.java21.dependency]]
     groupId = "com.microsoft.sqlserver"
     artifactId = "mssql-jdbc"
-    version = "10.2.0.jre17"
+    version = "12.8.1.jre11"
     ```
 
 ### Client
