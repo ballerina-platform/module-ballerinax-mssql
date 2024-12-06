@@ -396,18 +396,18 @@ function testMoneyProcedureCall() returns error? {
 }
 
 @test:Config {
-    groups: ["procedures"],
-    enable: false
+    groups: ["procedures"]
 }
 function testTimestamptzRetrieval() returns error? {
     string datetimetz = "2021-07-21T19:14:51.00+01:30";
     sql:TimestampWithTimezoneOutParameter datetimetzOutValue = new;
 
     sql:ParameterizedCallQuery sqlQuery = `{call DateTimeOutProcedure (2, ${datetimetzOutValue})}`;
-    _ = check callProcedureMssqlClient(sqlQuery, proceduresDb, [DatetimeProcedureRecord]);
-
+    Client dbClient = check getMssqlClient(proceduresDb);
+    _ = check dbClient->call(sqlQuery, [DatetimeProcedureRecord]);
     test:assertEquals(check datetimetzOutValue.get(time:Utc), check time:utcFromString(datetimetz),
                       "Retrieved date time with timestamp does not match.");
+    check dbClient.close();
 }
 
 @test:Config {
