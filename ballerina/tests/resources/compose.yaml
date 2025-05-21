@@ -1,0 +1,30 @@
+services:
+    mssql:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        container_name: ballerina-mssql
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "Test123#"
+        ports:
+          - "1433:1433"
+        volumes:
+            - ./keystore/server/server-cert.pem:/etc/ssl/certs/mssql.pem:ro
+            - ./keystore/server/server-key.pem:/etc/ssl/private/mssql.key:ro
+            - ./entrypoint.sh:/entrypoint.sh:ro
+        user: root
+        command: ["/bin/bash", "/entrypoint.sh"]
+
+    mssql-trx:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        container_name: ballerina-mssql-trx
+        environment:
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "Test123#"
+        ports:
+          - "1432:1433"
+        volumes:
+            - ./keystore/server/server-cert.pem:/etc/ssl/certs/mssql.pem:ro
+            - ./keystore/server/server-key.pem:/etc/ssl/private/mssql.key:ro
+            - ./entrypoint.sh:/entrypoint.sh:ro
+        user: root
+        command: ["/bin/bash", "/entrypoint.sh"]
