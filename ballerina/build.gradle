@@ -117,132 +117,57 @@ publishing {
     }
 }
 
-def testContainerName = "ballerina-mssql-testContainer"
-def testXaTrxContainerName = "ballerina-mssql-trxtestContainer"
+tasks.register('startMSSQLServers') {
+    doLast {
+        def stdOut = new ByteArrayOutputStream()
+        def cmd = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
+        exec {
+            commandLine cmd + ["docker compose -f tests/resources/compose.yaml ps --services --filter status=running"]
+            standardOutput = stdOut
+        }
+        if (stdOut.toString().trim().isEmpty()) {
+            println "Starting MSSQL server."
+            exec {
+                commandLine cmd + ["docker compose -f tests/resources/compose.yaml up -d"]
+            }
+            println stdOut.toString()
+            sleep(90 * 1000)
+        } else {
+            println "Expected MSSQL containers are already running. Exiting without starting new containers."
+        }
+    }
+}
 
-task createTestDockerImage(type: Exec) {
-    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-        def standardOutput = new ByteArrayOutputStream()
-        commandLine 'sh', '-c', "docker build -f $project.projectDir/tests/resources/Dockerfile -t ballerina-mssql" +
-                " -q $project.projectDir/tests/resources/"
-        doLast {
-            checkExecResult(executionResult, 'Error', standardOutput)
+tasks.register('stopMSSQLServers') {
+    doLast {
+        def stdOut = new ByteArrayOutputStream()
+        def cmd = Os.isFamily(Os.FAMILY_WINDOWS) ? ['cmd', '/c'] : ['sh', '-c']
+        exec {
+            commandLine cmd + ["docker compose -f tests/resources/compose.yaml ps --services --filter status=running"]
+            standardOutput = stdOut
+        }
+        if (!stdOut.toString().trim().isEmpty()) {
+            println "Stopping MSSQL server."
+            exec {
+                commandLine cmd + ["docker compose -f tests/resources/compose.yaml rm -svf"]
+                standardOutput = stdOut
+            }
+            println stdOut.toString()
             sleep(10 * 1000)
-        }
-    }
-}
-
-def checkExecResult(executionResult, failText, standardOutput){
-    if (executionResult) {
-        if (executionResult.get().getExitValue() != 0) {
-            throw new GradleException('Non-zero exit value: ' + executionResult.getExitValue())
-        }
-        if (standardOutput.toString().contains(failText)){
-            throw new GradleException('"' + failText + '" string in output: ' + standardOutput.toString())
-        }
-    } else {
-        throw new GradleException('Returned a null executionResult object')
-    }
-}
-
-def checkTestDockerContainerStatus(containerName) {
-    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-        try {
-            return exec {
-                commandLine 'sh', '-c',
-                        "docker exec ${containerName} /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P Test123#"
-            }.exitValue
-        } catch (all) {
-            return 1;
-        }
-    }
-}
-
-task startTestDockerContainer(type: Exec) {
-    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-        def standardOutput = new ByteArrayOutputStream()
-        commandLine 'sh', '-c',
-                "docker run --rm -d --name ${testContainerName} -e ACCEPT_EULA=Y -e SA_PASSWORD=Test123# -p 1433:1433 -d ballerina-mssql"
-        def healthCheck = 1;
-        def counter = 0;
-        doLast {
-            checkExecResult(executionResult, 'Error', standardOutput)
-            while (healthCheck != 0 && counter < 12) {
-                sleep(5 * 1000)
-                healthCheck = checkTestDockerContainerStatus(testContainerName)
-                counter = counter + 1;
-            }
-            if (healthCheck != 0) {
-                throw new GradleException("Docker container '${testContainerName}' health test exceeded timeout!")
-            }
-        }
-    }
-}
-
-task startTestDockerTrxContainer(type: Exec) {
-    if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-        def standardOutput = new ByteArrayOutputStream()
-        commandLine 'sh', '-c',
-                "docker run --rm -d --name ${testXaTrxContainerName} -e ACCEPT_EULA=Y -e SA_PASSWORD=Test123# -p 1432:1433 -d ballerina-mssql"
-        def healthCheck = 1;
-        def counter = 0;
-        doLast {
-            checkExecResult(executionResult, 'Error', standardOutput)
-            while (healthCheck != 0 && counter < 12) {
-                sleep(5 * 1000)
-                healthCheck = checkTestDockerContainerStatus(testXaTrxContainerName)
-                counter = counter + 1;
-            }
-            if (healthCheck != 0) {
-                throw new GradleException("Docker container '${testXaTrxContainerName}' health test exceeded timeout!")
-            }
-        }
-    }
-}
-
-task stopTestDockerContainer() {
-    doLast {
-        if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-            try {
-                def stdOut = new ByteArrayOutputStream()
-                exec {
-                    commandLine 'sh', '-c', "docker stop ${testContainerName}"
-                    standardOutput = stdOut
-                }
-            } catch (all) {
-                println("Process can safely ignore stopTestDockerContainer task")
-            }
-        }
-    }
-}
-
-task stopTestDockerTrxContainer() {
-    doLast {
-        if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
-            try {
-                def stdOut = new ByteArrayOutputStream()
-                exec {
-                    commandLine 'sh', '-c', "docker stop ${testXaTrxContainerName}"
-                    standardOutput = stdOut
-                }
-            } catch (all) {
-                println("Process can safely ignore stopTestDockerContainer task")
-            }
+        } else {
+            println "MSSQL server is not started."
         }
     }
 }
 
 updateTomlFiles.dependsOn copyStdlibs
-startTestDockerContainer.dependsOn createTestDockerImage
 
 build.dependsOn "generatePomFileForMavenPublication"
 build.dependsOn ":${packageName}-native:build"
 build.dependsOn ":${packageName}-compiler-plugin:build"
-build.finalizedBy stopTestDockerContainer
-build.finalizedBy stopTestDockerTrxContainer
 
 test.dependsOn ":${packageName}-native:build"
 test.dependsOn ":${packageName}-compiler-plugin:build"
-test.dependsOn startTestDockerContainer
-test.dependsOn startTestDockerTrxContainer
 test.dependsOn ":${packageName}-native:build"
+test.dependsOn "startMSSQLServers"
+test.finalizedBy "stopMSSQLServers"
