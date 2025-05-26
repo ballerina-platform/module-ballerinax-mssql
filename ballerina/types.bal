@@ -15,6 +15,7 @@
 // under the License.
 
 import ballerina/sql;
+import ballerinax/cdc;
 
 # Represents the MSSQL Point type parameter in the `sql:ParameterizedQuery`.
 #
@@ -212,3 +213,33 @@ public distinct class SmallMoneyValue {
         self.value = value;
     }  
 }
+
+# Represents the configuration for the MSSQL CDC listener.
+#
+# + database - The MSSQL database connection configuration
+public type MsSqlListenerConfiguration record {|
+    MsSqlDatabaseConnection database;
+    *cdc:ListenerConfiguration;
+|};
+
+# Represents the configuration for the MSSQL CDC database connection.
+#
+# + connectorClass - The class name of the MSSQL connector implementation to use
+# + hostname - The hostname of the MSSQL server
+# + port - The port number of the MSSQL server
+# + databaseInstance - The name of the database instance
+# + databaseNames - A list of database names to capture changes from
+# + includedSchemas - A list of regular expressions matching fully-qualified schema identifiers to capture changes from
+# + excludedSchemas - A list of regular expressions matching fully-qualified schema identifiers to exclude from change capture
+# + tasksMax - The maximum number of tasks to create for this connector. If the `databaseNames` contains more than one element, you can increase the value of this property to a number less than or equal to the number of elements in the list
+public type MsSqlDatabaseConnection record {|
+    *cdc:DatabaseConnection;
+    string connectorClass = "io.debezium.connector.sqlserver.SqlServerConnector";
+    string hostname = "localhost";
+    int port = 1433;
+    string databaseInstance?;
+    string|string[] databaseNames;
+    string|string[] includedSchemas?;
+    string|string[] excludedSchemas?;
+    int tasksMax = 1;
+|};

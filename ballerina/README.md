@@ -33,6 +33,35 @@ Follow one of the following ways to add the JAR in the file:
     version = "12.8.1.jre11"
     ```
 
+### Setup guide
+
+#### Change Data Capture
+
+1. **Ensure SQL Server Agent is Enabled**:
+   - The SQL Server Agent must be running to use CDC. Start the agent if it is not already running.
+
+2. **Enable CDC for the Database**:
+   - Run the following command to enable CDC for the database:
+     ```sql
+     USE <your_database_name>;
+     EXEC sys.sp_cdc_enable_db;
+     ```
+
+3. **Enable CDC for Specific Tables**:
+   - Enable CDC for the required tables by specifying the schema and table name:
+     ```sql
+     EXEC sys.sp_cdc_enable_table
+         @source_schema = 'your_schema_name',
+         @source_name = 'your_table_name',
+         @role_name = NULL;
+     ```
+
+4. **Verify CDC Configuration**:
+   - Run the following query to verify that CDC is enabled for the database:
+     ```sql
+     SELECT name, is_cdc_enabled FROM sys.databases WHERE name = 'your_database_name';
+     ```
+
 ### Client
 To access a database, you must first create an
 [`mssql:Client`](https://docs.central.ballerina.io/ballerinax/mssql/latest#Client) object.
@@ -472,3 +501,42 @@ check result.close();
 >**Note**: Once the results are processed, the `close` method on the `sql:ProcedureCallResult` must be called.
 
 >**Note**: The default thread pool size used in Ballerina is: `the number of processors available * 2`. You can configure the thread pool size by using the `BALLERINA_MAX_POOL_SIZE` environment variable.
+
+### Change Data Capture Listener
+
+To listen for change data capture (CDC) events from a MSSQL database, you must create a [`mssql:CdcListener`](https://docs.central.ballerina.io/ballerinax/mssql/latest#CdcListener) object. The listener allows your Ballerina application to react to changes (such as inserts, updates, and deletes) in real time.
+
+#### Create a listener
+
+You can create a CDC listener by specifying the required configurations such as host, port, username, password, and database name. Additional options can be provided using the [`cdc:Options`](https://docs.central.ballerina.io/ballerinax/cdc/latest#Options) record.
+
+```ballerina
+listener mssql:CdcListener cdcListener = new (database = {
+    username: <username>,
+    password: <password>
+});
+```
+
+#### Implement a service to handle CDC events
+
+You can attach a service to the listener to handle CDC events. The service can define remote methods for different event types such as `onRead`, `onCreate`, `onUpdate`, and `onDelete`.
+
+```ballerina
+service on cdcListener {
+    remote function onRead(record{} after) returns cdc:Error? {
+        io:println("Insert event: ", after);
+    }
+
+    remote function onCreate(record{} after) returns cdc:Error? {
+        io:println("Insert event: ", after);
+    }
+
+    remote function onUpdate(record{} before, record{} after) returns cdc:Error? {
+        io:println("Update event - Before: ", before, " After: ", after);
+    }
+
+    remote function onDelete(record{} before) returns error? {
+        io:println("Delete event: ", before);
+    }
+}
+```
