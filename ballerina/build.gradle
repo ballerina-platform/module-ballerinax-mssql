@@ -130,8 +130,27 @@ tasks.register('startMSSQLServers') {
             exec {
                 commandLine cmd + ["docker compose -f tests/resources/compose.yaml up -d"]
             }
-            println stdOut.toString()
-            sleep(90 * 1000)
+            // Wait for containers to be healthy
+            def healthCheckPassed = false
+            int retries = 18 // 90 seconds max, 5s interval
+            for (int i = 0; i < retries; i++) {
+                def healthOut = new ByteArrayOutputStream()
+                exec {
+                    commandLine cmd + ["docker compose -f tests/resources/compose.yaml ps --format '{{.Name}}: {{.Health}}'"]
+                    standardOutput = healthOut
+                    ignoreExitValue = true
+                }
+                def healthStatus = healthOut.toString().trim()
+                if (healthStatus && !healthStatus.contains("unhealthy") && !healthStatus.contains("starting")) {
+                    healthCheckPassed = true
+                    break
+                }
+                sleep(5 * 1000)
+            }
+            if (!healthCheckPassed) {
+                throw new GradleException("MSSQL containers did not become healthy in time.")
+            }
+            println "MSSQL containers are healthy."
         } else {
             println "Expected MSSQL containers are already running. Exiting without starting new containers."
         }
