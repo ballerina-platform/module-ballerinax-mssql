@@ -398,7 +398,7 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "mssql"
-version = "1.15.1"
+version = "1.16.0"
 dependencies = [
 	{org = "ballerina", name = "crypto"},
 	{org = "ballerina", name = "file"},
