@@ -15,7 +15,7 @@ services:
       networks:
           - mssql-network
       volumes:
-          - ./setup.sql:/tmp/mssql-init.sql
+          - ./db-scripts/setup.sql:/tmp/mssql-init.sql
       healthcheck:
           # -C disable checks for encryption
           test: /opt/mssql-tools18/bin/sqlcmd -S localhost -C -U sa -P root@123 -Q "SELECT 1" -b -o /dev/null

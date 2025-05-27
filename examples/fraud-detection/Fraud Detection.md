@@ -59,7 +59,7 @@ password = "cdc_password"
    bal run
    ```
 
-2. Use the provided `test.sql` script to insert sample transactions into the `trx` table to test the fraud detection system. Use the following SQL command:
+2. Use the provided `test.sql` script to insert sample transactions into the `transactions` table to test the fraud detection system. Use the following SQL command:
 
    ```bash
    sqlcmd -U <username> -P <password> -d <database> -i db_scripts/test.sql
