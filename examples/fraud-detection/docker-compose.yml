@@ -1,0 +1,107 @@
+name: mssql-with-kafka
+
+services:
+  sqlserver-cdc:
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      container_name: sqlserver-cdc
+      hostname: mssql-db
+      environment:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: "root@123"
+          MSSQL_AGENT_ENABLED: "true"
+          MSSQL_PID: "Developer"
+      ports:
+          - "1431:1433"
+      networks:
+          - mssql-network
+      volumes:
+          - ./setup.sql:/tmp/mssql-init.sql
+      healthcheck:
+          # -C disable checks for encryption
+          test: /opt/mssql-tools18/bin/sqlcmd -S localhost -C -U sa -P root@123 -Q "SELECT 1" -b -o /dev/null
+          interval: 1s
+          timeout: 30s
+          retries: 30
+          start_period: 20s
+
+  mssql-tools:
+      image: mcr.microsoft.com/mssql-tools:latest
+      container_name: sqlserver-tools
+      restart: "no"
+      command: >
+          /bin/sh -c "
+              /opt/mssql-tools/bin/sqlcmd -S mssql-db -l 60 -U sa -P root@123 -Q 'CREATE DATABASE finance_db'
+              until /opt/mssql-tools/bin/sqlcmd -S mssql-db -l 60 -U sa -P root@123 -Q \"SELECT name FROM sys.databases WHERE name='finance_db'\" | grep -q finance_db; do
+                  echo \"Waiting for finance_db to be ready...\"
+                  sleep 2
+              done
+              /opt/mssql-tools/bin/sqlcmd -S mssql-db -l 60 -U sa -P root@123 -d finance_db -i /tmp/mssql-init.sql
+          "
+      depends_on:
+          sqlserver-cdc:
+              condition: service_healthy
+      volumes:
+          - ./db-scripts/setup.sql:/tmp/mssql-init.sql
+      networks:
+          - mssql-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ALLOW_ANONYMOUS_LOGIN: yes
+    networks:
+      - kafka-network
+
+  kafka1:
+    image: confluentinc/cp-kafka:7.2.2
+    container_name: kafka1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9091:9091"
+    networks:
+      - kafka-network
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka1:19091,LISTENER_DOCKER_EXTERNAL://localhost:9091
+      - KAFKA_LISTENERS=LISTENER_DOCKER_INTERNAL://0.0.0.0:19091,LISTENER_DOCKER_EXTERNAL://0.0.0.0:9091
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      - KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_BROKER_ID=1
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:19091", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  redpanda-console:
+    container_name: redpanda-console
+    image: docker.redpanda.com/redpandadata/console:latest
+    entrypoint: /bin/sh
+    command: -c 'echo "$$CONSOLE_CONFIG_FILE" > /tmp/config.yml && /app/console '
+    volumes:
+      - ./config:/tmp/config/
+    environment:
+      CONFIG_FILEPATH: ${CONFIG_FILEPATH:-/tmp/config.yml}
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["kafka1:19091"]
+    ports:
+      - "8080:8080"
+    depends_on:
+      kafka1:
+        condition: service_healthy
+    networks:
+      - kafka-network
+
+networks:
+  kafka-network:
+  mssql-network:
