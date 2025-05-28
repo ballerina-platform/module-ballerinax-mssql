@@ -11,7 +11,7 @@ services:
           MSSQL_AGENT_ENABLED: "true"
           MSSQL_PID: "Developer"
       ports:
-          - "1431:1433"
+          - "1433:1433"
       networks:
           - mssql-network
       volumes:
