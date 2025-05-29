@@ -1,6 +1,6 @@
-## Package overview
+## Overview
 
-This package provides the functionality required to access and manipulate data stored in an MSSQL database.
+This module provides the functionality required to access and manipulate data stored in an MSSQL database.
 
 ### Prerequisite
 Add the MSSQL driver as a dependency to the Ballerina project.
@@ -32,6 +32,35 @@ Follow one of the following ways to add the JAR in the file:
     artifactId = "mssql-jdbc"
     version = "12.8.1.jre11"
     ```
+
+### Setup guide
+
+#### Change Data Capture
+
+1. **Ensure SQL Server Agent is Enabled**:
+   - The SQL Server Agent must be running to use CDC. Start the agent if it is not already running.
+
+2. **Enable CDC for the Database**:
+   - Run the following command to enable CDC for the database:
+     ```sql
+     USE <your_database_name>;
+     EXEC sys.sp_cdc_enable_db;
+     ```
+
+3. **Enable CDC for Specific Tables**:
+   - Enable CDC for the required tables by specifying the schema and table name:
+     ```sql
+     EXEC sys.sp_cdc_enable_table
+         @source_schema = 'your_schema_name',
+         @source_name = 'your_table_name',
+         @role_name = NULL;
+     ```
+
+4. **Verify CDC Configuration**:
+   - Run the following query to verify that CDC is enabled for the database:
+     ```sql
+     SELECT name, is_cdc_enabled FROM sys.databases WHERE name = 'your_database_name';
+     ```
 
 ### Client
 To access a database, you must first create an
@@ -82,7 +111,7 @@ mssql:Client|sql:Error dbClient = new(
 Similarly, in the sample below, the `mssql:Client` uses named parameters, and it provides an unshared connection pool of the
 [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest#ConnectionPool)
 type to be used within the client.
-For more details about connection pooling, see the [`sql` Package](https://docs.central.ballerina.io/ballerina/sql/latest).
+For more details about connection pooling, see the [`sql` module](https://docs.central.ballerina.io/ballerina/sql/latest).
 
 ```ballerina
 mssql:Client|sql:Error dbClient = new(
@@ -119,7 +148,7 @@ mssql:Options mssqlOptions = {
 
 #### Handle connection pools
 
-All database packages share the same connection pooling concept and there are three possible scenarios for
+All database modules share the same connection pooling concept and there are three possible scenarios for
 connection pool handling. For its properties and possible values, see [`sql:ConnectionPool`](https://docs.central.ballerina.io/ballerina/sql/latest#ConnectionPool).
 
 >**Note**: Connection pooling is used to optimize opening and closing connections to the database. However, the pool comes with an overhead. It is best to configure the connection pool properties as per the application need to get the best performance.
@@ -186,7 +215,7 @@ check dbClient.close();
 
 ### Database operations
 
-Once the client is created, database operations can be executed through that client. This package defines the interface
+Once the client is created, database operations can be executed through that client. This module defines the interface
 and common properties that are shared among multiple database clients. It also supports querying, inserting, deleting,
 updating, and batch updating data.
 
@@ -211,7 +240,7 @@ sql:ParameterizedQuery query = `SELECT * FROM students
                                 WHERE id < ${ids[0]} AND age > ${age}`;
 ```
 
-Moreover, the SQL package has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
+Moreover, the SQL module has `sql:queryConcat()` and `sql:arrayFlattenQuery()` util functions which make it easier
 to create a dynamic/constant complex query.
 
 The `sql:queryConcat()` is used to create a single parameterized query by concatenating a set of parameterized queries.
@@ -323,7 +352,7 @@ string|int? generatedKey = result.lastInsertId;
 #### Query data
 
 These samples show how to demonstrate the different usages of the `query` operation to query the
-database table and obtain the results.
+database table and obtain the results as a stream.
 
 >**Note**: When processing the stream, make sure to consume all fetched data or close the stream.
 
@@ -332,9 +361,9 @@ First, a type is created to represent the returned result set. This record can b
 according to the requirement. If an open record is defined, the returned stream type will include both defined fields
 in the record and additional database columns fetched by the SQL query, which are not defined in the record.
 
->**Note**: the mapping of the database column to the returned record's property is case-insensitive if it is defined in the record (i.e., the `ID` column in the result can be mapped to the `id` property in the record). Additional column names are added to the returned record as in the SQL query. If the record is defined as a closed record, only the defined fields in the record are returned or gives an error when additional columns are present in the SQL query.
+>**Note**: the mapping of the database column to the returned record's property is case-insensitive if it is defined in  the record(i.e., the `ID` column in the result can be mapped to the `id` property in the record). Additional column names are added to the returned record as in the SQL query. If the record is defined as a closed record, only the  defined fields in the record are returned or gives an error when additional columns are present in the SQL query. 
 
-Next, the `SELECT` query is executed via the `query` remote method of the client. Once the query is executed, each data record
+Next, the `SELECT` query is executed via the `query` remote method of the client. Once the query is executed, each data record 
 can be retrieved by iterating through the result set. The `stream` returned by the `SELECT` operation holds a pointer to the
 actual data in the database, and it loads data from the table only when it is accessed. This stream can be iterated only
 once.
@@ -473,11 +502,41 @@ check result.close();
 
 >**Note**: The default thread pool size used in Ballerina is: `the number of processors available * 2`. You can configure the thread pool size by using the `BALLERINA_MAX_POOL_SIZE` environment variable.
 
-## Report issues
+### Change Data Capture Listener
 
-To report bugs, request new features, start new discussions, view project boards, etc., go to the [Ballerina standard library parent repository](https://github.com/ballerina-platform/ballerina-standard-library).
+To listen for change data capture (CDC) events from a MSSQL database, you must create a [`mssql:CdcListener`](https://docs.central.ballerina.io/ballerinax/mssql/latest#CdcListener) object. The listener allows your Ballerina application to react to changes (such as inserts, updates, and deletes) in real time.
 
-## Useful links
+#### Create a listener
 
-- Chat live with us via our [Discord server](https://discord.gg/ballerinalang).
-- Post all technical questions on Stack Overflow with the [#ballerina](https://stackoverflow.com/questions/tagged/ballerina) tag.
+You can create a CDC listener by specifying the required configurations such as host, port, username, password, and database name. Additional options can be provided using the [`cdc:Options`](https://docs.central.ballerina.io/ballerinax/cdc/latest#Options) record.
+
+```ballerina
+listener mssql:CdcListener cdcListener = new (database = {
+    username: <username>,
+    password: <password>
+});
+```
+
+#### Implement a service to handle CDC events
+
+You can attach a service to the listener to handle CDC events. The service can define remote methods for different event types such as `onRead`, `onCreate`, `onUpdate`, and `onDelete`.
+
+```ballerina
+service on cdcListener {
+    remote function onRead(record{} after) returns cdc:Error? {
+        io:println("Insert event: ", after);
+    }
+
+    remote function onCreate(record{} after) returns cdc:Error? {
+        io:println("Insert event: ", after);
+    }
+
+    remote function onUpdate(record{} before, record{} after) returns cdc:Error? {
+        io:println("Update event - Before: ", before, " After: ", after);
+    }
+
+    remote function onDelete(record{} before) returns error? {
+        io:println("Delete event: ", before);
+    }
+}
+```

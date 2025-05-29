@@ -1,0 +1,4 @@
+[package]
+org = "mssql"
+name = "fraud_detection"
+version = "0.1.0"

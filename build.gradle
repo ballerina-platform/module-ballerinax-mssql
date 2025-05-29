@@ -99,6 +99,9 @@ subprojects {
         ballerinaStdLibs "io.ballerina.stdlib:observe-ballerina:${observeVersion}"
         ballerinaStdLibs "io.ballerina:observe-ballerina:${observeInternalVersion}"
         ballerinaStdLibs "io.ballerina.stdlib:mssql.driver-ballerina:${stdlibMssqlDriverVersion}"
+
+        ballerinaStdLibs "io.ballerina.lib:cdc-ballerina:${stdlibCdcVersion}"
+        ballerinaStdLibs "io.ballerina.lib:mssql.cdc.driver-ballerina:${stdlibMSSQLCdcDriverVersion}"
     }
 }
 
