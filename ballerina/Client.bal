@@ -153,7 +153,7 @@ public type Options record {|
     boolean useXADatasource = false;
 |};
 
-# SSL Configuration to be used when connecting to the MSSQL server.
+# SSL configurations to be used when connecting to the MSSQL server.
 #
 # + encrypt - Enable encryption for all data sent between client and server if server has a certificate installed
 # + trustServerCertificate - Automatically trust the MSSQL server SSL certificate when communication layer is encrypted using TLS
