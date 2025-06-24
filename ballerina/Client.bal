@@ -18,7 +18,7 @@ import ballerina/jballerina.java;
 import ballerina/sql;
 import ballerina/crypto;
 
-# MSSQL (Microsoft SQL) client for executing SQL queries and stored procedures.
+# MSSQL (Microsoft SQL) client that enables interaction with MSSQL servers and supports standard SQL operations.
 public isolated client class Client {
     *sql:Client;
 
@@ -29,7 +29,7 @@ public isolated client class Client {
     # + password - Database password (if secured)
     # + database - Database name to connect to (optional)
     # + port - MSSQL server port
-    # + instance - MSSQL server instance name
+    # + instance - MSSQL server instance name (optional)
     # + options - Advanced connection options (optional)
     # + connectionPool - Connection pool for connection reuse. If not provided, the global connection pool (shared by all clients) will be used
     # + return - `sql:Error` if the client creation fails
