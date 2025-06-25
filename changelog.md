@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [1.16.1] - 2025-06-25
+
+### Changed
+- [Fix Library/Connector API doc issues in BI editor](https://github.com/ballerina-platform/ballerina-library/issues/7736)
+
+## [1.16.1]
+
 ### Added
 - [Add compiler plugin validation to validate spread-field config initialization](https://github.com/ballerina-platform/ballerina-standard-library/issues/4594)
 
