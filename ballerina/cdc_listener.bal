@@ -47,13 +47,14 @@ public isolated class CdcListener {
                                                excludedTables: config.database.excludedTables,
                                                includedColumns: config.database.includedColumns,
                                                excludedColumns: config.database.excludedColumns
-                                           }, debeziumConfigs);
-        populateMsSqlConfigurations(config.database, debeziumConfigs);
+                                           }, configMap);
+        populateMsSqlConfigurations(config.database, configMap);
+        populateMsSqlOptions(config.options, configMap);
         map<anydata> listenerConfigs = {
             ...debeziumConfigs
         };
         listenerConfigs["livenessInterval"] = config.livenessInterval;
-        self.config = listenerConfigs.cloneReadOnly();
+        self.config = configMap.cloneReadOnly();
     }
 
     # Attaches a CDC service to the MSSQL listener.
