@@ -35,46 +35,38 @@ const string INCREMENTAL_SNAPSHOT_OPTION_RECOMPILE = "incremental.snapshot.optio
 // Relational-common configuration properties (applicable to MySQL, PostgreSQL, SQL Server)
 const string MESSAGE_KEY_COLUMNS = "message.key.columns";
 
-isolated function populateMsSqlAdvancedConfiguration(MsSqlAdvancedConfiguration? config, map<string> configMap) {
-    if config is () {
-        return;
+// Populates SQL Server connection configuration
+isolated function populateConnectionConfiguration(ConnectionConfiguration config, map<string> configMap) {
+    configMap[MSSQL_DATABASE_ENCRYPT] = config.encrypt.toString();
+
+    string? sslTruststore = config.sslTruststore;
+    if sslTruststore !is () {
+        configMap[DATABASE_SSL_TRUSTSTORE] = sslTruststore;
     }
 
-    configMap[MSSQL_DATABASE_ENCRYPT] = config.databaseEncrypt.toString();
-
-    if config.databaseSslTruststore !is () {
-        configMap[DATABASE_SSL_TRUSTSTORE] = config.databaseSslTruststore ?: "";
+    string? sslTruststorePassword = config.sslTruststorePassword;
+    if sslTruststorePassword !is () {
+        configMap[DATABASE_SSL_TRUSTSTORE_PASSWORD] = sslTruststorePassword;
     }
+}
 
-    if config.databaseSslTruststorePassword !is () {
-        configMap[DATABASE_SSL_TRUSTSTORE_PASSWORD] = config.databaseSslTruststorePassword ?: "";
-    }
-
+// Populates SQL Server streaming configuration
+isolated function populateStreamingConfiguration(StreamingConfiguration config, map<string> configMap) {
     configMap[DATA_QUERY_MODE] = config.dataQueryMode.toString();
     configMap[STREAMING_DELAY_MS] = config.streamingDelayMs.toString();
     configMap[STREAMING_FETCH_SIZE] = config.streamingFetchSize.toString();
     configMap[MAX_ITERATION_TRANSACTIONS] = config.maxIterationTransactions.toString();
-    configMap[SOURCE_STRUCT_VERSION] = config.sourceStructVersion.toString();
-    configMap[INCREMENTAL_SNAPSHOT_OPTION_RECOMPILE] = config.incrementalSnapshotOptionRecompile.toString();
 }
 
-isolated function populateRelationalCommonConfiguration(RelationalCommonConfiguration? config, map<string> configMap) {
-    if config is () {
-        return;
-    }
-
-    // Note: schemaIncludeList and schemaExcludeList are already handled by populateSchemaConfigurations
-    // from the top-level includedSchemas/excludedSchemas fields for backward compatibility
-
-    if config.messageKeyColumns !is () {
-        string|string[] keyColumns = config.messageKeyColumns ?: "";
-        configMap[MESSAGE_KEY_COLUMNS] = keyColumns is string ? keyColumns : string:'join(";", ...keyColumns);
-    }
+// Populates SQL Server schema configuration
+isolated function populateSchemaConfiguration(SchemaConfiguration config, map<string> configMap) {
+    configMap[SOURCE_STRUCT_VERSION] = config.sourceStructVersion.toString();
 }
 
 isolated function populateMsSqlConfigurations(MsSqlDatabaseConnection connection, map<string> configMap) {
-    if connection.databaseInstance !is () {
-        configMap[MSSQL_DATABASE_INSTANCE] = connection.databaseInstance ?: "";
+    string? databaseInstance = connection.databaseInstance;
+    if databaseInstance !is () {
+        configMap[MSSQL_DATABASE_INSTANCE] = databaseInstance;
     }
 
     string|string[] databaseNames = connection.databaseNames;
@@ -82,16 +74,14 @@ isolated function populateMsSqlConfigurations(MsSqlDatabaseConnection connection
 
     populateSchemaConfigurations(connection, configMap);
 
-    // Set default encryption to false if no advanced config provided
-    if connection.secure is () && connection.mssqlAdvancedConfig is () {
-        configMap[MSSQL_DATABASE_ENCRYPT] = "false";
-    }
+    // Populate SQL Server connection configuration
+    populateConnectionConfiguration(connection.connectionConfig, configMap);
 
-    // Populate SQL Server-specific advanced configuration
-    populateMsSqlAdvancedConfiguration(connection.mssqlAdvancedConfig, configMap);
+    // Populate SQL Server streaming configuration
+    populateStreamingConfiguration(connection.streamingConfig, configMap);
 
-    // Populate relational-common configuration
-    populateRelationalCommonConfiguration(connection.relationalCommonConfig, configMap);
+    // Populate SQL Server schema configuration
+    populateSchemaConfiguration(connection.schemaConfig, configMap);
 }
 
 // Populates schema inclusion/exclusion configurations
@@ -113,7 +103,7 @@ const string INCLUDE_SCHEMA_CHANGES = "include.schema.changes";
 // Populates MSSQL-specific options
 isolated function populateMsSqlOptions(MssqlOptions options, map<string> configMap) {
     // Populate common options from cdc module
-    cdc:populateOptions(options, configMap);
+    cdc:populateOptions(options, configMap, typeof options);
 
     // Populate MSSQL-specific extended snapshot configuration
     ExtendedSnapshotConfiguration? extendedSnapshot = options.extendedSnapshot;
@@ -125,14 +115,23 @@ isolated function populateMsSqlOptions(MssqlOptions options, map<string> configM
     // Populate MSSQL-specific data type configuration
     DataTypeConfiguration? dataTypeConfig = options.dataTypeConfig;
     if dataTypeConfig is DataTypeConfiguration {
-        cdc:populateDataTypeConfiguration(dataTypeConfig, configMap);
-        configMap[INCLUDE_SCHEMA_CHANGES] = dataTypeConfig.includeSchemaChanges.toString();
+        populateDataTypeConfiguration(dataTypeConfig, configMap);
     }
+}
+
+// Populates MSSQL-specific data type configuration
+isolated function populateDataTypeConfiguration(DataTypeConfiguration config, map<string> configMap) {
+    // Populate generic data type options
+    cdc:populateDataTypeConfiguration(config, configMap);
+
+    // Populate MSSQL-specific data type options
+    configMap[INCLUDE_SCHEMA_CHANGES] = config.includeSchemaChanges.toString();
 }
 
 // Populates MSSQL-specific extended snapshot properties
 isolated function populateMsSqlExtendedSnapshotConfiguration(ExtendedSnapshotConfiguration config, map<string> configMap) {
     configMap[SNAPSHOT_LOCK_TIMEOUT_MS] = getMillisecondValueOf(config.lockTimeout);
+    configMap[INCREMENTAL_SNAPSHOT_OPTION_RECOMPILE] = config.incrementalSnapshotOptionRecompile.toString();
 }
 
 isolated function getMillisecondValueOf(decimal value) returns string {
