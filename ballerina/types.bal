@@ -226,51 +226,44 @@ public distinct class SmallMoneyValue {
     }  
 }
 
-# Represents SQL Server-specific advanced configuration options.
+# SQL Server connection and SSL configuration.
 #
-# + databaseEncrypt - Whether to encrypt the connection to SQL Server
-# + databaseSslTruststore - Path to the truststore file for SSL connections
-# + databaseSslTruststorePassword - Password for the truststore file
-# + dataQueryMode - Mode for querying CDC data (function or direct)
-# + streamingDelayMs - Delay in milliseconds before starting streaming after snapshot
-# + streamingFetchSize - Number of rows to fetch per database round-trip during streaming
-# + maxIterationTransactions - Maximum number of transactions to process per iteration
-# + sourceStructVersion - Version of the source struct (v1 or v2)
-# + incrementalSnapshotOptionRecompile - Whether to use OPTION(RECOMPILE) for incremental snapshot queries
-public type MsSqlAdvancedConfiguration record {|
-    boolean databaseEncrypt = false;
-    string databaseSslTruststore?;
-    string databaseSslTruststorePassword?;
+# + encrypt - Enable SSL/TLS encryption for JDBC connections
+# + sslTruststore - Path to SSL truststore file
+# + sslTruststorePassword - Password for SSL truststore
+public type ConnectionConfiguration record {|
+    boolean encrypt = false;
+    string sslTruststore?;
+    string sslTruststorePassword?;
+|};
+
+# SQL Server streaming and query configuration.
+#
+# + dataQueryMode - CDC query method (function or direct)
+# + streamingDelayMs - Delay before starting streaming after snapshot
+# + streamingFetchSize - Maximum rows per streaming round trip
+# + maxIterationTransactions - Maximum number of transactions per iteration
+public type StreamingConfiguration record {|
     DataQueryMode dataQueryMode = FUNCTION;
     int streamingDelayMs = 0;
     int streamingFetchSize = 10000;
     int maxIterationTransactions = 500;
-    SourceStructVersion sourceStructVersion = V2;
-    boolean incrementalSnapshotOptionRecompile = false;
 |};
 
-# Represents relational database common configuration options.
-# These properties are applicable to all relational databases (MySQL, PostgreSQL, SQL Server).
+# SQL Server schema version configuration.
 #
-# + schemaIncludeList - List of schemas to include (comma-separated regular expressions)
-# + schemaExcludeList - List of schemas to exclude (comma-separated regular expressions)
-# + messageKeyColumns - Custom message key columns (format: schemaName.tableName:keyColumn1,keyColumn2)
-public type RelationalCommonConfiguration record {|
-    string|string[] schemaIncludeList?;
-    string|string[] schemaExcludeList?;
-    string|string[] messageKeyColumns?;
+# + sourceStructVersion - Schema version for source block in CDC events
+public type SchemaConfiguration record {|
+    SourceStructVersion sourceStructVersion = V2;
 |};
 
 # SQL Server CDC listener configuration including database connection, storage, and CDC options.
 #
 # + database - SQL Server database connection and capture settings
-# + engineName - Unique name for the CDC engine instance
-# + internalSchemaStorage - Schema history storage backend (file, Kafka, memory, JDBC, Redis, S3, Azure Blob, RocketMQ)
-# + offsetStorage - Offset storage backend for tracking connector progress (file, Kafka, memory, JDBC, Redis)
 # + options - SQL Server-specific CDC options including snapshot, heartbeat, signals, and data type handling
 public type MsSqlListenerConfiguration record {|
-    MsSqlDatabaseConnection database;
     *cdc:ListenerConfiguration;
+    MsSqlDatabaseConnection database;
     MssqlOptions options = {};
 |};
 
@@ -284,12 +277,15 @@ public type MssqlOptions record {|
     DataTypeConfiguration dataTypeConfig?;
 |};
 
-# Represents the extended snapshot configuration for the SQL Server CDC listener.
-# 
+# SQL Server-specific extended snapshot configuration.
+# Extends generic relational snapshot configuration with MSSQL-specific options.
+#
 # + lockTimeout - Lock acquisition timeout in seconds
+# + incrementalSnapshotOptionRecompile - Use OPTION(RECOMPILE) for incremental snapshot queries
 public type ExtendedSnapshotConfiguration record {|
     *cdc:RelationalExtendedSnapshotConfiguration;
     decimal lockTimeout = 10;
+    boolean incrementalSnapshotOptionRecompile = false;
 |};
 
 # Represents the configuration for the MSSQL CDC database connection.
@@ -302,8 +298,9 @@ public type ExtendedSnapshotConfiguration record {|
 # + includedSchemas - A list of regular expressions matching fully-qualified schema identifiers to capture changes from
 # + excludedSchemas - A list of regular expressions matching fully-qualified schema identifiers to exclude from change capture
 # + tasksMax - The maximum number of tasks to create for this connector. If the `databaseNames` contains more than one element, you can increase the value of this property to a number less than or equal to the number of elements in the list
-# + mssqlAdvancedConfig - SQL Server-specific advanced configuration options
-# + relationalCommonConfig - Relational database common configuration options (applicable to MySQL, PostgreSQL, SQL Server)
+# + connectionConfig - SQL Server connection and SSL configuration
+# + streamingConfig - SQL Server streaming and query configuration
+# + schemaConfig - SQL Server schema version configuration
 public type MsSqlDatabaseConnection record {|
     *cdc:DatabaseConnection;
     string connectorClass = "io.debezium.connector.sqlserver.SqlServerConnector";
@@ -314,8 +311,9 @@ public type MsSqlDatabaseConnection record {|
     string|string[] includedSchemas?;
     string|string[] excludedSchemas?;
     int tasksMax = 1;
-    MsSqlAdvancedConfiguration mssqlAdvancedConfig?;
-    RelationalCommonConfiguration relationalCommonConfig?;
+    ConnectionConfiguration connectionConfig = {};
+    StreamingConfiguration streamingConfig = {};
+    SchemaConfiguration schemaConfig = {};
 |};
 
 # Represents data type handling configuration.
