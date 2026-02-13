@@ -288,6 +288,20 @@ public type ExtendedSnapshotConfiguration record {|
     boolean incrementalSnapshotOptionRecompile = false;
 |};
 
+# Represents publication autocreate modes (PostgreSQL).
+public enum PublicationAutocreateMode {
+    ALL_TABLES = "all_tables",
+    DISABLED = "disabled",
+    FILTERED = "filtered"
+}
+
+# Represents LSN flush modes (PostgreSQL).
+public enum LsnFlushMode {
+    MANUAL = "manual",
+    CONNECTOR = "connector",
+    CONNECTOR_AND_DRIVER = "connector_and_driver"
+}
+
 # Represents the configuration for the MSSQL CDC database connection.
 #
 # + connectorClass - The class name of the MSSQL connector implementation to use
