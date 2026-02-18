@@ -3,4 +3,4 @@ id = "mssql-compiler-plugin"
 class = "io.ballerina.stdlib.mssql.compiler.MSSQLCompilerPlugin"
 
 [[dependency]]
-path = "../compiler-plugin/build/libs/mssql-compiler-plugin-1.16.2.jar"
+path = "../compiler-plugin/build/libs/mssql-compiler-plugin-1.16.3-SNAPSHOT.jar"

@@ -156,7 +156,7 @@ function testDetachAfterStart() returns error? {
 }
 
 cdc:Service mssqlTestService =
-@cdc:ServiceConfig {tables: "store_db.products"}
+@cdc:ServiceConfig {tables: "store_db.dbo.products"}
 service object {
     remote function onCreate(record {} after, string tableName) returns error? {
         createEventCount = createEventCount + 1;
@@ -176,7 +176,7 @@ service object {
 };
 
 cdc:Service mssqlDataBindingFailService =
-@cdc:ServiceConfig {tables: "store_db.vendors"}
+@cdc:ServiceConfig {tables: "store_db.dbo.vendors"}
 service object {
 
     remote function onCreate(WrongVendor after) returns error? {
@@ -217,7 +217,7 @@ function testCdcListenerEvents() returns error? {
             port: cdcPort,
             databaseNames: cdcDatabase
             // ,
-            // includedTables: ["store_db.products", "store_db.vendors"]
+            // includedTables: ["store_db.dbo.products", "store_db.dbo.vendors"]
         }
     });
 
