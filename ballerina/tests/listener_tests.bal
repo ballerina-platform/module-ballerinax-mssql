@@ -216,8 +216,8 @@ function testCdcListenerEvents() returns error? {
             password: cdcPassword,
             port: cdcPort,
             databaseNames: cdcDatabase
-            ,
-            includedTables: ["store_db.dbo.products", "store_db.dbo.vendors"]
+            // ,
+            // includedTables: ["store_db.dbo.products", "store_db.dbo.vendors"]
         }
     });
 
