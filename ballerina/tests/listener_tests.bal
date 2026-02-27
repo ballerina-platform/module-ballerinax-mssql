@@ -280,7 +280,7 @@ function testMsSqlConnectionConfiguration() {
     };
 
     map<string> actualProperties = {};
-    populateMsSqlConfigurations(connection, actualProperties);
+    populateConfigurations(connection, actualProperties);
 
     test:assertEquals(actualProperties["database.encrypt"],
         expectedProperties["database.encrypt"],
@@ -312,7 +312,7 @@ function testMsSqlStreamingConfiguration() {
     };
 
     map<string> actualProperties = {};
-    populateMsSqlConfigurations(connection, actualProperties);
+    populateConfigurations(connection, actualProperties);
 
     test:assertEquals(actualProperties["data.query.mode"],
         expectedProperties["data.query.mode"],
@@ -338,7 +338,7 @@ function testMsSqlSchemaConfiguration() {
     };
 
     map<string> actualProperties = {};
-    populateMsSqlConfigurations(connection, actualProperties);
+    populateConfigurations(connection, actualProperties);
 
     test:assertEquals(actualProperties["source.struct.version"],
         expectedProperties["source.struct.version"],
@@ -346,28 +346,39 @@ function testMsSqlSchemaConfiguration() {
 }
 
 @test:Config {groups: ["mssql-relational"]}
-function testMsSqlRelationalCommonConfiguration() {
+function testMsSqlRelationalFilteringConfiguration() {
     map<string> expectedProperties = {
         "schema.include.list": "dbo,custom",
-        "message.key.columns": "db.table1:id;db.table2:key"
+        "table.include.list": "dbo.customers,dbo.orders",
+        "column.exclude.list": "dbo.*.password,dbo.*.ssn",
+        "message.key.columns": "dbo.customers:id;dbo.orders:order_id"
     };
 
     MsSqlDatabaseConnection connection = {
         username: "testuser",
         password: "testpass",
         databaseNames: "testdb",
-        relationalCommonConfig: {
-            schemaIncludeList: ["dbo", "custom"],
-            messageKeyColumns: "db.table1:id;db.table2:key"
-        }
+        includedSchemas: ["dbo", "custom"],
+        includedTables: ["dbo.customers", "dbo.orders"],
+        excludedColumns: ["dbo.*.password", "dbo.*.ssn"],
+        messageKeyColumns: "dbo.customers:id;dbo.orders:order_id"
     };
 
     map<string> actualProperties = {};
-    populateMsSqlConfigurations(connection, actualProperties);
+    populateDatabaseConfigurations(connection, actualProperties);
 
     test:assertEquals(actualProperties["schema.include.list"],
         expectedProperties["schema.include.list"],
         msg = "Schema include list does not match.");
+    test:assertEquals(actualProperties["table.include.list"],
+        expectedProperties["table.include.list"],
+        msg = "Table include list does not match.");
+    test:assertEquals(actualProperties["column.exclude.list"],
+        expectedProperties["column.exclude.list"],
+        msg = "Column exclude list does not match.");
+    test:assertEquals(actualProperties["message.key.columns"],
+        expectedProperties["message.key.columns"],
+        msg = "Message key columns does not match.");
 }
 
 @test:Config {groups: ["mssql-snapshot"]}
@@ -385,7 +396,7 @@ function testMsSqlExtendedSnapshotConfiguration() {
     };
 
     map<string> actualProperties = {};
-    populateMsSqlOptions(options, actualProperties);
+    populateOptions(options, actualProperties);
 
     test:assertEquals(actualProperties["snapshot.lock.timeout.ms"],
         expectedProperties["snapshot.lock.timeout.ms"],
@@ -408,7 +419,7 @@ function testMsSqlDataTypeConfiguration() {
     };
 
     map<string> actualProperties = {};
-    populateMsSqlOptions(options, actualProperties);
+    populateOptions(options, actualProperties);
 
     test:assertEquals(actualProperties["include.schema.changes"],
         expectedProperties["include.schema.changes"],
@@ -430,7 +441,7 @@ function testMsSqlOptionsWithHeartbeat() {
     };
 
     map<string> actualProperties = {};
-    populateMsSqlOptions(options, actualProperties);
+    populateOptions(options, actualProperties);
 
     test:assertEquals(actualProperties["heartbeat.interval.ms"],
         expectedProperties["heartbeat.interval.ms"],

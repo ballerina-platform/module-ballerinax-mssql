@@ -311,6 +311,11 @@ public enum LsnFlushMode {
 # + databaseNames - A list of database names to capture changes from
 # + includedSchemas - A list of regular expressions matching fully-qualified schema identifiers to capture changes from
 # + excludedSchemas - A list of regular expressions matching fully-qualified schema identifiers to exclude from change capture
+# + includedTables - Regex patterns for tables to capture (mutually exclusive with `excludedTables`)
+# + excludedTables - Regex patterns for tables to exclude (mutually exclusive with `includedTables`)
+# + includedColumns - Regex patterns for columns to capture (mutually exclusive with `excludedColumns`)
+# + excludedColumns - Regex patterns for columns to exclude (mutually exclusive with `includedColumns`)
+# + messageKeyColumns - Composite message key columns for change events
 # + tasksMax - The maximum number of tasks to create for this connector. If the `databaseNames` contains more than one element, you can increase the value of this property to a number less than or equal to the number of elements in the list
 # + connectionConfig - SQL Server connection and SSL configuration
 # + streamingConfig - SQL Server streaming and query configuration
@@ -324,6 +329,11 @@ public type MsSqlDatabaseConnection record {|
     string|string[] databaseNames;
     string|string[] includedSchemas?;
     string|string[] excludedSchemas?;
+    string|string[] includedTables?;
+    string|string[] excludedTables?;
+    string|string[] includedColumns?;
+    string|string[] excludedColumns?;
+    string messageKeyColumns?;
     int tasksMax = 1;
     ConnectionConfiguration connectionConfig = {};
     StreamingConfiguration streamingConfig = {};

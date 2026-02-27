@@ -15,6 +15,35 @@
 // under the License.
 import ballerinax/cdc;
 
+isolated function populateDebeziumProperties(MsSqlListenerConfiguration config, map<string> debeziumConfigs) {
+    cdc:populateDebeziumProperties({
+                                       engineName: config.engineName,
+                                       offsetStorage: config.offsetStorage,
+                                       internalSchemaStorage: config.internalSchemaStorage
+                                   }, debeziumConfigs);
+    populateDatabaseConfigurations(config.database, debeziumConfigs);
+    populateOptions(config.options, debeziumConfigs);
+}
+
+isolated function populateDatabaseConfigurations(MsSqlDatabaseConnection database, map<string> debeziumConfigs) {
+    // Populate generic CDC connection fields
+    cdc:populateDatabaseConfigurations({
+        connectorClass: database.connectorClass,
+        hostname: database.hostname,
+        port: database.port,
+        username: database.username,
+        password: database.password,
+        connectTimeout: database.connectTimeout,
+        tasksMax: database.tasksMax,
+        secure: database.secure
+        }, debeziumConfigs);
+
+    // Populate MSSQL-specific relational filtering
+    populateTableAndColumnFiltering(database, debeziumConfigs);
+
+    populateConfigurations(database, debeziumConfigs);
+}
+
 const string SCHEMA_INCLUDE_LIST = "schema.include.list";
 const string SCHEMA_EXCLUDE_LIST = "schema.exclude.list";
 
@@ -32,8 +61,19 @@ const string MAX_ITERATION_TRANSACTIONS = "max.iteration.transactions";
 const string SOURCE_STRUCT_VERSION = "source.struct.version";
 const string INCREMENTAL_SNAPSHOT_OPTION_RECOMPILE = "incremental.snapshot.option.recompile";
 
-// Relational-common configuration properties (applicable to MySQL, PostgreSQL, SQL Server)
-const string MESSAGE_KEY_COLUMNS = "message.key.columns";
+// Populates MSSQL-specific relational filtering (table/column inclusion/exclusion and message key columns)
+isolated function populateTableAndColumnFiltering(MsSqlDatabaseConnection connection, map<string> configMap) {
+    // Call CDC utility functions with direct parameters
+    cdc:populateTableAndColumnConfigurations(
+        connection.includedTables,
+        connection.excludedTables,
+        connection.includedColumns,
+        connection.excludedColumns,
+        configMap
+    );
+
+    cdc:populateMessageKeyColumnsConfiguration(connection.messageKeyColumns, configMap);
+}
 
 // Populates SQL Server connection configuration
 isolated function populateConnectionConfiguration(ConnectionConfiguration config, map<string> configMap) {
@@ -63,7 +103,7 @@ isolated function populateSchemaConfiguration(SchemaConfiguration config, map<st
     configMap[SOURCE_STRUCT_VERSION] = config.sourceStructVersion.toString();
 }
 
-isolated function populateMsSqlConfigurations(MsSqlDatabaseConnection connection, map<string> configMap) {
+isolated function populateConfigurations(MsSqlDatabaseConnection connection, map<string> configMap) {
     string? databaseInstance = connection.databaseInstance;
     if databaseInstance !is () {
         configMap[MSSQL_DATABASE_INSTANCE] = databaseInstance;
@@ -101,7 +141,7 @@ const string SNAPSHOT_LOCK_TIMEOUT_MS = "snapshot.lock.timeout.ms";
 const string INCLUDE_SCHEMA_CHANGES = "include.schema.changes";
 
 // Populates MSSQL-specific options
-isolated function populateMsSqlOptions(MssqlOptions options, map<string> configMap) {
+isolated function populateOptions(MssqlOptions options, map<string> configMap) {
     // Populate common options from cdc module
     cdc:populateOptions(options, configMap, typeof options);
 
@@ -109,7 +149,7 @@ isolated function populateMsSqlOptions(MssqlOptions options, map<string> configM
     ExtendedSnapshotConfiguration? extendedSnapshot = options.extendedSnapshot;
     if extendedSnapshot is ExtendedSnapshotConfiguration {
         cdc:populateRelationalExtendedSnapshotConfiguration(extendedSnapshot, configMap);
-        populateMsSqlExtendedSnapshotConfiguration(extendedSnapshot, configMap);
+        populateExtendedSnapshotConfiguration(extendedSnapshot, configMap);
     }
 
     // Populate MSSQL-specific data type configuration
@@ -129,7 +169,7 @@ isolated function populateDataTypeConfiguration(DataTypeConfiguration config, ma
 }
 
 // Populates MSSQL-specific extended snapshot properties
-isolated function populateMsSqlExtendedSnapshotConfiguration(ExtendedSnapshotConfiguration config, map<string> configMap) {
+isolated function populateExtendedSnapshotConfiguration(ExtendedSnapshotConfiguration config, map<string> configMap) {
     configMap[SNAPSHOT_LOCK_TIMEOUT_MS] = getMillisecondValueOf(config.lockTimeout);
     configMap[INCREMENTAL_SNAPSHOT_OPTION_RECOMPILE] = config.incrementalSnapshotOptionRecompile.toString();
 }
