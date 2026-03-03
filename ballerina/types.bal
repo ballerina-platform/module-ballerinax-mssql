@@ -226,17 +226,6 @@ public distinct class SmallMoneyValue {
     }  
 }
 
-# SQL Server connection and SSL configuration.
-#
-# + encrypt - Enable SSL/TLS encryption for JDBC connections
-# + sslTruststore - Path to SSL truststore file
-# + sslTruststorePassword - Password for SSL truststore
-public type ConnectionConfiguration record {|
-    boolean encrypt = false;
-    string sslTruststore?;
-    string sslTruststorePassword?;
-|};
-
 # SQL Server streaming and query configuration.
 #
 # + dataQueryMode - CDC query method (function or direct)
@@ -248,13 +237,6 @@ public type StreamingConfiguration record {|
     int streamingDelayMs = 0;
     int streamingFetchSize = 10000;
     int maxIterationTransactions = 500;
-|};
-
-# SQL Server schema version configuration.
-#
-# + sourceStructVersion - Schema version for source block in CDC events
-public type SchemaConfiguration record {|
-    SourceStructVersion sourceStructVersion = V2;
 |};
 
 # SQL Server CDC listener configuration including database connection, storage, and CDC options.
@@ -281,26 +263,14 @@ public type MssqlOptions record {|
 # Extends generic relational snapshot configuration with MSSQL-specific options.
 #
 # + lockTimeout - Lock acquisition timeout in seconds
+# + isolationMode - Transaction isolation level during snapshot
 # + incrementalSnapshotOptionRecompile - Use OPTION(RECOMPILE) for incremental snapshot queries
 public type ExtendedSnapshotConfiguration record {|
     *cdc:RelationalExtendedSnapshotConfiguration;
     decimal lockTimeout = 10;
+    cdc:SnapshotIsolationMode isolationMode?;
     boolean incrementalSnapshotOptionRecompile = false;
 |};
-
-# Represents publication autocreate modes (PostgreSQL).
-public enum PublicationAutocreateMode {
-    ALL_TABLES = "all_tables",
-    DISABLED = "disabled",
-    FILTERED = "filtered"
-}
-
-# Represents LSN flush modes (PostgreSQL).
-public enum LsnFlushMode {
-    MANUAL = "manual",
-    CONNECTOR = "connector",
-    CONNECTOR_AND_DRIVER = "connector_and_driver"
-}
 
 # Represents the configuration for the MSSQL CDC database connection.
 #
@@ -317,9 +287,7 @@ public enum LsnFlushMode {
 # + excludedColumns - Regex patterns for columns to exclude (mutually exclusive with `includedColumns`)
 # + messageKeyColumns - Composite message key columns for change events
 # + tasksMax - The maximum number of tasks to create for this connector. If the `databaseNames` contains more than one element, you can increase the value of this property to a number less than or equal to the number of elements in the list
-# + connectionConfig - SQL Server connection and SSL configuration
 # + streamingConfig - SQL Server streaming and query configuration
-# + schemaConfig - SQL Server schema version configuration
 public type MsSqlDatabaseConnection record {|
     *cdc:DatabaseConnection;
     string connectorClass = "io.debezium.connector.sqlserver.SqlServerConnector";
@@ -333,11 +301,9 @@ public type MsSqlDatabaseConnection record {|
     string|string[] excludedTables?;
     string|string[] includedColumns?;
     string|string[] excludedColumns?;
-    string messageKeyColumns?;
+    cdc:MessageKeyColumns[] messageKeyColumns?;
     int tasksMax = 1;
-    ConnectionConfiguration connectionConfig = {};
-    StreamingConfiguration streamingConfig = {};
-    SchemaConfiguration schemaConfig = {};
+    StreamingConfiguration streamingConfig?;
 |};
 
 # Represents data type handling configuration.
