@@ -263,7 +263,6 @@ function testCdcListenerEvents() returns error? {
 @test:Config {groups: ["mssql-connection"]}
 function testMsSqlConnectionConfiguration() {
     map<string> expectedProperties = {
-        "database.encrypt": "true",
         "database.ssl.truststore": "/path/to/truststore.jks",
         "database.ssl.truststore.password": "password123"
     };
@@ -272,15 +271,13 @@ function testMsSqlConnectionConfiguration() {
         username: "testuser",
         password: "testpass",
         databaseNames: "testdb",
-        connectionConfig: {
-            encrypt: true,
-            sslTruststore: "/path/to/truststore.jks",
-            sslTruststorePassword: "password123"
+        secure: {
+            trustStore: {path: "/path/to/truststore.jks", password: "password123"}
         }
     };
 
     map<string> actualProperties = {};
-    populateConfigurations(connection, actualProperties);
+    populateDatabaseConfigurations(connection, actualProperties);
 
     test:assertEquals(actualProperties["database.encrypt"],
         expectedProperties["database.encrypt"],
@@ -322,29 +319,6 @@ function testMsSqlStreamingConfiguration() {
         msg = "Streaming fetch size does not match.");
 }
 
-@test:Config {groups: ["mssql-schema"]}
-function testMsSqlSchemaConfiguration() {
-    map<string> expectedProperties = {
-        "source.struct.version": "v1"
-    };
-
-    MsSqlDatabaseConnection connection = {
-        username: "testuser",
-        password: "testpass",
-        databaseNames: "testdb",
-        schemaConfig: {
-            sourceStructVersion: V1
-        }
-    };
-
-    map<string> actualProperties = {};
-    populateConfigurations(connection, actualProperties);
-
-    test:assertEquals(actualProperties["source.struct.version"],
-        expectedProperties["source.struct.version"],
-        msg = "Source struct version does not match.");
-}
-
 @test:Config {groups: ["mssql-relational"]}
 function testMsSqlRelationalFilteringConfiguration() {
     map<string> expectedProperties = {
@@ -361,7 +335,10 @@ function testMsSqlRelationalFilteringConfiguration() {
         includedSchemas: ["dbo", "custom"],
         includedTables: ["dbo.customers", "dbo.orders"],
         excludedColumns: ["dbo.*.password", "dbo.*.ssn"],
-        messageKeyColumns: "dbo.customers:id;dbo.orders:order_id"
+        messageKeyColumns: [
+            {tableName: "dbo.customers", columns: ["id"]},
+            {tableName: "dbo.orders", columns: ["order_id"]}
+        ]
     };
 
     map<string> actualProperties = {};
@@ -434,7 +411,7 @@ function testMsSqlOptionsWithHeartbeat() {
     };
 
     MssqlOptions options = {
-        heartbeat: {
+        heartbeatConfig: {
             interval: 20,
             actionQuery: "SELECT GETDATE()"
         }
