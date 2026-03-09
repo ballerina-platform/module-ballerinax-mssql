@@ -418,6 +418,7 @@ function testMsSqlOptionsWithHeartbeat() {
     };
 
     map<string> actualProperties = {};
+    cdc:populateOptions(options, actualProperties);
     populateOptions(options, actualProperties);
 
     test:assertEquals(actualProperties["heartbeat.interval.ms"],
