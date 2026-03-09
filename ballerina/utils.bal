@@ -19,25 +19,15 @@ isolated function populateDebeziumProperties(MsSqlListenerConfiguration config, 
     cdc:populateDebeziumProperties({
                                        engineName: config.engineName,
                                        offsetStorage: config.offsetStorage,
-                                       internalSchemaStorage: config.internalSchemaStorage
+                                       internalSchemaStorage: config.internalSchemaStorage,
+                                       database: config.database,
+                                       options: config.options
                                    }, debeziumConfigs);
     populateDatabaseConfigurations(config.database, debeziumConfigs);
     populateOptions(config.options, debeziumConfigs);
 }
 
 isolated function populateDatabaseConfigurations(MsSqlDatabaseConnection database, map<string> debeziumConfigs) {
-    // Populate generic CDC connection fields
-    cdc:populateDatabaseConfigurations({
-        connectorClass: database.connectorClass,
-        hostname: database.hostname,
-        port: database.port,
-        username: database.username,
-        password: database.password,
-        connectTimeout: database.connectTimeout,
-        tasksMax: database.tasksMax,
-        secure: database.secure
-        }, debeziumConfigs);
-
     // Populate MSSQL-specific relational filtering
     populateTableAndColumnFiltering(database, debeziumConfigs);
 
@@ -124,9 +114,6 @@ const string INCLUDE_SCHEMA_CHANGES = "include.schema.changes";
 
 // Populates MSSQL-specific options
 isolated function populateOptions(MssqlOptions options, map<string> configMap) {
-    // Populate common options from cdc module
-    cdc:populateOptions(options, configMap, typeof options);
-
     // Populate MSSQL-specific extended snapshot configuration
     ExtendedSnapshotConfiguration? extendedSnapshot = options.extendedSnapshot;
     if extendedSnapshot is ExtendedSnapshotConfiguration {
@@ -139,6 +126,15 @@ isolated function populateOptions(MssqlOptions options, map<string> configMap) {
     if dataTypeConfig is DataTypeConfiguration {
         populateDataTypeConfiguration(dataTypeConfig, configMap);
     }
+
+    // Populate relational heartbeat configuration
+    cdc:RelationalHeartbeatConfiguration? heartbeatConfig = options.heartbeatConfig;
+    if heartbeatConfig is cdc:RelationalHeartbeatConfiguration {
+        cdc:populateRelationalHeartbeatConfiguration(heartbeatConfig, configMap);
+    }
+
+    // Populate additional DB-specific options not present in base Options
+    cdc:populateAdditionalConfigurations(options, configMap, typeof options);
 }
 
 // Populates MSSQL-specific data type configuration

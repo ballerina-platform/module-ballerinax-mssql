@@ -253,10 +253,12 @@ public type MsSqlListenerConfiguration record {|
 #
 # + extendedSnapshot - Extended snapshot configuration with SQL Server-specific lock timeout and query settings
 # + dataTypeConfig - Data type handling configuration including schema change tracking
+# + heartbeatConfig - Heartbeat configuration for keeping the SQL Server CDC connection active
 public type MssqlOptions record {|
     *cdc:Options;
     ExtendedSnapshotConfiguration extendedSnapshot?;
     DataTypeConfiguration dataTypeConfig?;
+    cdc:RelationalHeartbeatConfiguration heartbeatConfig?;
 |};
 
 # SQL Server-specific extended snapshot configuration.
