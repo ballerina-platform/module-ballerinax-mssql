@@ -72,10 +72,12 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
             BigDecimal bd = ((BDecimal) value).decimalValue();
             int scale = Math.max(bd.scale(), MSSQL_BATCH_DECIMAL_SCALE);
             preparedStatement.setObject(index, bd.setScale(scale), jdbcType, scale);
-        } else if (value instanceof Double || value instanceof Long) {
+        } else if (value instanceof Long || value instanceof Integer) {
+            preparedStatement.setBigDecimal(index, BigDecimal.valueOf(((Number) value).longValue()));
+        } else if (value instanceof Double) {
             preparedStatement.setBigDecimal(index, new BigDecimal(((Number) value).doubleValue(),
                     MathContext.DECIMAL64));
-        } else if (value instanceof Integer || value instanceof Float) {
+        } else if (value instanceof Float) {
             preparedStatement.setBigDecimal(index, new BigDecimal(((Number) value).doubleValue(),
                     MathContext.DECIMAL32));
         } else {
