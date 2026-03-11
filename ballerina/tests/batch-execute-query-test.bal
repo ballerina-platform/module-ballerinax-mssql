@@ -80,6 +80,15 @@ function initBatchExecuteTests() returns error? {
             money_type money,
             smallmoney_type smallmoney
         );
+
+        DROP TABLE IF EXISTS NullableNumericTypes;
+
+        CREATE TABLE NullableNumericTypes (
+            row_id     INT PRIMARY KEY,
+            decimal_val DECIMAL(28, 10),
+            numeric_val NUMERIC(28, 10),
+            varchar_val VARCHAR(100)
+        );
     `;
     _ =  check executeQueryMssqlClient(query, batchExecuteDB);
 }
@@ -191,4 +200,135 @@ isolated function validateBatchExecutionResult(sql:ExecutionResult[] results, in
         test:assertEquals(results[i].affectedRowCount, rowCount[i]);
         i = i + 1;
     }
+}
+
+// Tests for batch execute with nullable parameters (fix: Types.NULL → Types.VARCHAR)
+// and decimal scale variance (fix: setObject with normalised scale).
+
+// Verify that rows with null decimal/numeric/varchar fields batch-insert without error.
+// Before the fix, passing bare Ballerina () mapped to Types.NULL which the MSSQL JDBC
+// driver could not encode in preparedTypeDefinitions, forcing sp_prepexec per row.
+@test:Config {
+    groups: ["batch-execute"]
+}
+function batchInsertWithNullDecimalFields() returns error? {
+    var data = [
+        {rowId: 100, decimalVal: <decimal?>12.34, numericVal: <decimal?>56.78, varcharVal: <string?>"hello"},
+        {rowId: 101, decimalVal: <decimal?>(), numericVal: <decimal?>(), varcharVal: <string?>()},
+        {rowId: 102, decimalVal: <decimal?>99.99, numericVal: <decimal?>(), varcharVal: <string?>"world"},
+        {rowId: 103, decimalVal: <decimal?>(), numericVal: <decimal?>11.22, varcharVal: <string?>()}
+    ];
+    sql:ParameterizedQuery[] sqlQueries =
+        from var row in data
+        let sql:DecimalValue dv = new (row.decimalVal),
+            sql:NumericValue nv = new (row.numericVal),
+            sql:VarcharValue vv = new (row.varcharVal)
+        select `INSERT INTO NullableNumericTypes (row_id, decimal_val, numeric_val, varchar_val)
+                VALUES (${row.rowId}, ${dv}, ${nv}, ${vv})`;
+    validateBatchExecutionResult(check batchExecuteQueryMssqlClient(sqlQueries, batchExecuteDB), [1, 1, 1, 1]);
+
+    // Verify null rows were stored correctly
+    record {}? row101 = check queryMssqlClient(
+        `SELECT decimal_val, numeric_val, varchar_val FROM NullableNumericTypes WHERE row_id = 101`,
+        database = batchExecuteDB);
+    test:assertNotEquals(row101, ());
+    test:assertEquals((<record {}>row101)["decimal_val"], ());
+    test:assertEquals((<record {}>row101)["numeric_val"], ());
+    test:assertEquals((<record {}>row101)["varchar_val"], ());
+}
+
+// Verify that batch-inserting sql:NumericValue/DecimalValue with different natural scales
+// across rows succeeds and stores the correct values.
+// Before the fix, BigDecimal.scale() varied per row (e.g., scale=2 for "10.50", scale=4
+// for "1234.5678"), generating a different preparedTypeDefinitions cache key per row and
+// forcing sp_prepexec instead of sp_execute.
+@test:Config {
+    groups: ["batch-execute"]
+}
+function batchInsertWithVaryingDecimalScales() returns error? {
+    decimal v1 = 1.5;       // natural scale = 1
+    decimal v2 = 12.34;     // natural scale = 2
+    decimal v3 = 123.456;   // natural scale = 3
+    decimal v4 = 1234.5678; // natural scale = 4
+    var data = [
+        {rowId: 110, val: v1},
+        {rowId: 111, val: v2},
+        {rowId: 112, val: v3},
+        {rowId: 113, val: v4}
+    ];
+    sql:ParameterizedQuery[] sqlQueries =
+        from var row in data
+        let sql:NumericValue nv = new (row.val)
+        select `INSERT INTO NullableNumericTypes (row_id, numeric_val) VALUES (${row.rowId}, ${nv})`;
+    validateBatchExecutionResult(check batchExecuteQueryMssqlClient(sqlQueries, batchExecuteDB), [1, 1, 1, 1]);
+
+    // Verify values are stored with correct precision
+    record {}? row110 = check queryMssqlClient(
+        `SELECT numeric_val FROM NullableNumericTypes WHERE row_id = 110`, database = batchExecuteDB);
+    test:assertEquals((<record {}>row110)["numeric_val"], <decimal>1.5);
+
+    record {}? row113 = check queryMssqlClient(
+        `SELECT numeric_val FROM NullableNumericTypes WHERE row_id = 113`, database = batchExecuteDB);
+    test:assertEquals((<record {}>row113)["numeric_val"], <decimal>1234.5678);
+}
+
+// Verify that a batch mixing null rows and rows with varying decimal scales all insert
+// correctly — exercises both fixes together.
+@test:Config {
+    groups: ["batch-execute"]
+}
+function batchInsertWithNullAndVaryingScalesMixed() returns error? {
+    var data = [
+        {rowId: 120, val: <decimal?>10.5},
+        {rowId: 121, val: <decimal?>()},
+        {rowId: 122, val: <decimal?>999.9999},
+        {rowId: 123, val: <decimal?>()},
+        {rowId: 124, val: <decimal?>0.001}
+    ];
+    sql:ParameterizedQuery[] sqlQueries =
+        from var row in data
+        let sql:DecimalValue dv = new (row.val)
+        select `INSERT INTO NullableNumericTypes (row_id, decimal_val) VALUES (${row.rowId}, ${dv})`;
+    validateBatchExecutionResult(check batchExecuteQueryMssqlClient(sqlQueries, batchExecuteDB), [1, 1, 1, 1, 1]);
+
+    record {}? row121 = check queryMssqlClient(
+        `SELECT decimal_val FROM NullableNumericTypes WHERE row_id = 121`, database = batchExecuteDB);
+    test:assertEquals((<record {}>row121)["decimal_val"], ());
+
+    record {}? row122 = check queryMssqlClient(
+        `SELECT decimal_val FROM NullableNumericTypes WHERE row_id = 122`, database = batchExecuteDB);
+    test:assertEquals((<record {}>row122)["decimal_val"], <decimal>999.9999);
+}
+
+// Verify the setSQLValueParam null path (Types.NULL → Types.VARCHAR fix) by passing
+// bare nullable Ballerina values directly in the template — no typed wrapper.
+// When a bare () reaches setSQLValueParam, it previously used Types.NULL which
+// the MSSQL JDBC driver cannot encode in preparedTypeDefinitions.
+@test:Config {
+    groups: ["batch-execute"]
+}
+function batchInsertWithBareNullableValues() returns error? {
+    var data = [
+        {rowId: 130, decimalVal: <decimal?>45.67, varcharVal: <string?>"bare"},
+        {rowId: 131, decimalVal: <decimal?>(), varcharVal: <string?>()},
+        {rowId: 132, decimalVal: <decimal?>8.9, varcharVal: <string?>()},
+        {rowId: 133, decimalVal: <decimal?>(), varcharVal: <string?>"non-null"}
+    ];
+    sql:ParameterizedQuery[] sqlQueries =
+        from var row in data
+        select `INSERT INTO NullableNumericTypes (row_id, decimal_val, varchar_val)
+                VALUES (${row.rowId}, ${row.decimalVal}, ${row.varcharVal})`;
+    validateBatchExecutionResult(check batchExecuteQueryMssqlClient(sqlQueries, batchExecuteDB), [1, 1, 1, 1]);
+
+    record {}? row131 = check queryMssqlClient(
+        `SELECT decimal_val, varchar_val FROM NullableNumericTypes WHERE row_id = 131`,
+        database = batchExecuteDB);
+    test:assertEquals((<record {}>row131)["decimal_val"], ());
+    test:assertEquals((<record {}>row131)["varchar_val"], ());
+
+    record {}? row133 = check queryMssqlClient(
+        `SELECT decimal_val, varchar_val FROM NullableNumericTypes WHERE row_id = 133`,
+        database = batchExecuteDB);
+    test:assertEquals((<record {}>row133)["decimal_val"], ());
+    test:assertEquals((<record {}>row133)["varchar_val"], "non-null");
 }
