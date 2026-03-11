@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+- [Fix batchExecute performance degradation with nullable and decimal parameters against Azure/on-prem SQL Server](https://github.com/ballerina-platform/ballerina-library/issues/8700)
+
 ## [1.16.1] - 2025-06-25
 
 ### Changed

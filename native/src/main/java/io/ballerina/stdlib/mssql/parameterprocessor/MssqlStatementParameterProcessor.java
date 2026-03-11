@@ -21,6 +21,7 @@ package io.ballerina.stdlib.mssql.parameterprocessor;
 import com.microsoft.sqlserver.jdbc.Geometry;
 import com.microsoft.sqlserver.jdbc.SQLServerPreparedStatement;
 import io.ballerina.runtime.api.utils.TypeUtils;
+import io.ballerina.runtime.api.values.BDecimal;
 import io.ballerina.runtime.api.values.BObject;
 import io.ballerina.stdlib.mssql.Constants;
 import io.ballerina.stdlib.mssql.utils.ConverterUtils;
@@ -28,9 +29,12 @@ import io.ballerina.stdlib.sql.exception.DataError;
 import io.ballerina.stdlib.sql.exception.UnsupportedTypeError;
 import io.ballerina.stdlib.sql.parameterprocessor.DefaultStatementParameterProcessor;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 /**
  * This class overrides DefaultStatementParameterProcessor to implement methods required to convert ballerina types
@@ -48,6 +52,65 @@ public class MssqlStatementParameterProcessor extends DefaultStatementParameterP
     */
     public static MssqlStatementParameterProcessor getInstance() {
         return instance;
+    }
+
+    // The MSSQL JDBC driver builds the batch cache key from preparedTypeDefinitions
+    // (e.g. "decimal(38,S)") where S = BigDecimal.scale(). Varying scales across rows produce
+    // different cache keys, forcing sp_prepexec (re-prepare + plan recompile) per row instead
+    // of the cheap sp_execute reuse. Using setObject with an explicit fixed minimum scale pins
+    // the type definition to a single stable string for all rows. Values with a larger natural
+    // scale keep it (no truncation); values below the minimum are zero-padded (lossless).
+    private static final int MSSQL_BATCH_DECIMAL_SCALE = 10;
+
+    private void setMssqlDecimalParam(PreparedStatement preparedStatement, int index, Object value, int jdbcType)
+            throws SQLException, DataError {
+        if (value == null) {
+            // setNull leaves Parameter.scale=0 ("decimal(38,0)"); setObject with explicit scale
+            // keeps null rows consistent with non-null rows in the type definition.
+            preparedStatement.setObject(index, null, jdbcType, MSSQL_BATCH_DECIMAL_SCALE);
+        } else if (value instanceof BDecimal) {
+            BigDecimal bd = ((BDecimal) value).decimalValue();
+            int scale = Math.max(bd.scale(), MSSQL_BATCH_DECIMAL_SCALE);
+            preparedStatement.setObject(index, bd.setScale(scale), jdbcType, scale);
+        } else if (value instanceof Long || value instanceof Integer) {
+            preparedStatement.setBigDecimal(index, BigDecimal.valueOf(((Number) value).longValue()));
+        } else if (value instanceof Double) {
+            preparedStatement.setBigDecimal(index, new BigDecimal(((Number) value).doubleValue(),
+                    MathContext.DECIMAL64));
+        } else if (value instanceof Float) {
+            preparedStatement.setBigDecimal(index, new BigDecimal(((Number) value).doubleValue(),
+                    MathContext.DECIMAL32));
+        } else {
+            throw new UnsupportedTypeError("DECIMAL", index);
+        }
+    }
+
+    @Override
+    protected void setNumeric(PreparedStatement preparedStatement, String sqlType, int index, Object value)
+            throws DataError, SQLException {
+        setMssqlDecimalParam(preparedStatement, index, value, Types.NUMERIC);
+    }
+
+    @Override
+    protected void setDecimal(PreparedStatement preparedStatement, String sqlType, int index, Object value)
+            throws DataError, SQLException {
+        setMssqlDecimalParam(preparedStatement, index, value, Types.DECIMAL);
+    }
+
+    @Override
+    public int setSQLValueParam(Connection connection, PreparedStatement preparedStatement,
+                                int index, Object object, boolean returnType)
+            throws DataError, SQLException {
+        if (object == null) {
+            // Types.NULL (=0) is unknown to the MSSQL JDBC driver, which omits
+            // the parameter from preparedTypeDefinitions, breaking the sp_execute cache key
+            // and forcing sp_prepexec (re-prepare) on every batch row. Types.VARCHAR gives
+            // the driver a known type so it can build a stable cache key for sp_execute reuse.
+            // SQL Server inserts NULL into any nullable column regardless of this type hint.
+            preparedStatement.setNull(index, Types.VARCHAR);
+            return Types.VARCHAR;
+        }
+        return super.setSQLValueParam(connection, preparedStatement, index, object, returnType);
     }
 
     @Override
