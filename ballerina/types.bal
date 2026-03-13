@@ -17,6 +17,18 @@
 import ballerina/sql;
 import ballerinax/cdc;
 
+# Represents the data query modes for SQL Server CDC.
+public enum DataQueryMode {
+    FUNCTION = "function",
+    DIRECT = "direct"
+}
+
+# Represents the source struct version for SQL Server connector.
+public enum SourceStructVersion {
+    V1 = "v1",
+    V2 = "v2"
+}
+
 # Represents the MSSQL Point type parameter in the `sql:ParameterizedQuery`.
 #
 # + x - The x coordinate of the point
@@ -214,12 +226,52 @@ public distinct class SmallMoneyValue {
     }  
 }
 
-# Represents the configuration for the MSSQL CDC listener.
+# SQL Server streaming and query configuration.
 #
-# + database - The MSSQL database connection configuration
+# + dataQueryMode - CDC query method (function or direct)
+# + streamingDelayMs - Delay before starting streaming after snapshot
+# + streamingFetchSize - Maximum rows per streaming round trip
+# + maxIterationTransactions - Maximum number of transactions per iteration
+public type StreamingConfiguration record {|
+    DataQueryMode dataQueryMode = FUNCTION;
+    int streamingDelayMs = 0;
+    int streamingFetchSize = 10000;
+    int maxIterationTransactions = 500;
+|};
+
+# SQL Server CDC listener configuration including database connection, storage, and CDC options.
+#
+# + database - SQL Server database connection and capture settings
+# + options - SQL Server-specific CDC options including snapshot, heartbeat, signals, and data type handling
 public type MsSqlListenerConfiguration record {|
-    MsSqlDatabaseConnection database;
     *cdc:ListenerConfiguration;
+    MsSqlDatabaseConnection database;
+    MssqlOptions options = {};
+|};
+
+# SQL Server-specific CDC options for configuring snapshot behavior and data type handling.
+#
+# + extendedSnapshot - Extended snapshot configuration with SQL Server-specific lock timeout and query settings
+# + dataTypeConfig - Data type handling configuration including schema change tracking
+# + heartbeatConfig - Heartbeat configuration for keeping the SQL Server CDC connection active
+public type MssqlOptions record {|
+    *cdc:Options;
+    ExtendedSnapshotConfiguration extendedSnapshot?;
+    DataTypeConfiguration dataTypeConfig?;
+    cdc:RelationalHeartbeatConfiguration heartbeatConfig?;
+|};
+
+# SQL Server-specific extended snapshot configuration.
+# Extends generic relational snapshot configuration with MSSQL-specific options.
+#
+# + lockTimeout - Lock acquisition timeout in seconds
+# + isolationMode - Transaction isolation level during snapshot
+# + incrementalSnapshotOptionRecompile - Use OPTION(RECOMPILE) for incremental snapshot queries
+public type ExtendedSnapshotConfiguration record {|
+    *cdc:RelationalExtendedSnapshotConfiguration;
+    decimal lockTimeout = 10;
+    cdc:SnapshotIsolationMode isolationMode?;
+    boolean incrementalSnapshotOptionRecompile = false;
 |};
 
 # Represents the configuration for the MSSQL CDC database connection.
@@ -231,7 +283,13 @@ public type MsSqlListenerConfiguration record {|
 # + databaseNames - A list of database names to capture changes from
 # + includedSchemas - A list of regular expressions matching fully-qualified schema identifiers to capture changes from
 # + excludedSchemas - A list of regular expressions matching fully-qualified schema identifiers to exclude from change capture
+# + includedTables - Regex patterns for tables to capture (mutually exclusive with `excludedTables`)
+# + excludedTables - Regex patterns for tables to exclude (mutually exclusive with `includedTables`)
+# + includedColumns - Regex patterns for columns to capture (mutually exclusive with `excludedColumns`)
+# + excludedColumns - Regex patterns for columns to exclude (mutually exclusive with `includedColumns`)
+# + messageKeyColumns - Composite message key columns for change events
 # + tasksMax - The maximum number of tasks to create for this connector. If the `databaseNames` contains more than one element, you can increase the value of this property to a number less than or equal to the number of elements in the list
+# + streamingConfig - SQL Server streaming and query configuration
 public type MsSqlDatabaseConnection record {|
     *cdc:DatabaseConnection;
     string connectorClass = "io.debezium.connector.sqlserver.SqlServerConnector";
@@ -241,5 +299,19 @@ public type MsSqlDatabaseConnection record {|
     string|string[] databaseNames;
     string|string[] includedSchemas?;
     string|string[] excludedSchemas?;
+    string|string[] includedTables?;
+    string|string[] excludedTables?;
+    string|string[] includedColumns?;
+    string|string[] excludedColumns?;
+    cdc:MessageKeyColumns[] messageKeyColumns?;
     int tasksMax = 1;
+    StreamingConfiguration streamingConfig?;
+|};
+
+# Represents data type handling configuration.
+#
+# + includeSchemaChanges - Whether to include schema change events
+public type DataTypeConfiguration record {|
+    *cdc:DataTypeConfiguration;
+    boolean includeSchemaChanges = true;
 |};

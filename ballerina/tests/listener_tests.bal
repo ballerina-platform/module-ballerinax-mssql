@@ -257,3 +257,174 @@ function testCdcListenerEvents() returns error? {
 
     check testListener.gracefulStop();
 }
+
+// ========== DATABASE-SPECIFIC CONFIGURATION TESTS ==========
+
+@test:Config {groups: ["mssql-connection"]}
+function testMsSqlConnectionConfiguration() {
+    map<string> expectedProperties = {
+        "database.ssl.truststore": "/path/to/truststore.jks",
+        "database.ssl.truststore.password": "password123"
+    };
+
+    MsSqlDatabaseConnection connection = {
+        username: "testuser",
+        password: "testpass",
+        databaseNames: "testdb",
+        secure: {
+            trustStore: {path: "/path/to/truststore.jks", password: "password123"}
+        }
+    };
+
+    map<string> actualProperties = {};
+    populateDatabaseConfigurations(connection, actualProperties);
+
+    test:assertEquals(actualProperties["database.encrypt"],
+        expectedProperties["database.encrypt"],
+        msg = "Database encrypt does not match.");
+    test:assertEquals(actualProperties["database.ssl.truststore"],
+        expectedProperties["database.ssl.truststore"],
+        msg = "SSL truststore does not match.");
+}
+
+@test:Config {groups: ["mssql-streaming"]}
+function testMsSqlStreamingConfiguration() {
+    map<string> expectedProperties = {
+        "data.query.mode": "direct",
+        "streaming.delay.ms": "2000",
+        "streaming.fetch.size": "5000",
+        "max.iteration.transactions": "1000"
+    };
+
+    MsSqlDatabaseConnection connection = {
+        username: "testuser",
+        password: "testpass",
+        databaseNames: "testdb",
+        streamingConfig: {
+            dataQueryMode: DIRECT,
+            streamingDelayMs: 2000,
+            streamingFetchSize: 5000,
+            maxIterationTransactions: 1000
+        }
+    };
+
+    map<string> actualProperties = {};
+    populateConfigurations(connection, actualProperties);
+
+    test:assertEquals(actualProperties["data.query.mode"],
+        expectedProperties["data.query.mode"],
+        msg = "Data query mode does not match.");
+    test:assertEquals(actualProperties["streaming.fetch.size"],
+        expectedProperties["streaming.fetch.size"],
+        msg = "Streaming fetch size does not match.");
+}
+
+@test:Config {groups: ["mssql-relational"]}
+function testMsSqlRelationalFilteringConfiguration() {
+    map<string> expectedProperties = {
+        "schema.include.list": "dbo,custom",
+        "table.include.list": "dbo.customers,dbo.orders",
+        "column.exclude.list": "dbo.*.password,dbo.*.ssn",
+        "message.key.columns": "dbo.customers:id;dbo.orders:order_id"
+    };
+
+    MsSqlDatabaseConnection connection = {
+        username: "testuser",
+        password: "testpass",
+        databaseNames: "testdb",
+        includedSchemas: ["dbo", "custom"],
+        includedTables: ["dbo.customers", "dbo.orders"],
+        excludedColumns: ["dbo.*.password", "dbo.*.ssn"],
+        messageKeyColumns: [
+            {tableName: "dbo.customers", columns: ["id"]},
+            {tableName: "dbo.orders", columns: ["order_id"]}
+        ]
+    };
+
+    map<string> actualProperties = {};
+    populateDatabaseConfigurations(connection, actualProperties);
+
+    test:assertEquals(actualProperties["schema.include.list"],
+        expectedProperties["schema.include.list"],
+        msg = "Schema include list does not match.");
+    test:assertEquals(actualProperties["table.include.list"],
+        expectedProperties["table.include.list"],
+        msg = "Table include list does not match.");
+    test:assertEquals(actualProperties["column.exclude.list"],
+        expectedProperties["column.exclude.list"],
+        msg = "Column exclude list does not match.");
+    test:assertEquals(actualProperties["message.key.columns"],
+        expectedProperties["message.key.columns"],
+        msg = "Message key columns does not match.");
+}
+
+@test:Config {groups: ["mssql-snapshot"]}
+function testMsSqlExtendedSnapshotConfiguration() {
+    map<string> expectedProperties = {
+        "snapshot.lock.timeout.ms": "25000",
+        "incremental.snapshot.option.recompile": "true"
+    };
+
+    MssqlOptions options = {
+        extendedSnapshot: {
+            lockTimeout: 25,
+            incrementalSnapshotOptionRecompile: true
+        }
+    };
+
+    map<string> actualProperties = {};
+    populateOptions(options, actualProperties);
+
+    test:assertEquals(actualProperties["snapshot.lock.timeout.ms"],
+        expectedProperties["snapshot.lock.timeout.ms"],
+        msg = "Snapshot lock timeout does not match.");
+    test:assertEquals(actualProperties["incremental.snapshot.option.recompile"],
+        expectedProperties["incremental.snapshot.option.recompile"],
+        msg = "Incremental snapshot option recompile does not match.");
+}
+
+@test:Config {groups: ["mssql-datatype"]}
+function testMsSqlDataTypeConfiguration() {
+    map<string> expectedProperties = {
+        "include.schema.changes": "false"
+    };
+
+    MssqlOptions options = {
+        dataTypeConfig: {
+            includeSchemaChanges: false
+        }
+    };
+
+    map<string> actualProperties = {};
+    populateOptions(options, actualProperties);
+
+    test:assertEquals(actualProperties["include.schema.changes"],
+        expectedProperties["include.schema.changes"],
+        msg = "Include schema changes does not match.");
+}
+
+@test:Config {groups: ["mssql-options"]}
+function testMsSqlOptionsWithHeartbeat() {
+    map<string> expectedProperties = {
+        "heartbeat.interval.ms": "20000",
+        "heartbeat.action.query": "SELECT GETDATE()"
+    };
+
+    MssqlOptions options = {
+        heartbeatConfig: {
+            interval: 20,
+            actionQuery: "SELECT GETDATE()"
+        }
+    };
+
+    map<string> actualProperties = {};
+    cdc:populateOptions(options, actualProperties);
+    populateOptions(options, actualProperties);
+
+    test:assertEquals(actualProperties["heartbeat.interval.ms"],
+        expectedProperties["heartbeat.interval.ms"],
+        msg = "Heartbeat interval does not match.");
+    test:assertEquals(actualProperties["heartbeat.action.query"],
+        expectedProperties["heartbeat.action.query"],
+        msg = "Heartbeat action query does not match.");
+}
