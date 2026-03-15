@@ -409,7 +409,7 @@ modules = [
 [[package]]
 org = "ballerinax"
 name = "cdc"
-version = "1.2.1"
+version = "1.2.0"
 dependencies = [
 	{org = "ballerina", name = "crypto"},
 	{org = "ballerina", name = "data.jsondata"},
@@ -437,7 +437,7 @@ dependencies = [
 [[package]]
 org = "ballerinax"
 name = "confluent.cregistry"
-version = "0.4.3"
+version = "0.4.4"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
 ]
