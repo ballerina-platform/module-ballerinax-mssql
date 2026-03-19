@@ -277,6 +277,7 @@ function testMsSqlConnectionConfiguration() {
     };
 
     map<string> actualProperties = {};
+    cdc:populateDatabaseConfigurations(connection, actualProperties);
     populateDatabaseConfigurations(connection, actualProperties);
 
     test:assertEquals(actualProperties["database.encrypt"],
