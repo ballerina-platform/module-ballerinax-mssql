@@ -459,7 +459,7 @@ dependencies = [
 [[package]]
 org = "ballerinax"
 name = "mssql"
-version = "1.16.5"
+version = "1.16.6"
 dependencies = [
 	{org = "ballerina", name = "crypto"},
 	{org = "ballerina", name = "file"},
