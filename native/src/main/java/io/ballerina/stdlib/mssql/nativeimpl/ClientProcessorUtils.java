@@ -44,7 +44,8 @@ public class ClientProcessorUtils {
 
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {
-        String url = "jdbc:sqlserver://" + clientConfig.getStringValue(Constants.ClientConfiguration.HOST);
+        String host = clientConfig.getStringValue(Constants.ClientConfiguration.HOST).getValue();
+        String url = "jdbc:sqlserver://" + host;
         BString instanceVal = clientConfig.getStringValue(Constants.ClientConfiguration.INSTANCE);
         String instance = instanceVal == null ? null : instanceVal.getValue();
         url += "\\" + instance;
@@ -84,7 +85,6 @@ public class ClientProcessorUtils {
        
         BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
 
-        String host = clientConfig.getStringValue(Constants.ClientConfiguration.HOST).getValue();
         Map<String, String> metricsTags = new HashMap<>();
         metricsTags.put(ObservabilityUtils.TAG_DB_HOST, host);
         metricsTags.put(ObservabilityUtils.TAG_DB_PORT, String.valueOf(portValue.intValue()));
