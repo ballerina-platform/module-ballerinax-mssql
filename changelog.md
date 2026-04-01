@@ -6,8 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.18.0] - 2026-04-01
+
 ### Added
 - [Introduce additional Debezium properties](https://github.com/ballerina-platform/ballerina-library/issues/8572)
+- [Add connection pool observability metrics support](https://github.com/ballerina-platform/ballerina-library/issues/7763)
 
 ## [1.16.4] - 2026-03-16
 
