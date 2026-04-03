@@ -25,7 +25,10 @@ import io.ballerina.runtime.api.values.BString;
 import io.ballerina.stdlib.mssql.Constants;
 import io.ballerina.stdlib.mssql.utils.Utils;
 import io.ballerina.stdlib.sql.datasource.SQLDatasource;
+import io.ballerina.stdlib.sql.observability.ObservabilityUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -41,7 +44,8 @@ public class ClientProcessorUtils {
 
     public static Object createClient(BObject client, BMap<BString, Object> clientConfig,
                                       BMap<BString, Object> globalPool) {
-        String url = "jdbc:sqlserver://" + clientConfig.getStringValue(Constants.ClientConfiguration.HOST);
+        String host = clientConfig.getStringValue(Constants.ClientConfiguration.HOST).getValue();
+        String url = "jdbc:sqlserver://" + host;
         BString instanceVal = clientConfig.getStringValue(Constants.ClientConfiguration.INSTANCE);
         String instance = instanceVal == null ? null : instanceVal.getValue();
         url += "\\" + instance;
@@ -80,7 +84,14 @@ public class ClientProcessorUtils {
         }
        
         BMap connectionPool = clientConfig.getMapValue(Constants.ClientConfiguration.CONNECTION_POOL_OPTIONS);
-        
+
+        Map<String, String> metricsTags = new HashMap<>();
+        metricsTags.put(ObservabilityUtils.TAG_DB_HOST, host);
+        metricsTags.put(ObservabilityUtils.TAG_DB_PORT, String.valueOf(portValue.intValue()));
+        if (database != null && !database.isEmpty()) {
+            metricsTags.put(ObservabilityUtils.TAG_DB_NAME, database);
+        }
+
         SQLDatasource.SQLDatasourceParams sqlDatasourceParams = new SQLDatasource.SQLDatasourceParams()
                 .setUrl(url)
                 .setUser(user)
@@ -88,7 +99,8 @@ public class ClientProcessorUtils {
                 .setDatasourceName(datasourceName)
                 .setOptions(properties)
                 .setConnectionPool(connectionPool, globalPool)
-                .setPoolProperties(poolProperties);
+                .setPoolProperties(poolProperties)
+                .setMetricsTags(metricsTags);
         
         return io.ballerina.stdlib.sql.nativeimpl.ClientProcessor.createClient(
                 client, sqlDatasourceParams, true, false);
