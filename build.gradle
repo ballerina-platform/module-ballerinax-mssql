@@ -72,6 +72,14 @@ subprojects {
         jbalTools
     }
 
+    plugins.withId('java') {
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(25)
+            }
+        }
+    }
+
     dependencies {
         jbalTools ("org.ballerinalang:jballerina-tools:${ballerinaLangVersion}") {
             transitive = false
@@ -125,7 +133,7 @@ release {
     }
 }
 
-task build {
+tasks.named('build') {
     dependsOn("${packageName}-native:build")
     dependsOn("${packageName}-compiler-plugin:build")
     dependsOn("${packageName}-ballerina:build")
