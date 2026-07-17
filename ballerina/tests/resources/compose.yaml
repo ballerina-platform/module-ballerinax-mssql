@@ -1,3 +1,4 @@
+name: ballerinax-mssql-tests
 services:
     mssql:
         image: mcr.microsoft.com/mssql/server:2019-latest
