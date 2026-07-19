@@ -75,14 +75,6 @@ subprojects {
         jbalTools
     }
 
-    plugins.withId('java') {
-        java {
-            toolchain {
-                languageVersion = JavaLanguageVersion.of(25)
-            }
-        }
-    }
-
     dependencies {
         jbalTools ("org.ballerinalang:jballerina-tools:${ballerinaLangVersion}") {
             transitive = false
