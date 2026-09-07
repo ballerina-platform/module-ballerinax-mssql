@@ -30,7 +30,7 @@
           "description": "The fully-qualified table name to capture events from. Format: `<database>.<schema>.<table>`"
         },
         "state": {
-          "optional": true
+          "optional": false
         },
         "key": "table",
         "placeholder": "",
@@ -46,7 +46,7 @@
                   "message": "Table must be in the format: <database>.<schema>.<table>. Use square brackets for names with dots (e.g., db.[schema.name].table)",
                   "severity": "ERROR",
                   "args": {
-                    "pattern": "^$|^\"\"$|^string `(|([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\]))`$|^\"([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\])\"$"
+                    "pattern": "^string `([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\])`$|^\"([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\])\\.([^.\\[\\]]+|\\[[^\\]]+\\])\"$"
                   }
                 }
               ]

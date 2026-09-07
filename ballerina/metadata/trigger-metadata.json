@@ -154,7 +154,7 @@
                 "presence": "required"
               }
             ],
-            "returns": { "id": "$service.onError.returns", "type": { "name": "()", "builtin": true } }
+            "returns": { "id": "$service.onError.returns", "type": [{ "name": "error", "builtin": true }, { "name": "()", "builtin": true }] }
           }
         ]
       },
