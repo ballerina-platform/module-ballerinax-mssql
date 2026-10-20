@@ -21,7 +21,7 @@ import ballerinax/mssql.driver as _;
 
 // The username , password and name of the MSSQL database
 configurable string dbUsername = "sa";
-configurable string dbPassword = "Test123#";
+configurable string dbPassword = ?;
 configurable string dbName = "EXAMPLE_DB";
 
 // Defines a record to load the query result schema as shown below in the
